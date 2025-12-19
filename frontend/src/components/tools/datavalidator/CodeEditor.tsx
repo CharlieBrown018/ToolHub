@@ -27,7 +27,7 @@ export function CodeEditor({
         placeholder={placeholder}
         disabled={disabled}
         readOnly={readOnly}
-        className="w-full min-h-[300px] p-4 rounded-md bg-background border border-border text-foreground font-mono text-sm resize-y focus:outline-none focus:ring-2 focus:ring-ring"
+        className="w-full min-h-[300px] p-4 rounded-lg bg-glass-white-md backdrop-blur-sm border border-glass-border text-gray-100 font-mono text-sm resize-y focus:outline-none focus:ring-2 focus:ring-accent-purple focus:border-accent-purple/50 custom-scrollbar"
       />
     </div>
   );

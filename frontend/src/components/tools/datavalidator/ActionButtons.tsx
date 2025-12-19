@@ -1,4 +1,4 @@
-import { Button } from '../../ui/button';
+import { GlassButton } from '../../ui/glass-button';
 import { CircleNotch, CheckCircle, XCircle, Code, Copy, Download } from '@phosphor-icons/react';
 import { type FormatType } from '../../../services/datavalidator';
 import { type ValidationResult } from './types';
@@ -36,42 +36,42 @@ export function ActionButtons({
     <>
       {/* Input Actions */}
       <div className="flex flex-wrap gap-2">
-        <Button
+        <GlassButton
           onClick={onValidate}
           disabled={isProcessing || !inputContent.trim()}
-          variant="outline"
+          variant="purple"
           size="sm"
         >
           {isProcessing ? (
             <CircleNotch className="h-4 w-4 mr-2 animate-spin" weight="duotone" />
           ) : validationResult?.valid ? (
-            <CheckCircle className="h-4 w-4 mr-2 text-primary" weight="duotone" />
+            <CheckCircle className="h-4 w-4 mr-2 text-accent-blue" weight="duotone" />
           ) : validationResult?.valid === false ? (
             <XCircle className="h-4 w-4 mr-2 text-red-400" weight="duotone" />
           ) : (
             <Code className="h-4 w-4 mr-2" weight="duotone" />
           )}
           Validate
-        </Button>
-        <Button
+        </GlassButton>
+        <GlassButton
           onClick={onFormat}
           disabled={isProcessing || !inputContent.trim()}
-          variant="outline"
+          variant="purple"
           size="sm"
         >
           Format
-        </Button>
+        </GlassButton>
         {inputFormat === 'json' && (
-          <Button
+          <GlassButton
             onClick={onMinify}
             disabled={isProcessing || !inputContent.trim()}
-            variant="outline"
+            variant="purple"
             size="sm"
           >
             Minify
-          </Button>
+          </GlassButton>
         )}
-        <Button
+        <GlassButton
           onClick={() => onCopy(inputContent, 'input')}
           disabled={!inputContent.trim()}
           variant="outline"
@@ -79,12 +79,12 @@ export function ActionButtons({
         >
           <Copy className="h-4 w-4 mr-2" weight="duotone" />
           Copy
-        </Button>
+        </GlassButton>
       </div>
 
       {/* Output Actions */}
       <div className="flex flex-wrap gap-2">
-        <Button
+        <GlassButton
           onClick={onConvert}
           disabled={isProcessing || !inputContent.trim()}
           className="flex-1"
@@ -100,8 +100,8 @@ export function ActionButtons({
               Convert
             </>
           )}
-        </Button>
-        <Button
+        </GlassButton>
+        <GlassButton
           onClick={() => onCopy(outputContent, 'output')}
           disabled={!outputContent.trim()}
           variant="outline"
@@ -109,8 +109,8 @@ export function ActionButtons({
         >
           <Copy className="h-4 w-4 mr-2" weight="duotone" />
           Copy
-        </Button>
-        <Button
+        </GlassButton>
+        <GlassButton
           onClick={() => onDownload(outputContent, outputFormat)}
           disabled={!outputContent.trim()}
           variant="outline"
@@ -118,7 +118,7 @@ export function ActionButtons({
         >
           <Download className="h-4 w-4 mr-2" weight="duotone" />
           Download
-        </Button>
+        </GlassButton>
       </div>
     </>
   );

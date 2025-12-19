@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { convertFiles, type ConvertProgress } from '../../services/scan2pdf';
-import { useToast } from '../../components/ui/use-toast';
+import { useToast } from '../useToast';
 import { type ProgressState, type ResultsState, type FileItem } from '../../components/tools/scan2pdf/types';
 
 interface ConversionOptions {

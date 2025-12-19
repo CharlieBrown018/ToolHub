@@ -1,8 +1,8 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card';
-import { Button } from '../../ui/button';
+import { GlassCard, GlassCardContent, GlassCardDescription, GlassCardHeader, GlassCardTitle } from '../../ui/glass-card';
+import { GlassButton } from '../../ui/glass-button';
 import { CircleNotch, FileText } from '@phosphor-icons/react';
 import { convertText } from '../../../services/documark';
-import { useToast } from '../../ui/use-toast';
+import { useToast } from '../../../hooks/useToast';
 
 interface MarkdownEditorProps {
   content: string;
@@ -60,14 +60,14 @@ export function MarkdownEditor({
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Or Paste Markdown</CardTitle>
-        <CardDescription>
+    <GlassCard hover={false} animated={false} className="border-emerald-500/20">
+      <GlassCardHeader>
+        <GlassCardTitle>Or Paste Markdown</GlassCardTitle>
+        <GlassCardDescription>
           Paste your markdown content directly
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
+        </GlassCardDescription>
+      </GlassCardHeader>
+      <GlassCardContent>
         <form onSubmit={handleConvert} className="space-y-4">
           <textarea
             value={content}
@@ -80,10 +80,11 @@ export function MarkdownEditor({
 - Table support
 - Custom styling"
             disabled={isConverting}
-            className="w-full min-h-[400px] p-4 rounded-md bg-background border border-border text-foreground font-mono text-sm resize-y focus:outline-none focus:ring-2 focus:ring-ring"
+            className="w-full min-h-[400px] p-4 rounded-lg bg-glass-white-md backdrop-blur-sm border border-glass-border text-gray-100 font-mono text-sm resize-y focus:outline-none focus:ring-2 focus:ring-accent-blue focus:border-accent-blue/50 custom-scrollbar"
           />
-          <Button
+          <GlassButton
             type="submit"
+            variant="green"
             disabled={isConverting || !content.trim()}
             className="w-full"
           >
@@ -98,10 +99,10 @@ export function MarkdownEditor({
                 Convert to PDF
               </>
             )}
-          </Button>
+          </GlassButton>
         </form>
-      </CardContent>
-    </Card>
+      </GlassCardContent>
+    </GlassCard>
   );
 }
 

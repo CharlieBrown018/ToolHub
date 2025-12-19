@@ -1,8 +1,8 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card';
-import { Button } from '../../ui/button';
+import { GlassCard, GlassCardContent, GlassCardDescription, GlassCardHeader, GlassCardTitle } from '../../ui/glass-card';
+import { GlassButton } from '../../ui/glass-button';
 import { CircleNotch, Download } from '@phosphor-icons/react';
 import { convertFile } from '../../../services/documark';
-import { useToast } from '../../ui/use-toast';
+import { useToast } from '../../../hooks/useToast';
 
 interface FileUploadProps {
   selectedFile: File | null;
@@ -71,24 +71,27 @@ export function FileUpload({
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Upload Markdown File</CardTitle>
-        <CardDescription>
+    <GlassCard hover={false} animated={false} className="border-emerald-500/20">
+      <GlassCardHeader>
+        <GlassCardTitle>Upload Markdown File</GlassCardTitle>
+        <GlassCardDescription>
           Upload a .md, .markdown, or .txt file to convert
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
+        </GlassCardDescription>
+      </GlassCardHeader>
+      <GlassCardContent>
         <form onSubmit={handleConvert} className="space-y-4">
-          <input
-            type="file"
-            accept=".md,.markdown,.txt"
-            onChange={handleFileChange}
-            disabled={isConverting}
-            className="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90"
-          />
-          <Button
+          <div className="relative">
+            <input
+              type="file"
+              accept=".md,.markdown,.txt"
+              onChange={handleFileChange}
+              disabled={isConverting}
+              className="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-glass-white-md file:backdrop-blur-sm file:border file:border-glass-border file:text-gray-100 hover:file:bg-glass-white-lg hover:file:border-glass-border-hover file:transition-all file:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed px-3 py-2 rounded-lg bg-glass-white-md backdrop-blur-sm border border-glass-border text-gray-100 focus:outline-none focus:ring-2 focus:ring-accent-blue focus:border-accent-blue/50"
+            />
+          </div>
+          <GlassButton
             type="submit"
+            variant="green"
             disabled={isConverting || !selectedFile}
             className="w-full"
           >
@@ -103,10 +106,10 @@ export function FileUpload({
                 Convert to PDF
               </>
             )}
-          </Button>
+          </GlassButton>
         </form>
-      </CardContent>
-    </Card>
+      </GlassCardContent>
+    </GlassCard>
   );
 }
 

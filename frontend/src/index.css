@@ -1,10 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    /* Dark greyscale theme - Vercel-inspired (default) */
+    /* Dark greyscale theme - Glassmorphic */
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
     --card: 0 0% 3.9%;
@@ -12,7 +14,7 @@
     --popover: 0 0% 3.9%;
     --popover-foreground: 0 0% 98%;
     
-    /* Primary - blue accent for interactive elements (Vercel blue) */
+    /* Primary - blue accent for interactive elements */
     --primary: 221.2 83.2% 53.3%;
     --primary-foreground: 0 0% 100%;
     
@@ -38,35 +40,39 @@
     --ring: 221.2 83.2% 53.3%;
     
     --radius: 0.5rem;
-  }
-  
-  .light {
-    /* Light mode greyscale (optional) */
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
-    
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 0 0% 100%;
-    
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
-    
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
-    
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 100%;
-    
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 221.2 83.2% 53.3%;
+
+    /* Glassmorphism Colors */
+    --color-bg-primary: #111827;
+    --color-bg-secondary: #1f2937;
+    --color-bg-tertiary: #374151;
+    --color-accent-blue: #60a5fa;
+    --color-accent-indigo: #6366f1;
+    --color-accent-purple: #8b5cf6;
+
+    /* Glassmorphism Glass Colors */
+    --color-glass-white: rgba(255, 255, 255, 0.01);
+    --color-glass-white-md: rgba(255, 255, 255, 0.02);
+    --color-glass-white-lg: rgba(255, 255, 255, 0.04);
+    --color-glass-white-xl: rgba(255, 255, 255, 0.06);
+    --color-glass-border: rgba(255, 255, 255, 0.08);
+    --color-glass-border-hover: rgba(255, 255, 255, 0.15);
+    --color-glass-border-strong: rgba(255, 255, 255, 0.2);
+    --color-glass-highlight: rgba(255, 255, 255, 0.01);
+    --color-glass-highlight-strong: rgba(255, 255, 255, 0.03);
+
+    /* Glassmorphism Shadows */
+    --shadow-neon: 0 0 5px rgb(96 165 250), 0 0 20px rgb(37 99 235);
+    --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    --shadow-glass-sm: 0 4px 16px 0 rgba(0, 0, 0, 0.25);
+    --shadow-glass-lg: 0 12px 48px 0 rgba(0, 0, 0, 0.5);
+    --shadow-glass-inset: inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+    --shadow-depth-1: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    --shadow-depth-2: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    --shadow-depth-3: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+    --shadow-depth-4: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+    --shadow-depth-5: 0 19px 38px rgba(0, 0, 0, 0.3), 0 15px 12px rgba(0, 0, 0, 0.22);
+    --shadow-glass-depth: 0 8px 32px rgba(0, 0, 0, 0.37), inset 0 1px 0 rgba(255, 255, 255, 0.1), inset 0 0 20px rgba(255, 255, 255, 0.05);
+    --shadow-glass-lifted: 0 12px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15), inset 0 0 25px rgba(255, 255, 255, 0.06);
   }
 }
 
@@ -75,8 +81,8 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    @apply bg-bg-primary text-gray-100;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
       'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
       sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -86,5 +92,122 @@
   /* Ensure Phosphor duotone icons render correctly */
   svg[data-phosphor-icon] {
     display: inline-block;
+  }
+}
+
+@layer utilities {
+  /* Glassmorphism Background Utilities */
+  .bg-glass-white {
+    background-color: var(--color-glass-white);
+  }
+  .bg-glass-white-md {
+    background-color: var(--color-glass-white-md);
+  }
+  .bg-glass-white-lg {
+    background-color: var(--color-glass-white-lg);
+  }
+  .bg-glass-white-xl {
+    background-color: var(--color-glass-white-xl);
+  }
+  .bg-bg-primary {
+    background-color: var(--color-bg-primary);
+  }
+  .bg-bg-secondary {
+    background-color: var(--color-bg-secondary);
+  }
+  .bg-bg-tertiary {
+    background-color: var(--color-bg-tertiary);
+  }
+  .bg-accent-blue {
+    background-color: var(--color-accent-blue);
+  }
+  .bg-accent-indigo {
+    background-color: var(--color-accent-indigo);
+  }
+  .bg-accent-purple {
+    background-color: var(--color-accent-purple);
+  }
+
+  /* Glassmorphism Text Utilities */
+  .text-accent-blue {
+    color: var(--color-accent-blue);
+  }
+  .text-accent-indigo {
+    color: var(--color-accent-indigo);
+  }
+  .text-accent-purple {
+    color: var(--color-accent-purple);
+  }
+
+  /* Glassmorphism Border Utilities */
+  .border-glass-border {
+    border-color: var(--color-glass-border);
+  }
+  .border-glass-border-hover {
+    border-color: var(--color-glass-border-hover);
+  }
+  .border-glass-border-strong {
+    border-color: var(--color-glass-border-strong);
+  }
+
+  /* Glassmorphism Shadow Utilities */
+  .shadow-neon {
+    box-shadow: var(--shadow-neon);
+  }
+  .shadow-glass {
+    box-shadow: var(--shadow-glass);
+  }
+  .shadow-glass-sm {
+    box-shadow: var(--shadow-glass-sm);
+  }
+  .shadow-glass-lg {
+    box-shadow: var(--shadow-glass-lg);
+  }
+  .shadow-glass-inset {
+    box-shadow: var(--shadow-glass-inset);
+  }
+  .shadow-depth-1 {
+    box-shadow: var(--shadow-depth-1);
+  }
+  .shadow-depth-2 {
+    box-shadow: var(--shadow-depth-2);
+  }
+  .shadow-depth-3 {
+    box-shadow: var(--shadow-depth-3);
+  }
+  .shadow-depth-4 {
+    box-shadow: var(--shadow-depth-4);
+  }
+  .shadow-depth-5 {
+    box-shadow: var(--shadow-depth-5);
+  }
+  .shadow-glass-depth {
+    box-shadow: var(--shadow-glass-depth);
+  }
+  .shadow-glass-lifted {
+    box-shadow: var(--shadow-glass-lifted);
+  }
+
+  /* Custom Scrollbar */
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #4b5563 transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #4b5563;
+    border-radius: 3px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: #6b7280;
   }
 }

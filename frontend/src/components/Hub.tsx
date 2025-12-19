@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from './ui/card';
-import { Button } from './ui/button';
+import { GlassCard, GlassCardContent, GlassCardDescription, GlassCardFooter, GlassCardHeader, GlassCardTitle } from './ui/glass-card';
+import { GlassButton } from './ui/glass-button';
+import { HubLayout } from './layouts/HubLayout';
+import { PageTransition } from './animations/PageTransition';
 import { Tool } from '../types/tool';
-import { CircleNotch, Image, FileText, CheckCircle, Palette, CaretRight, Toolbox } from '@phosphor-icons/react';
+import { CircleNotch, Image, FileText, CheckCircle, Palette, CaretRight } from '@phosphor-icons/react';
 import { getTools } from '../services/tools';
 
 function Hub() {
@@ -24,31 +26,31 @@ function Hub() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="min-h-screen flex items-center justify-center bg-bg-primary">
         <div className="flex flex-col items-center gap-4">
-          <CircleNotch className="h-8 w-8 animate-spin text-primary" weight="duotone" />
-          <p className="text-muted-foreground">Loading ToolHub...</p>
+          <CircleNotch className="h-8 w-8 animate-spin text-accent-blue" weight="duotone" />
+          <p className="text-gray-400">Loading ToolHub...</p>
         </div>
       </div>
     );
   }
 
-  // Dark greyscale theme with subtle accent colors for tool cards
+  // Glassmorphic theme with accent colors for tool cards
   const getColorClasses = (color: string) => {
     const colors: Record<string, string> = {
-      blue: 'bg-primary/10 text-primary border-primary/30 hover:border-primary/50 hover:bg-primary/15',
-      green: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30 hover:border-emerald-500/50 hover:bg-emerald-500/15',
-      purple: 'bg-purple-500/10 text-purple-400 border-purple-500/30 hover:border-purple-500/50 hover:bg-purple-500/15',
-      orange: 'bg-orange-500/10 text-orange-400 border-orange-500/30 hover:border-orange-500/50 hover:bg-orange-500/15',
+      blue: 'border-accent-blue/30 hover:border-accent-blue/50',
+      green: 'border-emerald-500/30 hover:border-emerald-500/50',
+      purple: 'border-accent-purple/30 hover:border-accent-purple/50',
+      orange: 'border-orange-500/30 hover:border-orange-500/50',
     };
     return colors[color] || colors.blue;
   };
 
   const getIconColorClasses = (color: string) => {
     const colors: Record<string, string> = {
-      blue: 'bg-primary/15 text-primary',
+      blue: 'bg-accent-blue/15 text-accent-blue',
       green: 'bg-emerald-500/15 text-emerald-400',
-      purple: 'bg-purple-500/15 text-purple-400',
+      purple: 'bg-accent-purple/15 text-accent-purple',
       orange: 'bg-orange-500/15 text-orange-400',
     };
     return colors[color] || colors.blue;
@@ -64,118 +66,70 @@ function Hub() {
     return iconMap[toolId] || Image;
   };
 
+  const getButtonVariant = (color: string) => {
+    const variants: Record<string, 'blue' | 'green' | 'purple' | 'orange'> = {
+      blue: 'blue',
+      green: 'green',
+      purple: 'purple',
+      orange: 'orange',
+    };
+    return variants[color] || 'blue';
+  };
+
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur-sm">
-        <div className="container mx-auto px-4 py-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                <Toolbox className="h-4 w-4 text-primary" weight="duotone" />
-              </div>
-              <h1 className="text-xl font-bold text-foreground">ToolHub</h1>
-            </div>
-            <p className="text-sm text-muted-foreground hidden sm:block">
-              A collection of powerful utility tools for file conversion and processing
-            </p>
-          </div>
-        </div>
-      </header>
-
-      <main className="container mx-auto px-4 py-12 flex-1">
+    <PageTransition>
+      <HubLayout>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {tools.map(tool => (
-            <Card
-              key={tool.id}
-              className={`${getColorClasses(tool.color)} transition-all hover:scale-105`}
-            >
-              <CardHeader>
-                <div className="flex items-center gap-3 mb-2">
-                  <div className={`h-12 w-12 rounded-lg ${getIconColorClasses(tool.color)} flex items-center justify-center`}>
-                    {(() => {
-                      const IconComponent = getToolIcon(tool.id);
-                      return <IconComponent className="h-6 w-6" weight="duotone" />;
-                    })()}
-                  </div>
-                  <CardTitle className="text-xl">{tool.display_name || tool.title}</CardTitle>
+        {tools.map((tool) => (
+          <GlassCard
+            key={tool.id}
+            className={`${getColorClasses(tool.color)}`}
+            hover={true}
+            animated={true}
+          >
+            <GlassCardHeader>
+              <div className="flex items-center gap-3 mb-2">
+                <div className={`h-12 w-12 rounded-lg ${getIconColorClasses(tool.color)} backdrop-blur-sm border border-glass-border flex items-center justify-center`}>
+                  {(() => {
+                    const IconComponent = getToolIcon(tool.id);
+                    return <IconComponent className="h-6 w-6" weight="duotone" />;
+                  })()}
                 </div>
-                <CardDescription className="text-base">
-                  {tool.description}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex flex-wrap gap-2">
-                  {tool.features.map((feature, idx) => (
-                    <span
-                      key={idx}
-                      className="text-xs px-2 py-1 rounded-md bg-muted border border-border text-muted-foreground"
-                    >
-                      {feature}
-                    </span>
-                  ))}
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Button
-                  asChild
-                  className="w-full"
-                >
-                  <Link to={tool.route}>
-                    Open Tool
-                    <CaretRight className="ml-2 h-4 w-4" weight="duotone" />
-                  </Link>
-                </Button>
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
-      </main>
-
-      <footer className="mt-auto border-t border-border bg-background">
-        <div className="container mx-auto px-4 py-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div>
-              <h3 className="font-semibold mb-2">About ToolHub</h3>
-              <p className="text-sm text-muted-foreground">
-                A unified platform for various file conversion and utility tools.
-                Built with React, FastAPI, and modern web technologies.
-              </p>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-2">Technologies</h3>
+                <GlassCardTitle className="text-xl text-gray-100">{tool.display_name || tool.title}</GlassCardTitle>
+              </div>
+              <GlassCardDescription className="text-base text-gray-300">
+                {tool.description}
+              </GlassCardDescription>
+            </GlassCardHeader>
+            <GlassCardContent>
               <div className="flex flex-wrap gap-2">
-                {['React', 'TypeScript', 'FastAPI', 'Python', 'Tesseract OCR'].map((tech) => (
+                {tool.features.map((feature, idx) => (
                   <span
-                    key={tech}
-                    className="text-xs px-2 py-1 rounded-md bg-background/50 border border-border/50"
+                    key={idx}
+                    className="text-xs px-2 py-1 rounded-md bg-glass-white-md backdrop-blur-sm border border-glass-border text-gray-300"
                   >
-                    {tech}
+                    {feature}
                   </span>
                 ))}
               </div>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-2">Tools</h3>
-              <ul className="space-y-1">
-                {tools.map(tool => (
-                  <li key={tool.id}>
-                    <Link
-                      to={tool.route}
-                      className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                      {tool.display_name || tool.title}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-          <div className="mt-8 pt-8 border-t border-border/40 text-center text-sm text-muted-foreground">
-            <p>&copy; 2025 ToolHub. Free and open-source utilities.</p>
-          </div>
+            </GlassCardContent>
+            <GlassCardFooter>
+              <GlassButton
+                asChild
+                variant={getButtonVariant(tool.color)}
+                className="w-full"
+              >
+                <Link to={tool.route}>
+                  Open Tool
+                  <CaretRight className="ml-2 h-4 w-4" weight="duotone" />
+                </Link>
+              </GlassButton>
+            </GlassCardFooter>
+          </GlassCard>
+        ))}
         </div>
-      </footer>
-    </div>
+      </HubLayout>
+    </PageTransition>
   );
 }
 

@@ -9,10 +9,10 @@ export function ValidationResultDisplay({ result }: ValidationResultProps) {
   if (!result) return null;
 
   return (
-    <div className={`p-3 rounded-md border ${
+    <div className={`p-3 rounded-lg border backdrop-blur-sm ${
       result.valid
-        ? 'bg-primary/5 border-primary/20 text-primary'
-        : 'bg-destructive/10 border-destructive/20 text-destructive'
+        ? 'bg-accent-blue/10 border-accent-blue/20 text-accent-blue'
+        : 'bg-red-500/10 border-red-500/20 text-red-400'
     }`}>
       <div className="flex items-center gap-2">
         {result.valid ? (
@@ -25,7 +25,7 @@ export function ValidationResultDisplay({ result }: ValidationResultProps) {
         </span>
       </div>
       {result.error && (
-        <p className="text-xs mt-1">{result.error}</p>
+        <p className="text-xs mt-1 text-gray-300">{result.error}</p>
       )}
     </div>
   );

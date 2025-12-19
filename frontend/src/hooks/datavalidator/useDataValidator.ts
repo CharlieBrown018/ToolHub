@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { validate, convert, format as formatContent, minify, type FormatType } from '../../services/datavalidator';
-import { useToast } from '../../components/ui/use-toast';
+import { useToast } from '../useToast';
 import { type ValidationResult } from '../../components/tools/datavalidator/types';
 
 export function useDataValidator() {

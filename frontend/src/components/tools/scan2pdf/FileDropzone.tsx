@@ -1,8 +1,8 @@
 import { useRef } from 'react';
-import { Button } from '../../ui/button';
+import { GlassButton } from '../../ui/glass-button';
 import { Upload, FolderOpen } from '@phosphor-icons/react';
 import { browseFiles, browseFolder, uploadFiles } from '../../../services/scan2pdf';
-import { useToast } from '../../ui/use-toast';
+import { useToast } from '../../../hooks/useToast';
 
 interface FileDropzoneProps {
   inputFiles: string[];
@@ -115,31 +115,31 @@ export function FileDropzone({
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
-    dropzoneRef.current?.classList.add('border-primary');
+    dropzoneRef.current?.classList.add('border-accent-blue/50');
   };
 
   const handleDragLeave = (e: React.DragEvent) => {
     e.preventDefault();
-    dropzoneRef.current?.classList.remove('border-primary');
+    dropzoneRef.current?.classList.remove('border-accent-blue/50');
   };
 
   return (
     <div className="space-y-6">
       <div className="space-y-2">
-        <label className="text-sm font-medium">Input Files</label>
+        <label className="text-sm font-medium text-gray-100">Input Files</label>
         <div
           ref={dropzoneRef}
-          className="border-2 border-dashed border-border rounded-lg p-8 text-center cursor-pointer transition-colors hover:border-primary/50"
+          className="border-2 border-dashed border-glass-border rounded-xl p-8 text-center cursor-pointer transition-all duration-200 bg-glass-white-md backdrop-blur-sm hover:border-accent-blue/50 hover:bg-glass-white-lg"
           onClick={handleBrowseFiles}
           onDrop={handleDrop}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
         >
-          <Upload className="h-12 w-12 mx-auto mb-4 text-muted-foreground" weight="duotone" />
-          <p className="text-sm font-medium mb-1">Drag & drop files here</p>
-          <p className="text-xs text-muted-foreground">or click to browse</p>
+          <Upload className="h-12 w-12 mx-auto mb-4 text-gray-400" weight="duotone" />
+          <p className="text-sm font-medium mb-1 text-gray-100">Drag & drop files here</p>
+          <p className="text-xs text-gray-400">or click to browse</p>
         </div>
-        <p className="text-xs text-muted-foreground">
+        <p className="text-xs text-gray-400">
           {inputFiles.length > 0
             ? `${inputFiles.length} file(s) selected`
             : 'No files selected'}
@@ -147,18 +147,18 @@ export function FileDropzone({
       </div>
 
       <div className="space-y-2">
-        <label className="text-sm font-medium">Output Folder</label>
-        <Button
+        <label className="text-sm font-medium text-gray-100">Output Folder</label>
+        <GlassButton
           type="button"
-          variant="outline"
+          variant="blue"
           onClick={handleBrowseFolder}
           disabled={disabled}
           className="w-full"
         >
           <FolderOpen className="h-4 w-4 mr-2" weight="duotone" />
           Select Output Folder
-        </Button>
-        <p className="text-xs text-muted-foreground">
+        </GlassButton>
+        <p className="text-xs text-gray-400">
           {outputPath || 'No folder selected'}
         </p>
       </div>

@@ -1,16 +1,18 @@
 import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { useToast } from '../ui/use-toast';
+import { GlassCard, GlassCardContent, GlassCardHeader, GlassCardTitle } from '../ui/glass-card';
+import { useToast } from '../../hooks/useToast';
 import {
   Image as ImageIcon,
   Sparkle,
   Plus,
   Eye,
   Stack,
+  Palette,
 } from '@phosphor-icons/react';
 import { type Color } from '../../services/colorpalette';
 import { type TabType, type ContrastResult } from './colorpalette/types';
-import { Header } from '../ui/header';
+import { ToolLayout } from '../layouts/ToolLayout';
+import { PageTransition } from '../animations/PageTransition';
 import { PaletteDisplay } from './colorpalette/PaletteDisplay';
 import { ContrastResultDisplay } from './colorpalette/ContrastResult';
 import { ExtractTab } from './colorpalette/ExtractTab';
@@ -160,96 +162,96 @@ function ColorPalette() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header
+    <PageTransition>
+      <ToolLayout
         title="ColorPalette"
         subtitle="Professional color palette tools - Extract, Generate, Build & Analyze"
-      />
-
-      <div className="container mx-auto px-4 py-8">
+        icon={Palette}
+        iconColor="orange"
+      >
         {/* Tabs */}
-        <div className="flex flex-wrap gap-2 mb-6 border-b border-border">
-          {tabs.map((tab) => {
-            const Icon = tab.icon;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-4 py-2 border-b-2 transition-colors ${
-                  activeTab === tab.id
-                    ? 'border-primary text-primary'
-                    : 'border-transparent text-muted-foreground hover:text-foreground'
-                }`}
-              >
-                <Icon className="h-4 w-4" weight="duotone" />
-                <span className="text-sm font-medium">{tab.label}</span>
-              </button>
-            );
-          })}
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Left Panel - Controls */}
-          <Card>
-            <CardHeader>
-              <CardTitle>{getTabTitle()}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {activeTab === 'extract' && (
-                <ExtractTab
-                  onColorsGenerated={setExtractColors}
-                  isProcessing={isProcessing}
-                  onProcessingChange={setIsProcessing}
-                />
-              )}
-              {activeTab === 'random' && (
-                <RandomTab
-                  onColorsGenerated={setRandomColors}
-                  isProcessing={isProcessing}
-                  onProcessingChange={setIsProcessing}
-                />
-              )}
-              {activeTab === 'custom' && (
-                <CustomTab
-                  colors={customColors}
-                  onColorsChange={setCustomColors}
-                  savedPalettes={savedPalettes}
-                  onLoadPalette={handleLoadPalette}
-                  onDeletePalette={deletePalette}
-                />
-              )}
-              {activeTab === 'shades' && (
-                <ShadesTab
-                  onColorsGenerated={setShadesColors}
-                  isProcessing={isProcessing}
-                  onProcessingChange={setIsProcessing}
-                />
-              )}
-              {activeTab === 'contrast' && (
-                <>
-                  <ContrastTab
-                    isProcessing={isProcessing}
-                    onProcessingChange={setIsProcessing}
-                    onResultChange={setContrastResult}
-                  />
-                  {contrastResult && <ContrastResultDisplay result={contrastResult} />}
-                </>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* Right Panel - Palette Display */}
-          {activeTab !== 'contrast' && (
-            <PaletteDisplay
-              colors={colors}
-              onSave={handleSavePalette}
-              onExport={handleExport}
-              onCopyColor={handleCopyColor}
-            />
-          )}
-        </div>
+        <div className="flex flex-wrap gap-2 mb-6 border-b border-glass-border">
+        {tabs.map((tab) => {
+          const Icon = tab.icon;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex items-center gap-2 px-4 py-2 border-b-2 transition-all duration-200 rounded-t-lg ${
+                activeTab === tab.id
+                  ? 'border-orange-500 text-orange-400 bg-glass-white-md backdrop-blur-sm'
+                  : 'border-transparent text-gray-400 hover:text-gray-100 hover:bg-glass-white/30'
+              }`}
+            >
+              <Icon className="h-4 w-4" weight="duotone" />
+              <span className="text-sm font-medium">{tab.label}</span>
+            </button>
+          );
+        })}
       </div>
-    </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Left Panel - Controls */}
+        <GlassCard hover={false} animated={false} className="border-orange-500/20">
+          <GlassCardHeader>
+            <GlassCardTitle>{getTabTitle()}</GlassCardTitle>
+          </GlassCardHeader>
+          <GlassCardContent>
+            {activeTab === 'extract' && (
+              <ExtractTab
+                onColorsGenerated={setExtractColors}
+                isProcessing={isProcessing}
+                onProcessingChange={setIsProcessing}
+              />
+            )}
+            {activeTab === 'random' && (
+              <RandomTab
+                onColorsGenerated={setRandomColors}
+                isProcessing={isProcessing}
+                onProcessingChange={setIsProcessing}
+              />
+            )}
+            {activeTab === 'custom' && (
+              <CustomTab
+                colors={customColors}
+                onColorsChange={setCustomColors}
+                savedPalettes={savedPalettes}
+                onLoadPalette={handleLoadPalette}
+                onDeletePalette={deletePalette}
+              />
+            )}
+            {activeTab === 'shades' && (
+              <ShadesTab
+                onColorsGenerated={setShadesColors}
+                isProcessing={isProcessing}
+                onProcessingChange={setIsProcessing}
+              />
+            )}
+            {activeTab === 'contrast' && (
+              <>
+                <ContrastTab
+                  isProcessing={isProcessing}
+                  onProcessingChange={setIsProcessing}
+                  onResultChange={setContrastResult}
+                />
+                {contrastResult && <ContrastResultDisplay result={contrastResult} />}
+              </>
+            )}
+          </GlassCardContent>
+        </GlassCard>
+
+        {/* Right Panel - Palette Display */}
+        {activeTab !== 'contrast' && (
+          <PaletteDisplay
+            colors={colors}
+            onSave={handleSavePalette}
+            onExport={handleExport}
+            onCopyColor={handleCopyColor}
+          />
+        )}
+        </div>
+      </ToolLayout>
+    </PageTransition>
   );
 }
 

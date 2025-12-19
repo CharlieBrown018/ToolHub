@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Button } from '../../ui/button';
-import { useToast } from '../../ui/use-toast';
+import { GlassButton } from '../../ui/glass-button';
+import { useToast } from '../../../hooks/useToast';
 import { CircleNotch, Stack } from '@phosphor-icons/react';
 import { generateShades, type Color } from '../../../services/colorpalette';
 
@@ -39,24 +39,24 @@ export function ShadesTab({ onColorsGenerated, isProcessing, onProcessingChange 
   return (
     <div className="space-y-4">
       <div>
-        <label className="text-sm font-medium mb-2 block">Base Color:</label>
+        <label className="text-sm font-medium mb-2 block text-gray-100">Base Color:</label>
         <div className="flex gap-2">
           <input
             type="color"
             value={baseColor}
             onChange={(e) => setBaseColor(e.target.value)}
-            className="h-10 w-20 rounded border border-border cursor-pointer"
+            className="h-10 w-20 rounded-lg border border-glass-border bg-glass-white-md backdrop-blur-sm cursor-pointer hover:border-glass-border-hover transition-colors"
           />
           <input
             type="text"
             value={baseColor}
             onChange={(e) => setBaseColor(e.target.value)}
-            className="flex-1 px-3 py-2 rounded-md bg-background border border-border font-mono text-sm"
+            className="flex-1 px-3 py-2 rounded-lg bg-glass-white-md backdrop-blur-sm border border-glass-border text-gray-100 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
           />
         </div>
       </div>
       <div>
-        <label className="text-sm font-medium mb-2 block">
+        <label className="text-sm font-medium mb-2 block text-gray-100">
           Number of Shades: {numShades}
         </label>
         <input
@@ -65,11 +65,12 @@ export function ShadesTab({ onColorsGenerated, isProcessing, onProcessingChange 
           max="20"
           value={numShades}
           onChange={(e) => setNumShades(parseInt(e.target.value))}
-          className="w-full"
+          className="w-full h-2 rounded-lg accent-orange-500 bg-glass-white-md backdrop-blur-sm cursor-pointer"
         />
       </div>
-      <Button
+      <GlassButton
         onClick={handleGenerateShades}
+        variant="orange"
         disabled={isProcessing}
         className="w-full"
       >
@@ -79,7 +80,7 @@ export function ShadesTab({ onColorsGenerated, isProcessing, onProcessingChange 
           <Stack className="h-4 w-4 mr-2" weight="duotone" />
         )}
         Generate Shades
-      </Button>
+      </GlassButton>
     </div>
   );
 }

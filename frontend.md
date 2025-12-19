@@ -1,6 +1,15 @@
 # ToolHub Frontend Documentation
 
-React + TypeScript frontend with **Vite**, shadcn/ui components, and Tailwind CSS v3.
+React + TypeScript frontend with **Vite**, glassmorphic design system, and Tailwind CSS v3.
+
+## 🎨 Design System
+
+ToolHub uses a **glassmorphic design language** with:
+- Translucent backgrounds with backdrop blur
+- Subtle borders and depth shadows
+- Smooth hover animations with Framer Motion
+- Dark theme with accent colors (blue, indigo, purple)
+- Plus Jakarta Sans font family
 
 ## 📁 Structure
 
@@ -83,23 +92,32 @@ Preview the production build locally.
 - Uses shadcn/ui components for UI
 
 **UI Components** (`components/ui/`)
-- shadcn/ui component library
+- Glassmorphic components (GlassPanel, GlassCard, GlassButton)
 - Built on Radix UI primitives
 - Fully accessible
 - TypeScript typed
+- Framer Motion animations
+
+**Glass Components** (`components/ui/`)
+- **GlassPanel** - Base glassmorphic container with backdrop blur
+- **GlassCard** - 3D glassmorphic card with hover effects
+- **GlassButton** - Glassmorphic button with icon support
 
 ### Styling
 
 **Tailwind CSS v3**
-- Standard Tailwind configuration
+- Glassmorphic theme configuration
+- Custom glass color variables
+- Depth shadows and blur utilities
 - Theme variables in `index.css`
-- No separate CSS files per component
 - All styling via Tailwind utility classes
 
-**Theme Variables**
-- Defined in `index.css` `@theme` block
-- Dark mode by default
-- Customizable colors and spacing
+**Glassmorphic Theme Variables**
+- Glass backgrounds: `bg-glass-white`, `bg-glass-white-md`, `bg-glass-white-lg`
+- Glass borders: `border-glass-border`, `border-glass-border-hover`
+- Depth shadows: `shadow-glass-depth`, `shadow-depth-2`, `shadow-depth-3`
+- Backdrop blur: `backdrop-blur-md`, `backdrop-blur-lg`
+- Accent colors: `accent-blue`, `accent-indigo`, `accent-purple`
 
 ### Type Safety
 
@@ -112,18 +130,24 @@ Preview the production build locally.
 
 ### Hub Component
 
-Main landing page that displays all available tools.
+Main landing page that displays all available tools with glassmorphic design.
 
 **Features:**
 - Fetches tools from `/api/tools`
-- Displays tool cards with features
+- Displays glassmorphic tool cards with hover effects
 - Loading state handling
 - Responsive grid layout
+- Glassmorphic header and footer
 
 **Usage:**
 ```tsx
 <Hub />
 ```
+
+**Styling:**
+- Uses GlassCard components for tool cards
+- Glassmorphic header with backdrop blur
+- Glassmorphic footer with border
 
 ### Scan2PDF Component
 
@@ -159,22 +183,33 @@ Markdown to PDF converter tool.
 
 ### UI Components
 
-**Button** (`components/ui/button.tsx`)
+**GlassButton** (`components/ui/button.tsx`)
+- Glassmorphic button with backdrop blur
 - Multiple variants (default, outline, ghost, etc.)
 - Size variants (sm, default, lg, icon)
+- Icon support (left/right positioning)
+- Smooth hover animations
 - Fully accessible
 
-**Card** (`components/ui/card.tsx`)
-- Card container
+**GlassCard** (`components/ui/card.tsx`)
+- Glassmorphic card container with depth
+- 3D hover effects with perspective
 - CardHeader, CardTitle, CardDescription
 - CardContent, CardFooter
+- Gradient overlays on hover
+
+**GlassPanel** (`components/ui/glass-panel.tsx`)
+- Base glassmorphic container
+- Variants: subtle, elevated, highlighted
+- Backdrop blur and translucent backgrounds
+- Hover state management
 
 **Progress** (`components/ui/progress.tsx`)
-- Progress bar component
+- Progress bar component with glassmorphic styling
 - Used for conversion progress
 
 **Toast** (`components/ui/toast.tsx`)
-- Toast notifications
+- Glassmorphic toast notifications
 - Success/error variants
 - Auto-dismiss
 
@@ -262,31 +297,59 @@ The tool will automatically appear in the Hub if it's registered in the backend 
 
 ## 🎨 Styling Guidelines
 
-### Tailwind Classes
+### Glassmorphic Design Patterns
 
-Use Tailwind utility classes directly in components:
+Use glassmorphic components and utilities:
 
 ```tsx
-<div className="flex items-center gap-4 p-6 bg-background border border-border rounded-lg">
-  <h1 className="text-2xl font-bold text-foreground">Title</h1>
-</div>
+<GlassCard hoverable perspective animated>
+  <GlassPanel variant="elevated" hover>
+    <h1 className="text-2xl font-bold text-gray-100">Title</h1>
+  </GlassPanel>
+</GlassCard>
 ```
+
+### Glassmorphic Utilities
+
+**Backgrounds:**
+- `bg-glass-white` - Subtle glass background (1% opacity)
+- `bg-glass-white-md` - Medium glass background (2% opacity)
+- `bg-glass-white-lg` - Strong glass background (4% opacity)
+- `bg-glass-white-xl` - Extra strong glass background (6% opacity)
+
+**Borders:**
+- `border-glass-border` - Subtle glass border (8% opacity)
+- `border-glass-border-hover` - Hover glass border (15% opacity)
+- `border-glass-border-strong` - Strong glass border (20% opacity)
+
+**Shadows:**
+- `shadow-glass-depth` - Combined glass shadow with depth
+- `shadow-depth-2` - Medium depth shadow
+- `shadow-depth-3` - Strong depth shadow
+- `shadow-glass-lifted` - Elevated glass shadow
+
+**Backdrop Blur:**
+- `backdrop-blur-sm` - Small blur (4px)
+- `backdrop-blur-md` - Medium blur (16px)
+- `backdrop-blur-lg` - Large blur (24px)
+- `backdrop-blur-xl` - Extra large blur (32px)
 
 ### Theme Colors
 
-Use theme variables via Tailwind:
-
-- `bg-background` - Background color
-- `text-foreground` - Text color
-- `bg-primary` - Primary color
-- `border-border` - Border color
-- `text-muted-foreground` - Muted text
+**Glass Colors:**
+- `bg-bg-primary` - Primary background (#111827)
+- `bg-bg-secondary` - Secondary background (#1f2937)
+- `text-gray-100` - Primary text
+- `text-gray-400` - Muted text
+- `text-accent-blue` - Blue accent (#60a5fa)
+- `text-accent-indigo` - Indigo accent (#6366f1)
+- `text-accent-purple` - Purple accent (#8b5cf6)
 
 ### Responsive Design
 
 ```tsx
-<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-  {/* Responsive grid */}
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  {/* Responsive grid with glassmorphic cards */}
 </div>
 ```
 
@@ -301,7 +364,8 @@ Use theme variables via Tailwind:
 
 ### UI Libraries
 - **tailwindcss** ^3.4.0 - Styling
-- **lucide-react** ^0.303.0 - Icons
+- **@phosphor-icons/react** ^2.1.10 - Icons (duotone style)
+- **framer-motion** ^10.18.0 - Animations
 - **@radix-ui/** - UI primitives
 - **class-variance-authority** - Component variants
 - **clsx** & **tailwind-merge** - Class utilities
@@ -324,8 +388,11 @@ Use theme variables via Tailwind:
 
 ### Tailwind (`src/index.css`)
 
-- Standard Tailwind directives
-- Theme variables for customization
+- Glassmorphic theme variables
+- Custom glass color utilities
+- Depth shadow utilities
+- Backdrop blur utilities
+- Plus Jakarta Sans font family
 - Dark mode by default
 
 ### PostCSS (`postcss.config.cjs`)

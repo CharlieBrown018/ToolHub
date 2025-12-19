@@ -1,4 +1,4 @@
-import { Progress } from '../../ui/progress';
+import { GlassProgress } from '../../ui/glass-progress';
 import { type ProgressState } from './types';
 
 interface ProgressDisplayProps {
@@ -10,8 +10,8 @@ export function ProgressDisplay({ progress }: ProgressDisplayProps) {
 
   return (
     <div className="space-y-2">
-      <Progress value={progress.percent} />
-      <p className="text-xs text-center text-muted-foreground">
+      <GlassProgress value={progress.percent} />
+      <p className="text-xs text-center text-gray-400">
         {progress.current} / {progress.total} files ({progress.percent}%)
       </p>
     </div>

@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
-import { Button } from '../../ui/button';
-import { useToast } from '../../ui/use-toast';
+import { GlassButton } from '../../ui/glass-button';
+import { useToast } from '../../../hooks/useToast';
 import { CircleNotch, Palette, Image as ImageIcon } from '@phosphor-icons/react';
 import { generatePalette, type Color } from '../../../services/colorpalette';
 
@@ -89,7 +89,7 @@ export function ExtractTab({ onColorsGenerated, isProcessing, onProcessingChange
       <div
         onDragOver={handleDragOver}
         onDrop={handleDrop}
-        className="border-2 border-dashed border-border rounded-lg p-8 text-center hover:border-primary transition-colors cursor-pointer"
+        className="border-2 border-dashed border-glass-border rounded-xl p-8 text-center bg-glass-white-md backdrop-blur-sm hover:border-accent-blue transition-all duration-200 cursor-pointer"
         onClick={() => fileInputRef.current?.click()}
       >
         <input
@@ -107,8 +107,8 @@ export function ExtractTab({ onColorsGenerated, isProcessing, onProcessingChange
           />
         ) : (
           <div className="space-y-4">
-            <ImageIcon className="h-12 w-12 mx-auto text-muted-foreground" weight="duotone" />
-            <p className="text-sm text-muted-foreground">
+            <ImageIcon className="h-12 w-12 mx-auto text-gray-400" weight="duotone" />
+            <p className="text-sm text-gray-400">
               Click to upload or drag and drop
             </p>
           </div>
@@ -116,29 +116,30 @@ export function ExtractTab({ onColorsGenerated, isProcessing, onProcessingChange
       </div>
       <div className="space-y-4">
         <div className="flex items-center gap-2">
-          <label className="text-sm font-medium w-32">Colors:</label>
+          <label className="text-sm font-medium w-32 text-gray-100">Colors:</label>
           <input
             type="number"
             min="1"
             max="20"
             value={numColors}
             onChange={(e) => setNumColors(parseInt(e.target.value) || 5)}
-            className="flex-1 px-3 py-1 rounded-md bg-background border border-border text-sm"
+            className="flex-1 px-3 py-1 rounded-lg bg-glass-white-md backdrop-blur-sm border border-glass-border text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
           />
         </div>
         <div className="flex items-center gap-2">
-          <label className="text-sm font-medium w-32">Method:</label>
+          <label className="text-sm font-medium w-32 text-gray-100">Method:</label>
           <select
             value={method}
             onChange={(e) => setMethod(e.target.value as 'dominant' | 'vibrant')}
-            className="flex-1 px-3 py-1 rounded-md bg-background border border-border text-sm"
+            className="flex-1 px-3 py-2 rounded-lg bg-glass-white-md backdrop-blur-sm border border-glass-border text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500/50 hover:bg-glass-white-lg transition-colors cursor-pointer"
           >
-            <option value="dominant">Dominant Colors</option>
-            <option value="vibrant">Vibrant Colors</option>
+            <option value="dominant" className="bg-bg-primary">Dominant Colors</option>
+            <option value="vibrant" className="bg-bg-primary">Vibrant Colors</option>
           </select>
         </div>
-        <Button
+        <GlassButton
           onClick={handleExtractPalette}
+          variant="orange"
           disabled={isProcessing || !selectedFile}
           className="w-full"
         >
@@ -148,7 +149,7 @@ export function ExtractTab({ onColorsGenerated, isProcessing, onProcessingChange
             <Palette className="h-4 w-4 mr-2" weight="duotone" />
           )}
           Extract Palette
-        </Button>
+        </GlassButton>
       </div>
     </div>
   );

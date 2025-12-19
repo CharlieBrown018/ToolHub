@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Button } from '../../ui/button';
-import { useToast } from '../../ui/use-toast';
+import { GlassButton } from '../../ui/glass-button';
+import { useToast } from '../../../hooks/useToast';
 import { Plus, Trash, Eye } from '@phosphor-icons/react';
 import { type Color } from '../../../services/colorpalette';
 import { type SavedPalette } from './types';
@@ -61,19 +61,19 @@ export function CustomTab({
   return (
     <div className="space-y-4">
       <div className="flex gap-2">
-        <Button
+        <GlassButton
           onClick={handleAddCustomColor}
-          variant="outline"
+          variant="orange"
           className="flex-1"
         >
           <Plus className="h-4 w-4 mr-2" weight="duotone" />
           Add Color
-        </Button>
+        </GlassButton>
         <input
           type="color"
           value={baseColor}
           onChange={(e) => handleColorPickerChange(e.target.value)}
-          className="h-10 w-20 rounded border border-border cursor-pointer"
+          className="h-10 w-20 rounded-lg border border-glass-border bg-glass-white-md backdrop-blur-sm cursor-pointer hover:border-glass-border-hover transition-colors"
         />
       </div>
       {colors.length > 0 && (
@@ -81,19 +81,19 @@ export function CustomTab({
           {colors.map((color, index) => (
             <div
               key={index}
-              className="flex items-center gap-2 p-2 rounded bg-background/50"
+              className="flex items-center gap-2 p-2 rounded-lg bg-glass-white-md backdrop-blur-sm border border-glass-border"
             >
               <div
-                className="w-12 h-12 rounded border border-border"
+                className="w-12 h-12 rounded-lg border border-glass-border"
                 style={{ backgroundColor: color.hex }}
               />
               <div className="flex-1">
-                <div className="font-mono text-sm">{color.hex}</div>
-                <div className="text-xs text-muted-foreground">
+                <div className="font-mono text-sm text-gray-100">{color.hex}</div>
+                <div className="text-xs text-gray-400">
                   RGB: {color.rgb.join(', ')}
                 </div>
               </div>
-              <Button
+              <GlassButton
                 variant="ghost"
                 size="icon"
                 onClick={() => {
@@ -102,47 +102,47 @@ export function CustomTab({
                 }}
               >
                 <Trash className="h-4 w-4" weight="duotone" />
-              </Button>
+              </GlassButton>
             </div>
           ))}
         </div>
       )}
       {savedPalettes.length > 0 && (
-        <div className="pt-4 border-t border-border">
-          <h4 className="text-sm font-semibold mb-2">Saved Palettes</h4>
+        <div className="pt-4 border-t border-glass-border">
+          <h4 className="text-sm font-semibold mb-2 text-gray-100">Saved Palettes</h4>
           <div className="space-y-2">
             {savedPalettes.map((palette) => (
               <div
                 key={palette.id}
-                className="flex items-center justify-between p-2 rounded bg-background/50"
+                className="flex items-center justify-between p-2 rounded-lg bg-glass-white-md backdrop-blur-sm border border-glass-border"
               >
                 <div className="flex items-center gap-2">
                   <div className="flex gap-1">
                     {palette.colors.slice(0, 5).map((c, i) => (
                       <div
                         key={i}
-                        className="w-6 h-6 rounded border border-border"
+                        className="w-6 h-6 rounded-lg border border-glass-border"
                         style={{ backgroundColor: c.hex }}
                       />
                     ))}
                   </div>
-                  <span className="text-sm">{palette.name}</span>
+                  <span className="text-sm text-gray-100">{palette.name}</span>
                 </div>
                 <div className="flex gap-1">
-                  <Button
+                  <GlassButton
                     variant="ghost"
                     size="icon"
                     onClick={() => onLoadPalette(palette)}
                   >
                     <Eye className="h-4 w-4" weight="duotone" />
-                  </Button>
-                  <Button
+                  </GlassButton>
+                  <GlassButton
                     variant="ghost"
                     size="icon"
                     onClick={() => onDeletePalette(palette.id)}
                   >
                     <Trash className="h-4 w-4" weight="duotone" />
-                  </Button>
+                  </GlassButton>
                 </div>
               </div>
             ))}
