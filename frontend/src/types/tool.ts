@@ -7,5 +7,6 @@ export interface Tool {
   color: string;
   features: string[];
   route: string;
+  tags?: string[];
 }
 

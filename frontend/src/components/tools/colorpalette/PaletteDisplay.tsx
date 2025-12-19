@@ -17,7 +17,7 @@ export function PaletteDisplay({ colors, onSave, onExport, onCopyColor }: Palett
   };
 
   return (
-    <GlassCard hover={false} animated={false} className="border-accent-orange/30">
+    <GlassCard hover={false} animated={false} className="border-accent-orange/30 h-full flex flex-col">
       <GlassCardHeader>
         <div className="flex items-center justify-between">
           <div>

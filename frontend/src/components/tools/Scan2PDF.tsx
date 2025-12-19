@@ -1,9 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { GlassCard, GlassCardContent, GlassCardDescription, GlassCardHeader, GlassCardTitle } from '../ui/glass-card';
 import { GlassButton } from '../ui/glass-button';
 import { useApiToast } from '../../hooks/useApiToast';
-import { CheckCircle, XCircle, CircleNotch, Image } from '@phosphor-icons/react';
-import { checkTesseractStatus } from '../../services/scan2pdf';
+import { CircleNotch, Image } from '@phosphor-icons/react';
 import { ToolLayout } from '../layouts/ToolLayout';
 import { PageTransition } from '../animations/PageTransition';
 import { FileDropzone } from './scan2pdf/FileDropzone';
@@ -17,15 +16,8 @@ function Scan2PDF() {
   const [outputPath, setOutputPath] = useState('');
   const [skipExisting, setSkipExisting] = useState(true);
   const [combinePdfs, setCombinePdfs] = useState(false);
-  const [tesseractAvailable, setTesseractAvailable] = useState(false);
   const { toast } = useApiToast(); // UI-only actions (validation messages)
   const { isConverting, progress, results, fileList, startConversion } = useConversion();
-
-  useEffect(() => {
-    checkTesseractStatus().then((status) => {
-      setTesseractAvailable(status.tesseract_available);
-    });
-  }, []);
 
   const handleConvert = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,7 +55,7 @@ function Scan2PDF() {
         iconColor="blue"
       >
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <GlassCard hover={false} animated={false} className="border-accent-blue/30">
+        <GlassCard hover={false} animated={false} className="border-accent-blue/30 h-full">
           <GlassCardHeader>
             <GlassCardTitle>Convert Files</GlassCardTitle>
             <GlassCardDescription>

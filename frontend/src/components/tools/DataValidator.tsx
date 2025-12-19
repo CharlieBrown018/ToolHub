@@ -80,7 +80,7 @@ function DataValidator() {
       >
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Input Section */}
-          <GlassCard hover={false} animated={false} className="border-accent-purple/30">
+          <GlassCard hover={false} animated={false} className="border-accent-purple/30 h-full">
             <GlassCardHeader>
               <div className="flex items-center justify-between">
                 <GlassCardTitle>Input</GlassCardTitle>
@@ -110,7 +110,7 @@ function DataValidator() {
           </GlassCard>
 
           {/* Output Section */}
-          <GlassCard hover={false} animated={false} className="border-accent-purple/30">
+          <GlassCard hover={false} animated={false} className="border-accent-purple/30 h-full">
             <GlassCardHeader>
               <div className="flex items-center justify-between">
                 <GlassCardTitle>Output</GlassCardTitle>

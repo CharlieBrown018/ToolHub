@@ -35,6 +35,12 @@ module.exports = {
           purple: "#8b5cf6",
           green: "#10b981",
           orange: "#f97316",
+          pink: "#ec4899",
+          indigo: "#6366f1",
+          cyan: "#06b6d4",
+          amber: "#f59e0b",
+          red: "#ef4444",
+          teal: "#14b8a6",
         },
         popover: {
           DEFAULT: "hsl(var(--popover))",

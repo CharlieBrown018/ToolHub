@@ -13,6 +13,13 @@ export async function getTools(): Promise<Tool[]> {
 }
 
 /**
+ * Search tools by query
+ */
+export async function searchTools(query: string): Promise<Tool[]> {
+  return apiRequest<Tool[]>(`/api/tools/search?q=${encodeURIComponent(query)}`);
+}
+
+/**
  * Health check
  */
 export async function healthCheck(): Promise<{ status: string }> {

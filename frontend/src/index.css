@@ -50,10 +50,11 @@
     --color-accent-purple: #8b5cf6;
 
     /* Glassmorphism Glass Colors */
-    --color-glass-white: rgba(255, 255, 255, 0.01);
-    --color-glass-white-md: rgba(255, 255, 255, 0.02);
-    --color-glass-white-lg: rgba(255, 255, 255, 0.04);
-    --color-glass-white-xl: rgba(255, 255, 255, 0.06);
+    --color-glass-white-sm: rgba(255, 255, 255, 0.01);
+    --color-glass-white: rgba(255, 255, 255, 0.02);
+    --color-glass-white-md: rgba(255, 255, 255, 0.04);
+    --color-glass-white-lg: rgba(255, 255, 255, 0.06);
+    --color-glass-white-xl: rgba(255, 255, 255, 0.08);
     --color-glass-border: rgba(255, 255, 255, 0.08);
     --color-glass-border-hover: rgba(255, 255, 255, 0.15);
     --color-glass-border-strong: rgba(255, 255, 255, 0.2);
@@ -97,6 +98,9 @@
 
 @layer utilities {
   /* Glassmorphism Background Utilities */
+  .bg-glass-white-sm {
+    background-color: var(--color-glass-white-sm);
+  }
   .bg-glass-white {
     background-color: var(--color-glass-white);
   }

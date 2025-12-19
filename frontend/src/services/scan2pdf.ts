@@ -41,25 +41,40 @@ export interface ConvertProgress {
  * Check Tesseract OCR availability
  */
 export async function checkTesseractStatus(): Promise<TesseractStatus> {
-  return apiRequest<TesseractStatus>('/api/tools/image-to-pdf/status');
+  const response = await apiRequest<TesseractStatus>('/api/tools/image-to-pdf/status');
+  // Extract data if wrapped in ApiResponseWithMetadata
+  if (response && typeof response === 'object' && 'data' in response) {
+    return (response as any).data as TesseractStatus;
+  }
+  return response as TesseractStatus;
 }
 
 /**
  * Open file picker dialog
  */
 export async function browseFiles(): Promise<BrowseFilesResponse> {
-  return apiRequest<BrowseFilesResponse>('/api/tools/image-to-pdf/browse-files', {
+  const response = await apiRequest<BrowseFilesResponse>('/api/tools/image-to-pdf/browse-files', {
     method: 'POST',
   });
+  // Extract data if wrapped in ApiResponseWithMetadata
+  if (response && typeof response === 'object' && 'data' in response) {
+    return (response as any).data as BrowseFilesResponse;
+  }
+  return response as BrowseFilesResponse;
 }
 
 /**
  * Open folder picker dialog
  */
 export async function browseFolder(): Promise<BrowseFolderResponse> {
-  return apiRequest<BrowseFolderResponse>('/api/tools/image-to-pdf/browse-folder', {
+  const response = await apiRequest<BrowseFolderResponse>('/api/tools/image-to-pdf/browse-folder', {
     method: 'POST',
   });
+  // Extract data if wrapped in ApiResponseWithMetadata
+  if (response && typeof response === 'object' && 'data' in response) {
+    return (response as any).data as BrowseFolderResponse;
+  }
+  return response as BrowseFolderResponse;
 }
 
 /**

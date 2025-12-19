@@ -57,53 +57,150 @@ app.include_router(colorpalette_router, prefix="/api/tools/color-palette", tags=
 if FRONTEND_STATIC_DIR and FRONTEND_STATIC_DIR.exists():
     app.mount("/static", StaticFiles(directory=str(FRONTEND_STATIC_DIR)), name="static")
 
+# Tool data
+TOOLS_DATA = [
+    {
+        'id': 'image-to-pdf',
+        'title': 'Scan2PDF',
+        'display_name': 'Scan2PDF',
+        'description': 'Convert images and PDFs to searchable PDFs with OCR technology',
+        'icon': 'fas fa-image',
+        'color': 'blue',
+        'features': ['Batch processing', 'OCR text layer', 'Multiple formats'],
+        'route': '/tools/image-to-pdf',
+        'tags': ['image', 'pdf', 'ocr', 'scan', 'convert', 'batch']
+    },
+    {
+        'id': 'md-to-pdf',
+        'title': 'DocuMark',
+        'display_name': 'DocuMark',
+        'description': 'Convert Markdown files to beautifully formatted PDF documents',
+        'icon': 'fas fa-file-alt',
+        'color': 'green',
+        'features': ['Syntax highlighting', 'Custom styling', 'Table support'],
+        'route': '/tools/md-to-pdf',
+        'available': True,
+        'tags': ['markdown', 'pdf', 'document', 'convert', 'format']
+    },
+    {
+        'id': 'data-validator',
+        'title': 'DataValidator',
+        'display_name': 'DataValidator',
+        'description': 'Validate and convert between JSON, XML, YAML, CSV, and TOML formats',
+        'icon': 'fas fa-check-circle',
+        'color': 'purple',
+        'features': ['Multi-format validation', 'Format conversion', 'Beautify & minify'],
+        'route': '/tools/data-validator',
+        'tags': ['json', 'xml', 'yaml', 'csv', 'toml', 'validate', 'convert', 'format']
+    },
+    {
+        'id': 'color-palette',
+        'title': 'ColorPalette',
+        'display_name': 'ColorPalette',
+        'description': 'Generate beautiful color palettes from images using AI-powered extraction',
+        'icon': 'fas fa-palette',
+        'color': 'orange',
+        'features': ['Image upload', 'Dominant colors', 'Vibrant extraction'],
+        'route': '/tools/color-palette',
+        'tags': ['color', 'palette', 'image', 'design', 'extract', 'generate']
+    },
+    {
+        'id': 'webp-express',
+        'title': 'WebP Express',
+        'display_name': 'WebP Express',
+        'description': 'Convert PNG and JPG images to modern WebP format for better web performance',
+        'icon': 'fas fa-bolt',
+        'color': 'indigo',
+        'features': ['Bulk conversion', 'Quality control', 'Fast processing'],
+        'route': '/tools/webp-express',
+        'tags': ['webp', 'image', 'convert', 'optimization', 'modern']
+    },
+    {
+        'id': 'shrink-it',
+        'title': 'ShrinkIt',
+        'display_name': 'ShrinkIt',
+        'description': 'Powerful compression for images and PDF files without significant quality loss',
+        'icon': 'fas fa-compress-arrows-alt',
+        'color': 'teal',
+        'features': ['Image shrinking', 'PDF optimization', 'Size comparison'],
+        'route': '/tools/shrink-it',
+        'tags': ['compress', 'optimization', 'image', 'pdf', 'size']
+    },
+    {
+        'id': 'diff-master',
+        'title': 'DiffMaster',
+        'display_name': 'DiffMaster',
+        'description': 'Compare text, code, or JSON side-by-side to highlight differences and changes',
+        'icon': 'fas fa-columns',
+        'color': 'red',
+        'features': ['Syntax highlighting', 'Inline diff', 'JSON comparison'],
+        'route': '/tools/diff-master',
+        'tags': ['diff', 'compare', 'text', 'code', 'json']
+    },
+    {
+        'id': 'secure-pass',
+        'title': 'SecurePass',
+        'display_name': 'SecurePass',
+        'description': 'Generate cryptographically strong, customizable passwords for maximum security',
+        'icon': 'fas fa-shield-alt',
+        'color': 'amber',
+        'features': ['Custom length', 'Entropy meter', 'Secure generation'],
+        'route': '/tools/secure-pass',
+        'tags': ['password', 'security', 'generator', 'safe']
+    },
+    {
+        'id': 'unit-flow',
+        'title': 'UnitFlow',
+        'display_name': 'UnitFlow',
+        'description': 'Instant conversion between various units of measurement, data, and time',
+        'icon': 'fas fa-exchange-alt',
+        'color': 'cyan',
+        'features': ['Data units', 'Metric/Imperial', 'Time conversion'],
+        'route': '/tools/unit-flow',
+        'tags': ['unit', 'converter', 'data', 'measurement']
+    },
+    {
+        'id': 'quick-qr',
+        'title': 'QuickQR',
+        'display_name': 'QuickQR',
+        'description': 'Create customizable QR codes for links, text, and contact information instantly',
+        'icon': 'fas fa-qrcode',
+        'color': 'pink',
+        'features': ['Custom colors', 'Live preview', 'SVG export'],
+        'route': '/tools/quick-qr',
+        'tags': ['qr', 'generator', 'code', 'link', 'design']
+    }
+]
+
 # API routes
 @app.get("/api/tools")
 async def get_tools():
     """Get list of available tools"""
-    return [
-        {
-            'id': 'image-to-pdf',
-            'title': 'Scan2PDF',
-            'display_name': 'Scan2PDF',
-            'description': 'Convert images and PDFs to searchable PDFs with OCR technology',
-            'icon': 'fas fa-image',
-            'color': 'blue',
-            'features': ['Batch processing', 'OCR text layer', 'Multiple formats'],
-            'route': '/tools/image-to-pdf'
-        },
-        {
-            'id': 'md-to-pdf',
-            'title': 'DocuMark',
-            'display_name': 'DocuMark',
-            'description': 'Convert Markdown files to beautifully formatted PDF documents',
-            'icon': 'fas fa-file-alt',
-            'color': 'green',
-            'features': ['Syntax highlighting', 'Custom styling', 'Table support'],
-            'route': '/tools/md-to-pdf',
-            'available': True  # Will be set based on WeasyPrint availability
-        },
-        {
-            'id': 'data-validator',
-            'title': 'DataValidator',
-            'display_name': 'DataValidator',
-            'description': 'Validate and convert between JSON, XML, YAML, CSV, and TOML formats',
-            'icon': 'fas fa-check-circle',
-            'color': 'purple',
-            'features': ['Multi-format validation', 'Format conversion', 'Beautify & minify'],
-            'route': '/tools/data-validator'
-        },
-        {
-            'id': 'color-palette',
-            'title': 'ColorPalette',
-            'display_name': 'ColorPalette',
-            'description': 'Generate beautiful color palettes from images using AI-powered extraction',
-            'icon': 'fas fa-palette',
-            'color': 'orange',
-            'features': ['Image upload', 'Dominant colors', 'Vibrant extraction'],
-            'route': '/tools/color-palette'
-        }
-    ]
+    return TOOLS_DATA
+
+@app.get("/api/tools/search")
+async def search_tools(q: str = ""):
+    """Search tools by query"""
+    if not q or not q.strip():
+        return TOOLS_DATA
+    
+    query = q.lower().strip()
+    filtered_tools = []
+    
+    for tool in TOOLS_DATA:
+        # Search in multiple fields
+        searchable_text = " ".join([
+            tool['title'].lower(),
+            tool['display_name'].lower(),
+            tool['description'].lower(),
+            " ".join(tool['features']).lower(),
+            " ".join(tool.get('tags', [])).lower()
+        ])
+        
+        if query in searchable_text:
+            filtered_tools.append(tool)
+    
+    return filtered_tools
 
 @app.get("/api/health")
 async def health():

@@ -84,7 +84,7 @@ export function FileUpload({
   };
 
   return (
-    <GlassCard hover={false} animated={false} className="border-accent-green/30">
+    <GlassCard hover={false} animated={false} className="border-accent-green/30 h-full">
       <GlassCardHeader>
         <GlassCardTitle>Upload Markdown File</GlassCardTitle>
         <GlassCardDescription>

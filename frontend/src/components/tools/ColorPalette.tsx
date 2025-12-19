@@ -192,7 +192,7 @@ function ColorPalette() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Left Panel - Controls */}
-        <GlassCard hover={false} animated={false} className="border-accent-orange/30">
+        <GlassCard hover={false} animated={false} className="border-accent-orange/30 h-full">
           <GlassCardHeader>
             <GlassCardTitle>{getTabTitle()}</GlassCardTitle>
           </GlassCardHeader>
