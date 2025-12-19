@@ -4,15 +4,10 @@
 
 import { apiRequest, apiDownload } from './api';
 
+// Type definitions match the 'data' field from standardized ApiResponse<T>
 export interface DocuMarkStatus {
   weasyprint_available: boolean;
-  error?: string;
-}
-
-export interface ConvertTextResponse {
-  success: boolean;
-  pdf_path?: string;
-  error?: string;
+  error?: string | null;
 }
 
 /**

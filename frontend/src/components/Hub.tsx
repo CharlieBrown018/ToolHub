@@ -39,9 +39,9 @@ function Hub() {
   const getColorClasses = (color: string) => {
     const colors: Record<string, string> = {
       blue: 'border-accent-blue/30 hover:border-accent-blue/50',
-      green: 'border-emerald-500/30 hover:border-emerald-500/50',
+      green: 'border-accent-green/30 hover:border-accent-green/50',
       purple: 'border-accent-purple/30 hover:border-accent-purple/50',
-      orange: 'border-orange-500/30 hover:border-orange-500/50',
+      orange: 'border-accent-orange/30 hover:border-accent-orange/50',
     };
     return colors[color] || colors.blue;
   };
@@ -49,9 +49,9 @@ function Hub() {
   const getIconColorClasses = (color: string) => {
     const colors: Record<string, string> = {
       blue: 'bg-accent-blue/15 text-accent-blue',
-      green: 'bg-emerald-500/15 text-emerald-400',
+      green: 'bg-accent-green/15 text-accent-green',
       purple: 'bg-accent-purple/15 text-accent-purple',
-      orange: 'bg-orange-500/15 text-orange-400',
+      orange: 'bg-accent-orange/15 text-accent-orange',
     };
     return colors[color] || colors.blue;
   };

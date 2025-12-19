@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { MotionProps } from 'framer-motion';
 import { motion } from 'framer-motion';
+import { cn } from '../../lib/utils';
 
 /**
  * GlassPanel Variants
@@ -25,11 +26,11 @@ export interface GlassPanelProps {
 }
 
 const variantStyles: Record<GlassPanelVariant, string> = {
-  subtle: 'bg-glass-white backdrop-blur-sm border-glass-border shadow-depth-1',
+  subtle: 'bg-glass-white backdrop-blur-sm shadow-depth-1',
   elevated:
-    'bg-glass-white-md backdrop-blur-md border-glass-border shadow-depth-2',
+    'bg-glass-white-md backdrop-blur-md shadow-depth-2',
   highlighted:
-    'bg-glass-white-lg backdrop-blur-lg border-glass-border-hover shadow-depth-3',
+    'bg-glass-white-lg backdrop-blur-lg shadow-depth-3',
 };
 
 const hoverStyles: Record<GlassPanelVariant, string> = {
@@ -74,25 +75,24 @@ export const GlassPanel: React.FC<GlassPanelProps> = ({
 
   const baseStyles = variantStyles[variant];
   const hoverStyle = hover ? hoverStyles[variant] : '';
-  const borderStyle = border ? 'border' : '';
   const shadowStyle = shadow ? 'shadow-glass-depth' : '';
   const roundedStyle = `rounded-${rounded}`;
   const interactiveStyle = onClick ? 'cursor-pointer' : '';
 
-  const combinedClassName = `
-    relative overflow-hidden
-    ${baseStyles}
-    ${hoverStyle}
-    ${borderStyle}
-    ${shadowStyle}
-    ${roundedStyle}
-    ${interactiveStyle}
-    transition-all duration-200 ease-out
-    will-change-transform
-    ${className}
-  `
-    .trim()
-    .replace(/\s+/g, ' ');
+  // Use cn() to properly merge classes - twMerge will handle conflicting border colors
+  const combinedClassName = cn(
+    'relative overflow-hidden isolate',
+    baseStyles,
+    border && 'border',
+    border && 'border-glass-border', // Default border color
+    hoverStyle,
+    shadowStyle,
+    roundedStyle,
+    interactiveStyle,
+    'transition-all duration-200 ease-out',
+    'will-change-transform',
+    className // Custom border color will override border-glass-border via twMerge
+  );
 
   const animationProps: MotionProps = animated
     ? {

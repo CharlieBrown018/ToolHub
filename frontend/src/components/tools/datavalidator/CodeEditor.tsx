@@ -1,4 +1,5 @@
 import { FormatSelector } from './FormatSelector';
+import { FileDropzone } from './FileDropzone';
 import { type EditorProps } from './types';
 
 export function CodeEditor({
@@ -9,7 +10,13 @@ export function CodeEditor({
   disabled,
   readOnly,
   placeholder,
+  showDropzone,
 }: EditorProps) {
+  const handleFileLoad = (fileContent: string, fileFormat: FormatType) => {
+    onContentChange(fileContent);
+    onFormatChange(fileFormat);
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -21,6 +28,12 @@ export function CodeEditor({
           />
         </div>
       </div>
+      {showDropzone && !readOnly && (
+        <FileDropzone
+          onFileLoad={handleFileLoad}
+          disabled={disabled}
+        />
+      )}
       <textarea
         value={content}
         onChange={(e) => onContentChange(e.target.value)}

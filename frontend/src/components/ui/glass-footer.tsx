@@ -1,5 +1,6 @@
 import { GithubLogo, LinkedinLogo, EnvelopeSimple } from '@phosphor-icons/react';
 import { RotatingTech } from '../animations/RotatingTech';
+import { GlassTooltip } from './glass-tooltip';
 
 export function GlassFooter() {
   return (
@@ -18,7 +19,7 @@ export function GlassFooter() {
 
           {/* Right: Social Links */}
           <div className="flex items-center gap-4">
-            <div className="relative group">
+            <GlassTooltip content="Visit GitHub" side="top">
               <a
                 href="https://github.com"
                 target="_blank"
@@ -28,11 +29,8 @@ export function GlassFooter() {
               >
                 <GithubLogo className="w-5 h-5" weight="duotone" />
               </a>
-              <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-50 px-3 py-1.5 bg-glass-white-lg backdrop-blur-md border border-glass-border text-gray-400 text-xs rounded-lg whitespace-nowrap shadow-glass-sm">
-                Visit GitHub
-              </div>
-            </div>
-            <div className="relative group">
+            </GlassTooltip>
+            <GlassTooltip content="Visit LinkedIn" side="top">
               <a
                 href="https://linkedin.com"
                 target="_blank"
@@ -42,11 +40,8 @@ export function GlassFooter() {
               >
                 <LinkedinLogo className="w-5 h-5" weight="duotone" />
               </a>
-              <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-50 px-3 py-1.5 bg-glass-white-lg backdrop-blur-md border border-glass-border text-gray-400 text-xs rounded-lg whitespace-nowrap shadow-glass-sm">
-                Visit LinkedIn
-              </div>
-            </div>
-            <div className="relative group">
+            </GlassTooltip>
+            <GlassTooltip content="Send Email" side="top" align="end">
               <a
                 href="mailto:contact@toolhub.com"
                 className="text-gray-400 hover:text-gray-300 transition-all duration-300 hover:scale-110 block"
@@ -54,10 +49,7 @@ export function GlassFooter() {
               >
                 <EnvelopeSimple className="w-5 h-5" weight="duotone" />
               </a>
-              <div className="absolute bottom-full mb-2 right-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-50 px-3 py-1.5 bg-glass-white-lg backdrop-blur-md border border-glass-border text-gray-400 text-xs rounded-lg whitespace-nowrap shadow-glass-sm">
-                Send Email
-              </div>
-            </div>
+            </GlassTooltip>
           </div>
         </div>
       </div>

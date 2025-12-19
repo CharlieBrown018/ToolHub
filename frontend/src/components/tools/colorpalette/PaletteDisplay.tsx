@@ -17,7 +17,7 @@ export function PaletteDisplay({ colors, onSave, onExport, onCopyColor }: Palett
   };
 
   return (
-    <GlassCard hover={false} animated={false} className="border-orange-500/20">
+    <GlassCard hover={false} animated={false} className="border-accent-orange/30">
       <GlassCardHeader>
         <div className="flex items-center justify-between">
           <div>
@@ -101,21 +101,6 @@ export function PaletteDisplay({ colors, onSave, onExport, onCopyColor }: Palett
                   </div>
                 </div>
               ))}
-            </div>
-            <div className="pt-4 border-t border-glass-border">
-              <h4 className="text-sm font-semibold mb-2 text-gray-100">Color Values</h4>
-              <div className="space-y-2 font-mono text-xs max-h-64 overflow-y-auto custom-scrollbar">
-                {colors.map((color, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between p-2 rounded-lg bg-glass-white-md backdrop-blur-sm border border-glass-border hover:bg-glass-white-lg transition-colors cursor-pointer"
-                    onClick={() => handleCopyColor(color.hex)}
-                  >
-                    <span className="text-gray-100">{color.hex}</span>
-                    <Copy className="h-3 w-3 opacity-50 text-gray-400" weight="duotone" />
-                  </div>
-                ))}
-              </div>
             </div>
           </div>
         ) : (

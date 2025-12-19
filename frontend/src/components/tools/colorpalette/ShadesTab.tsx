@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { GlassButton } from '../../ui/glass-button';
-import { useToast } from '../../../hooks/useToast';
+import { useApiToast } from '../../../hooks/useApiToast';
 import { CircleNotch, Stack } from '@phosphor-icons/react';
-import { generateShades, type Color } from '../../../services/colorpalette';
+import { type Color } from '../../../services/colorpalette';
 
 interface ShadesTabProps {
   onColorsGenerated: (colors: Color[]) => void;
@@ -13,24 +13,26 @@ interface ShadesTabProps {
 export function ShadesTab({ onColorsGenerated, isProcessing, onProcessingChange }: ShadesTabProps) {
   const [baseColor, setBaseColor] = useState('#3b82f6');
   const [numShades, setNumShades] = useState(10);
-  const { toast } = useToast();
+  const { callApi } = useApiToast();
 
   const handleGenerateShades = async () => {
     onProcessingChange(true);
     try {
-      const result = await generateShades(baseColor, numShades);
+      // Use callApi - automatically shows toast with backend message
+      const result = await callApi<{ shades: Color[]; base_color: string }>(
+        '/api/tools/color-palette/shades',
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            hex_color: baseColor,
+            num_shades: numShades,
+          }),
+        }
+      );
+      
       onColorsGenerated(result.shades);
-      toast({
-        title: 'Success',
-        description: `Generated ${result.shades.length} shades`,
-      });
     } catch (err: unknown) {
-      const error = err instanceof Error ? err.message : 'Failed to generate shades';
-      toast({
-        title: 'Error',
-        description: error,
-        variant: 'destructive',
-      });
+      // Error toast already shown by callApi
     } finally {
       onProcessingChange(false);
     }
@@ -51,7 +53,7 @@ export function ShadesTab({ onColorsGenerated, isProcessing, onProcessingChange 
             type="text"
             value={baseColor}
             onChange={(e) => setBaseColor(e.target.value)}
-            className="flex-1 px-3 py-2 rounded-lg bg-glass-white-md backdrop-blur-sm border border-glass-border text-gray-100 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+            className="flex-1 px-3 py-2 rounded-lg bg-glass-white-md backdrop-blur-sm border border-glass-border text-gray-100 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-accent-orange"
           />
         </div>
       </div>
@@ -65,7 +67,8 @@ export function ShadesTab({ onColorsGenerated, isProcessing, onProcessingChange 
           max="20"
           value={numShades}
           onChange={(e) => setNumShades(parseInt(e.target.value))}
-          className="w-full h-2 rounded-lg accent-orange-500 bg-glass-white-md backdrop-blur-sm cursor-pointer"
+          className="w-full h-2 rounded-lg bg-glass-white-md backdrop-blur-sm cursor-pointer"
+          style={{ accentColor: '#f97316' }}
         />
       </div>
       <GlassButton

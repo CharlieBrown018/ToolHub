@@ -3,124 +3,120 @@ import { CircleNotch, CheckCircle, XCircle, Code, Copy, Download } from '@phosph
 import { type FormatType } from '../../../services/datavalidator';
 import { type ValidationResult } from './types';
 
-interface ActionButtonsProps {
+interface InputActionsProps {
   isProcessing: boolean;
   inputContent: string;
-  outputContent: string;
   inputFormat: FormatType;
-  outputFormat: FormatType;
   validationResult: ValidationResult | null;
   onValidate: () => void;
   onConvert: () => void;
   onFormat: () => void;
   onMinify: () => void;
-  onCopy: (content: string, type: 'input' | 'output') => void;
-  onDownload: (content: string, format: FormatType) => void;
 }
 
-export function ActionButtons({
+export function InputActions({
   isProcessing,
   inputContent,
-  outputContent,
   inputFormat,
-  outputFormat,
   validationResult,
   onValidate,
   onConvert,
   onFormat,
   onMinify,
+}: InputActionsProps) {
+  return (
+    <div className="flex flex-wrap gap-2">
+      <GlassButton
+        onClick={onValidate}
+        disabled={isProcessing || !inputContent.trim()}
+        variant="purple"
+        size="sm"
+      >
+        {isProcessing ? (
+          <CircleNotch className="h-4 w-4 mr-2 animate-spin" weight="duotone" />
+        ) : validationResult?.valid ? (
+          <CheckCircle className="h-4 w-4 mr-2 text-accent-blue" weight="duotone" />
+        ) : validationResult?.valid === false ? (
+          <XCircle className="h-4 w-4 mr-2 text-red-400" weight="duotone" />
+        ) : (
+          <Code className="h-4 w-4 mr-2" weight="duotone" />
+        )}
+        Validate
+      </GlassButton>
+      <GlassButton
+        onClick={onFormat}
+        disabled={isProcessing || !inputContent.trim()}
+        variant="purple"
+        size="sm"
+      >
+        Format
+      </GlassButton>
+      {inputFormat === 'json' && (
+        <GlassButton
+          onClick={onMinify}
+          disabled={isProcessing || !inputContent.trim()}
+          variant="purple"
+          size="sm"
+        >
+          Minify
+        </GlassButton>
+      )}
+      <GlassButton
+        onClick={onConvert}
+        disabled={isProcessing || !inputContent.trim()}
+        variant="purple"
+        size="sm"
+      >
+        {isProcessing ? (
+          <>
+            <CircleNotch className="h-4 w-4 mr-2 animate-spin" weight="duotone" />
+            Converting...
+          </>
+        ) : (
+          <>
+            <Code className="h-4 w-4 mr-2" weight="duotone" />
+            Convert
+          </>
+        )}
+      </GlassButton>
+    </div>
+  );
+}
+
+interface OutputActionsProps {
+  outputContent: string;
+  outputFormat: FormatType;
+  onCopy: (content: string) => void;
+  onDownload: (content: string, format: FormatType) => void;
+}
+
+export function OutputActions({
+  outputContent,
+  outputFormat,
   onCopy,
   onDownload,
-}: ActionButtonsProps) {
+}: OutputActionsProps) {
   return (
-    <>
-      {/* Input Actions */}
-      <div className="flex flex-wrap gap-2">
-        <GlassButton
-          onClick={onValidate}
-          disabled={isProcessing || !inputContent.trim()}
-          variant="purple"
-          size="sm"
-        >
-          {isProcessing ? (
-            <CircleNotch className="h-4 w-4 mr-2 animate-spin" weight="duotone" />
-          ) : validationResult?.valid ? (
-            <CheckCircle className="h-4 w-4 mr-2 text-accent-blue" weight="duotone" />
-          ) : validationResult?.valid === false ? (
-            <XCircle className="h-4 w-4 mr-2 text-red-400" weight="duotone" />
-          ) : (
-            <Code className="h-4 w-4 mr-2" weight="duotone" />
-          )}
-          Validate
-        </GlassButton>
-        <GlassButton
-          onClick={onFormat}
-          disabled={isProcessing || !inputContent.trim()}
-          variant="purple"
-          size="sm"
-        >
-          Format
-        </GlassButton>
-        {inputFormat === 'json' && (
-          <GlassButton
-            onClick={onMinify}
-            disabled={isProcessing || !inputContent.trim()}
-            variant="purple"
-            size="sm"
-          >
-            Minify
-          </GlassButton>
-        )}
-        <GlassButton
-          onClick={() => onCopy(inputContent, 'input')}
-          disabled={!inputContent.trim()}
-          variant="outline"
-          size="sm"
-        >
-          <Copy className="h-4 w-4 mr-2" weight="duotone" />
-          Copy
-        </GlassButton>
-      </div>
-
-      {/* Output Actions */}
-      <div className="flex flex-wrap gap-2">
-        <GlassButton
-          onClick={onConvert}
-          disabled={isProcessing || !inputContent.trim()}
-          className="flex-1"
-        >
-          {isProcessing ? (
-            <>
-              <CircleNotch className="h-4 w-4 mr-2 animate-spin" weight="duotone" />
-              Converting...
-            </>
-          ) : (
-            <>
-              <Code className="h-4 w-4 mr-2" weight="duotone" />
-              Convert
-            </>
-          )}
-        </GlassButton>
-        <GlassButton
-          onClick={() => onCopy(outputContent, 'output')}
-          disabled={!outputContent.trim()}
-          variant="outline"
-          size="sm"
-        >
-          <Copy className="h-4 w-4 mr-2" weight="duotone" />
-          Copy
-        </GlassButton>
-        <GlassButton
-          onClick={() => onDownload(outputContent, outputFormat)}
-          disabled={!outputContent.trim()}
-          variant="outline"
-          size="sm"
-        >
-          <Download className="h-4 w-4 mr-2" weight="duotone" />
-          Download
-        </GlassButton>
-      </div>
-    </>
+    <div className="flex flex-wrap gap-2">
+      <GlassButton
+        onClick={() => onCopy(outputContent)}
+        disabled={!outputContent.trim()}
+        variant="outline"
+        size="sm"
+      >
+        <Copy className="h-4 w-4 mr-2" weight="duotone" />
+        Copy
+      </GlassButton>
+      <GlassButton
+        onClick={() => onDownload(outputContent, outputFormat)}
+        disabled={!outputContent.trim()}
+        variant="outline"
+        size="sm"
+      >
+        <Download className="h-4 w-4 mr-2" weight="duotone" />
+        Download
+      </GlassButton>
+    </div>
   );
 }
 

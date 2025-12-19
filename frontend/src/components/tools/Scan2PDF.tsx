@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { GlassCard, GlassCardContent, GlassCardDescription, GlassCardHeader, GlassCardTitle } from '../ui/glass-card';
 import { GlassButton } from '../ui/glass-button';
-import { useToast } from '../../hooks/useToast';
+import { useApiToast } from '../../hooks/useApiToast';
 import { CheckCircle, XCircle, CircleNotch, Image } from '@phosphor-icons/react';
 import { checkTesseractStatus } from '../../services/scan2pdf';
 import { ToolLayout } from '../layouts/ToolLayout';
@@ -18,7 +18,7 @@ function Scan2PDF() {
   const [skipExisting, setSkipExisting] = useState(true);
   const [combinePdfs, setCombinePdfs] = useState(false);
   const [tesseractAvailable, setTesseractAvailable] = useState(false);
-  const { toast } = useToast();
+  const { toast } = useApiToast(); // UI-only actions (validation messages)
   const { isConverting, progress, results, fileList, startConversion } = useConversion();
 
   useEffect(() => {
@@ -54,75 +54,58 @@ function Scan2PDF() {
     });
   };
 
-  const statusBadge = (
-    <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-glass-white-md backdrop-blur-sm border border-glass-border">
-      {tesseractAvailable ? (
-        <>
-          <CheckCircle className="h-4 w-4 text-accent-blue" weight="duotone" />
-          <span className="text-sm text-gray-100">Tesseract OCR Available</span>
-        </>
-      ) : (
-        <>
-          <XCircle className="h-4 w-4 text-yellow-400" weight="duotone" />
-          <span className="text-sm text-gray-100">Tesseract OCR Not Found</span>
-        </>
-      )}
-    </div>
-  );
-
   return (
     <PageTransition>
       <ToolLayout
         title="Scan2PDF"
         subtitle="Convert images and PDFs to searchable PDFs with OCR"
-        statusBadge={statusBadge}
         icon={Image}
         iconColor="blue"
       >
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <GlassCard hover={false} animated={false} className="border-accent-blue/20">
+        <GlassCard hover={false} animated={false} className="border-accent-blue/30">
           <GlassCardHeader>
             <GlassCardTitle>Convert Files</GlassCardTitle>
             <GlassCardDescription>
-              Select images or PDFs to convert to searchable PDFs
+                Select images or PDFs to convert to searchable PDFs
             </GlassCardDescription>
           </GlassCardHeader>
           <GlassCardContent>
-            <form onSubmit={handleConvert} className="space-y-6">
-              <FileDropzone
-                inputFiles={inputFiles}
-                outputPath={outputPath}
-                onInputFilesChange={setInputFiles}
-                onOutputPathChange={setOutputPath}
-                disabled={isConverting}
-              />
+              <form onSubmit={handleConvert} className="space-y-6">
+                <FileDropzone
+                  inputFiles={inputFiles}
+                  outputPath={outputPath}
+                  onInputFilesChange={setInputFiles}
+                  onOutputPathChange={setOutputPath}
+                  disabled={isConverting}
+                />
 
-              <ConversionOptions
-                skipExisting={skipExisting}
-                combinePdfs={combinePdfs}
-                onSkipExistingChange={setSkipExisting}
-                onCombinePdfsChange={setCombinePdfs}
-                disabled={isConverting}
-              />
+                <ConversionOptions
+                  skipExisting={skipExisting}
+                  combinePdfs={combinePdfs}
+                  onSkipExistingChange={setSkipExisting}
+                  onCombinePdfsChange={setCombinePdfs}
+                  disabled={isConverting}
+                />
 
               <GlassButton
-                type="submit"
+                  type="submit"
                 variant="blue"
-                disabled={isConverting || inputFiles.length === 0 || !outputPath}
-                className="w-full"
-              >
-                {isConverting ? (
-                  <>
-                    <CircleNotch className="h-4 w-4 mr-2 animate-spin" />
-                    Converting...
-                  </>
-                ) : (
-                  'Convert to PDF'
-                )}
+                  disabled={isConverting || inputFiles.length === 0 || !outputPath}
+                  className="w-full"
+                >
+                  {isConverting ? (
+                    <>
+                      <CircleNotch className="h-4 w-4 mr-2 animate-spin" />
+                      Converting...
+                    </>
+                  ) : (
+                    'Convert to PDF'
+                  )}
               </GlassButton>
 
-              {isConverting && <ProgressDisplay progress={progress} />}
-            </form>
+                {isConverting && <ProgressDisplay progress={progress} />}
+              </form>
           </GlassCardContent>
         </GlassCard>
 

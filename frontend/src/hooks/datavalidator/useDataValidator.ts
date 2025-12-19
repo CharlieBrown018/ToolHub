@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { validate, convert, format as formatContent, minify, type FormatType } from '../../services/datavalidator';
-import { useToast } from '../useToast';
+import { type FormatType } from '../../services/datavalidator';
+import { useApiToast } from '../useApiToast';
 import { type ValidationResult } from '../../components/tools/datavalidator/types';
 
 export function useDataValidator() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [validationResult, setValidationResult] = useState<ValidationResult | null>(null);
-  const { toast } = useToast();
+  const { callApi, toast } = useApiToast();
 
   const handleValidate = async (content: string, format: FormatType) => {
     if (!content.trim()) {
@@ -20,28 +20,22 @@ export function useDataValidator() {
 
     setIsProcessing(true);
     try {
-      const result = await validate(content, format);
-      setValidationResult({ valid: result.valid, error: result.error });
+      // Use callApi - automatically shows toast with backend message
+      const result = await callApi<ValidationResult>(
+        '/api/tools/data-validator/validate',
+        {
+          method: 'POST',
+          body: JSON.stringify({ content, format }),
+        },
+        {
+          successTitle: 'Validation Result',
+        }
+      );
       
-      if (result.valid) {
-        toast({
-          title: 'Valid',
-          description: `${format.toUpperCase()} is valid`,
-        });
-      } else {
-        toast({
-          title: 'Invalid',
-          description: result.error || 'Validation failed',
-          variant: 'destructive',
-        });
-      }
+      setValidationResult({ valid: result.valid, error: result.error });
     } catch (err: unknown) {
-      const error = err instanceof Error ? err.message : 'Validation failed';
-      toast({
-        title: 'Error',
-        description: error,
-        variant: 'destructive',
-      });
+      // Error toast already shown by callApi
+      setValidationResult(null);
     } finally {
       setIsProcessing(false);
     }
@@ -63,19 +57,22 @@ export function useDataValidator() {
 
     setIsProcessing(true);
     try {
-      const result = await convert(content, inputFormat, outputFormat);
-      toast({
-        title: 'Success',
-        description: `Converted from ${inputFormat.toUpperCase()} to ${outputFormat.toUpperCase()}`,
-      });
-      return result.converted;
+      // Use callApi - automatically shows toast with backend message
+      const result = await callApi<{ converted: string }>(
+        '/api/tools/data-validator/convert',
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            content,
+            from_format: inputFormat,
+            to_format: outputFormat,
+          }),
+        }
+      );
+      
+      return result.converted || '';
     } catch (err: unknown) {
-      const error = err instanceof Error ? err.message : 'Conversion failed';
-      toast({
-        title: 'Error',
-        description: error,
-        variant: 'destructive',
-      });
+      // Error toast already shown by callApi
       return '';
     } finally {
       setIsProcessing(false);
@@ -94,19 +91,18 @@ export function useDataValidator() {
 
     setIsProcessing(true);
     try {
-      const result = await formatContent(content, format, 2);
-      toast({
-        title: 'Success',
-        description: 'Content formatted',
-      });
-      return result.formatted;
+      // Use callApi - automatically shows toast with backend message
+      const result = await callApi<{ formatted: string }>(
+        '/api/tools/data-validator/format',
+        {
+          method: 'POST',
+          body: JSON.stringify({ content, format, indent: 2 }),
+        }
+      );
+      
+      return result.formatted || content;
     } catch (err: unknown) {
-      const error = err instanceof Error ? err.message : 'Formatting failed';
-      toast({
-        title: 'Error',
-        description: error,
-        variant: 'destructive',
-      });
+      // Error toast already shown by callApi
       return content;
     } finally {
       setIsProcessing(false);
@@ -125,19 +121,18 @@ export function useDataValidator() {
 
     setIsProcessing(true);
     try {
-      const result = await minify(content);
-      toast({
-        title: 'Success',
-        description: 'JSON minified',
-      });
-      return result.minified;
+      // Use callApi - automatically shows toast with backend message
+      const result = await callApi<{ minified: string }>(
+        '/api/tools/data-validator/minify',
+        {
+          method: 'POST',
+          body: JSON.stringify({ content, format: 'json' }),
+        }
+      );
+      
+      return result.minified || content;
     } catch (err: unknown) {
-      const error = err instanceof Error ? err.message : 'Minification failed';
-      toast({
-        title: 'Error',
-        description: error,
-        variant: 'destructive',
-      });
+      // Error toast already shown by callApi
       return content;
     } finally {
       setIsProcessing(false);

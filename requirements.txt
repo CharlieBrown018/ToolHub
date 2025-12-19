@@ -23,6 +23,8 @@ Pygments>=2.17.2
 PyYAML>=6.0.1
 tomli>=2.0.1; python_version < "3.11"
 tomli-w>=1.0.0
+xmltodict>=0.13.0
+dicttoxml>=1.7.16
 
 # Color Palette Tool (ColorPalette)
 # Uses Pillow (already included)

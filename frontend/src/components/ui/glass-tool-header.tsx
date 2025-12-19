@@ -16,19 +16,19 @@ export function GlassToolHeader({ title, subtitle, statusBadge, icon: Icon, icon
   const getIconColorClasses = (color: string) => {
     const colors: Record<string, string> = {
       blue: 'bg-accent-blue/15 text-accent-blue',
-      green: 'bg-emerald-500/15 text-emerald-400',
+      green: 'bg-accent-green/15 text-accent-green',
       purple: 'bg-accent-purple/15 text-accent-purple',
-      orange: 'bg-orange-500/15 text-orange-400',
+      orange: 'bg-accent-orange/15 text-accent-orange',
     };
     return colors[color] || colors.blue;
   };
 
   const getBorderColorClasses = (color: string) => {
     const colors: Record<string, string> = {
-      blue: 'border-accent-blue/20 hover:border-accent-blue/40',
-      green: 'border-emerald-500/20 hover:border-emerald-500/40',
-      purple: 'border-accent-purple/20 hover:border-accent-purple/40',
-      orange: 'border-orange-500/20 hover:border-orange-500/40',
+      blue: 'border-accent-blue/30 hover:border-accent-blue/50',
+      green: 'border-accent-green/30 hover:border-accent-green/50',
+      purple: 'border-accent-purple/30 hover:border-accent-purple/50',
+      orange: 'border-accent-orange/30 hover:border-accent-orange/50',
     };
     return colors[color] || colors.blue;
   };
@@ -36,9 +36,9 @@ export function GlassToolHeader({ title, subtitle, statusBadge, icon: Icon, icon
   const getBackButtonColorClasses = (color: string) => {
     const colors: Record<string, string> = {
       blue: 'bg-accent-blue/15 text-accent-blue hover:bg-accent-blue/25 border-accent-blue/30',
-      green: 'bg-emerald-500/15 text-emerald-400 hover:bg-emerald-500/25 border-emerald-500/30',
+      green: 'bg-accent-green/15 text-accent-green hover:bg-accent-green/25 border-accent-green/30',
       purple: 'bg-accent-purple/15 text-accent-purple hover:bg-accent-purple/25 border-accent-purple/30',
-      orange: 'bg-orange-500/15 text-orange-400 hover:bg-orange-500/25 border-orange-500/30',
+      orange: 'bg-accent-orange/15 text-accent-orange hover:bg-accent-orange/25 border-accent-orange/30',
     };
     return colors[color] || colors.blue;
   };

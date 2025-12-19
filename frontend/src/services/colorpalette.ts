@@ -13,15 +13,14 @@ export interface Color {
   saturation?: number;
 }
 
+// Type definitions match the 'data' field from standardized ApiResponse<T>
 export interface PaletteResponse {
-  success: boolean;
   colors: Color[];
   method: string;
   num_colors: number;
 }
 
 export interface AnalyzeResponse {
-  success: boolean;
   dimensions: {
     width: number;
     height: number;
@@ -35,20 +34,17 @@ export interface AnalyzeResponse {
 }
 
 export interface RandomPaletteResponse {
-  success: boolean;
   colors: Color[];
   harmony: string;
   num_colors: number;
 }
 
 export interface ShadesResponse {
-  success: boolean;
   shades: Color[];
   base_color: string;
 }
 
 export interface ContrastResponse {
-  success: boolean;
   contrast_ratio: number;
   wcag: {
     aa_normal: boolean;

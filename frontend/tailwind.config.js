@@ -31,6 +31,10 @@ module.exports = {
         accent: {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
+          blue: "#60a5fa",
+          purple: "#8b5cf6",
+          green: "#10b981",
+          orange: "#f97316",
         },
         popover: {
           DEFAULT: "hsl(var(--popover))",
@@ -40,6 +44,17 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // Custom glassmorphic colors
+        'bg-primary': '#111827',
+        'bg-secondary': '#1f2937',
+        'bg-tertiary': '#374151',
+        'glass-white': 'rgba(255, 255, 255, 0.01)',
+        'glass-white-md': 'rgba(255, 255, 255, 0.02)',
+        'glass-white-lg': 'rgba(255, 255, 255, 0.04)',
+        'glass-white-xl': 'rgba(255, 255, 255, 0.06)',
+        'glass-border': 'rgba(3, 1, 1, 0.08)',
+        'glass-border-hover': 'rgba(255, 255, 255, 0.15)',
+        'glass-border-strong': 'rgba(255, 255, 255, 0.2)',
       },
       borderRadius: {
         lg: "var(--radius)",

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { GlassPanel, GlassPanelVariant } from './glass-panel';
+import { cn } from '../../lib/utils';
 
 export interface GlassCardBaseProps {
   children: React.ReactNode;
@@ -74,7 +75,12 @@ export const GlassCard: React.FC<GlassCardBaseProps> = ({
 
   return (
     <motion.div
-      className={`${perspectiveClass} ${cursorClass} ${hoverable ? 'transition-transform duration-200 ease-out' : ''}`}
+      className={cn(
+        'relative overflow-hidden isolate z-0',
+        perspectiveClass,
+        cursorClass,
+        hoverable && 'transition-transform duration-200 ease-out'
+      )}
       onMouseEnter={hoverable ? handleMouseEnter : undefined}
       onMouseLeave={hoverable ? handleMouseLeave : undefined}
       {...cardAnimation}
@@ -93,15 +99,15 @@ export const GlassCard: React.FC<GlassCardBaseProps> = ({
         isHovered={false}
         rounded={rounded}
         style={style}
-        className={`
-          relative overflow-hidden
-          ${hoverable && isHovered && perspective ? 'shadow-depth-4' : 'shadow-depth-2'}
-          ${className}
-        `}
+    className={cn(
+          'relative overflow-hidden',
+          hoverable && isHovered && perspective ? 'shadow-depth-4' : 'shadow-depth-2',
+      className
+    )}
       >
         {/* Top lighting - only on hover for glassmorphic effect */}
         {hoverable && isHovered && (
-          <div className='absolute inset-x-0 top-0 h-1/3 bg-gradient-to-b from-white/3 via-white/2 to-transparent pointer-events-none transition-opacity duration-200' />
+          <div className='absolute inset-x-0 top-0 h-1/3 bg-gradient-to-b from-white/3 via-white/2 to-transparent pointer-events-none transition-opacity duration-200 z-0 rounded-t-xl' />
         )}
 
         {/* Content */}
@@ -109,7 +115,7 @@ export const GlassCard: React.FC<GlassCardBaseProps> = ({
 
         {/* Bottom depth shadow - only on hover */}
         {hoverable && perspective && isHovered && (
-          <div className='absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-black/15 via-black/5 to-transparent pointer-events-none transition-opacity duration-200' />
+          <div className='absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-black/15 via-black/5 to-transparent pointer-events-none transition-opacity duration-200 z-0 rounded-b-xl' />
         )}
       </GlassPanel>
     </motion.div>

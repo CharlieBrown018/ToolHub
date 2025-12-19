@@ -13,7 +13,12 @@ import colorsys
 import random
 import math
 
+from backend.utils.responses import api_success_response, api_error_response
+from backend.utils.messages import MessageCode
+from backend.utils.logging import get_logger
+
 router = APIRouter()
+logger = get_logger(__name__)
 
 class PaletteRequest(BaseModel):
     num_colors: int = 5
@@ -40,10 +45,11 @@ async def generate_palette(
     method: str = 'dominant'
 ):
     """Generate color palette from uploaded image"""
+    logger.info(f"Generating palette with method: {method}, num_colors: {num_colors}")
     try:
         # Validate image
         if not file.content_type or not file.content_type.startswith('image/'):
-            raise HTTPException(status_code=400, detail="File must be an image")
+            raise api_error_response(MessageCode.INVALID_FILE_TYPE, file_type='image')
         
         # Read image
         image_data = await file.read()
@@ -64,22 +70,29 @@ async def generate_palette(
         else:
             colors = extract_dominant_colors(image, num_colors)
         
-        return {
-            "success": True,
-            "colors": colors,
-            "method": method,
-            "num_colors": len(colors)
-        }
+        logger.info(f"Successfully generated {len(colors)} colors")
+        return api_success_response(
+            MessageCode.PALETTE_EXTRACTED,
+            data={
+                "colors": colors,
+                "method": method,
+                "num_colors": len(colors)
+            }
+        )
     
+    except HTTPException:
+        raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error generating palette: {str(e)}")
+        logger.error(f"Error generating palette: {str(e)}", exc_info=True)
+        raise api_error_response(MessageCode.PROCESSING_ERROR, error=str(e))
 
 @router.post("/analyze")
 async def analyze_image(file: UploadFile = File(...)):
     """Analyze image and return color information"""
+    logger.info("Analyzing image")
     try:
         if not file.content_type or not file.content_type.startswith('image/'):
-            raise HTTPException(status_code=400, detail="File must be an image")
+            raise api_error_response(MessageCode.INVALID_FILE_TYPE, file_type='image')
         
         image_data = await file.read()
         image = Image.open(io.BytesIO(image_data))
@@ -106,16 +119,22 @@ async def analyze_image(file: UploadFile = File(...)):
             "rgb": [avg_r, avg_g, avg_b]
         }
         
-        return {
-            "success": True,
-            "dimensions": {"width": width, "height": height},
-            "total_pixels": total_pixels,
-            "average_color": average_color,
-            "dominant_colors": dominant_colors
-        }
+        logger.info(f"Successfully analyzed image: {width}x{height}")
+        return api_success_response(
+            MessageCode.PALETTE_EXTRACTED,
+            data={
+                "dimensions": {"width": width, "height": height},
+                "total_pixels": total_pixels,
+                "average_color": average_color,
+                "dominant_colors": dominant_colors
+            }
+        )
     
+    except HTTPException:
+        raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error analyzing image: {str(e)}")
+        logger.error(f"Error analyzing image: {str(e)}", exc_info=True)
+        raise api_error_response(MessageCode.PROCESSING_ERROR, error=str(e))
 
 def extract_dominant_colors(image: Image.Image, num_colors: int) -> List[dict]:
     """Extract dominant colors from image"""
@@ -213,6 +232,7 @@ def extract_vibrant_colors(image: Image.Image, num_colors: int) -> List[dict]:
 @router.post("/random")
 async def generate_random_palette(request: RandomPaletteRequest):
     """Generate random color palette with harmony rules"""
+    logger.info(f"Generating random palette with harmony: {request.harmony}")
     try:
         colors = generate_harmony_palette(
             request.harmony,
@@ -220,42 +240,59 @@ async def generate_random_palette(request: RandomPaletteRequest):
             request.saturation,
             request.lightness
         )
-        return {
-            "success": True,
-            "colors": colors,
-            "harmony": request.harmony,
-            "num_colors": len(colors)
-        }
+        logger.info(f"Successfully generated {len(colors)} colors")
+        return api_success_response(
+            MessageCode.PALETTE_GENERATED,
+            data={
+                "colors": colors,
+                "harmony": request.harmony,
+                "num_colors": len(colors)
+            }
+        )
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error generating palette: {str(e)}")
+        logger.error(f"Error generating random palette: {str(e)}", exc_info=True)
+        raise api_error_response(MessageCode.PROCESSING_ERROR, error=str(e))
 
 @router.post("/shades")
 async def generate_shades(request: ShadesRequest):
     """Generate shades and tints from a base color"""
+    logger.info(f"Generating shades for color: {request.hex_color}")
     try:
         hex_color = request.hex_color.lstrip('#')
         if len(hex_color) != 6:
-            raise HTTPException(status_code=400, detail="Invalid hex color")
+            raise api_error_response(MessageCode.INVALID_HEX_COLOR)
         
-        r = int(hex_color[0:2], 16)
-        g = int(hex_color[2:4], 16)
-        b = int(hex_color[4:6], 16)
+        try:
+            r = int(hex_color[0:2], 16)
+            g = int(hex_color[2:4], 16)
+            b = int(hex_color[4:6], 16)
+        except ValueError:
+            raise api_error_response(MessageCode.INVALID_HEX_COLOR)
         
         shades = generate_color_shades(r, g, b, request.num_shades)
-        return {
-            "success": True,
-            "shades": shades,
-            "base_color": request.hex_color
-        }
+        logger.info(f"Successfully generated {len(shades)} shades")
+        return api_success_response(
+            MessageCode.PALETTE_GENERATED,
+            data={
+                "shades": shades,
+                "base_color": request.hex_color
+            }
+        )
+    except HTTPException:
+        raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error generating shades: {str(e)}")
+        logger.error(f"Error generating shades: {str(e)}", exc_info=True)
+        raise api_error_response(MessageCode.PROCESSING_ERROR, error=str(e))
 
 @router.post("/contrast")
 async def check_contrast(request: ContrastRequest):
     """Check contrast ratio between two colors"""
+    logger.info(f"Checking contrast between {request.color1} and {request.color2}")
     try:
         def hex_to_rgb(hex_color):
             hex_color = hex_color.lstrip('#')
+            if len(hex_color) != 6:
+                raise ValueError("Invalid hex color")
             return tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
         
         def get_luminance(rgb):
@@ -265,8 +302,11 @@ async def check_contrast(request: ContrastRequest):
             b = b / 12.92 if b <= 0.03928 else ((b + 0.055) / 1.055) ** 2.4
             return 0.2126 * r + 0.7152 * g + 0.0722 * b
         
-        rgb1 = hex_to_rgb(request.color1)
-        rgb2 = hex_to_rgb(request.color2)
+        try:
+            rgb1 = hex_to_rgb(request.color1)
+            rgb2 = hex_to_rgb(request.color2)
+        except ValueError:
+            raise api_error_response(MessageCode.INVALID_HEX_COLOR)
         
         lum1 = get_luminance(rgb1)
         lum2 = get_luminance(rgb2)
@@ -282,19 +322,25 @@ async def check_contrast(request: ContrastRequest):
         aaa_normal = contrast_ratio >= 7.0
         aaa_large = contrast_ratio >= 4.5
         
-        return {
-            "success": True,
-            "contrast_ratio": round(contrast_ratio, 2),
-            "wcag": {
-                "aa_normal": aa_normal,
-                "aa_large": aa_large,
-                "aaa_normal": aaa_normal,
-                "aaa_large": aaa_large
-            },
-            "rating": get_contrast_rating(contrast_ratio)
-        }
+        logger.info(f"Contrast ratio: {contrast_ratio:.2f}")
+        return api_success_response(
+            MessageCode.SUCCESS,
+            data={
+                "contrast_ratio": round(contrast_ratio, 2),
+                "wcag": {
+                    "aa_normal": aa_normal,
+                    "aa_large": aa_large,
+                    "aaa_normal": aaa_normal,
+                    "aaa_large": aaa_large
+                },
+                "rating": get_contrast_rating(contrast_ratio)
+            }
+        )
+    except HTTPException:
+        raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error checking contrast: {str(e)}")
+        logger.error(f"Error checking contrast: {str(e)}", exc_info=True)
+        raise api_error_response(MessageCode.PROCESSING_ERROR, error=str(e))
 
 def generate_harmony_palette(harmony: str, num_colors: int, saturation: float, lightness: float) -> List[dict]:
     """Generate color palette based on harmony rules"""

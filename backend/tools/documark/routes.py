@@ -10,6 +10,10 @@ from pathlib import Path
 import markdown
 import tempfile
 
+from backend.utils.responses import api_success_response, api_error_response
+from backend.utils.messages import MessageCode
+from backend.utils.logging import get_logger
+
 # Try to import WeasyPrint (requires GTK+ on Windows)
 try:
     from weasyprint import HTML
@@ -20,14 +24,19 @@ except (ImportError, OSError) as e:
     WEASYPRINT_ERROR = str(e)
 
 router = APIRouter()
+logger = get_logger(__name__)
 
 @router.get("/status")
 async def status():
     """Get DocuMark status"""
-    return {
-        'weasyprint_available': WEASYPRINT_AVAILABLE,
-        'error': WEASYPRINT_ERROR if not WEASYPRINT_AVAILABLE else None
-    }
+    logger.info("Checking DocuMark status")
+    return api_success_response(
+        MessageCode.SUCCESS,
+        data={
+            'weasyprint_available': WEASYPRINT_AVAILABLE,
+            'error': WEASYPRINT_ERROR if not WEASYPRINT_AVAILABLE else None
+        }
+    )
 
 class ConvertTextRequest(BaseModel):
     content: str
@@ -184,12 +193,16 @@ def get_default_css():
 @router.post("/convert")
 async def convert(file: UploadFile = File(...)):
     """Convert markdown file to PDF"""
+    logger.info(f"Converting markdown file: {file.filename}")
     try:
         if not file.filename:
-            raise HTTPException(status_code=400, detail='No file selected')
+            raise api_error_response(MessageCode.MISSING_FILES)
         
         if not allowed_file(file.filename):
-            raise HTTPException(status_code=400, detail='Invalid file type. Please upload .md, .markdown, or .txt files')
+            raise api_error_response(
+                MessageCode.INVALID_FILE_TYPE,
+                file_type='.md, .markdown, or .txt'
+            )
         
         # Read markdown content
         md_content = (await file.read()).decode('utf-8')
@@ -203,8 +216,10 @@ async def convert(file: UploadFile = File(...)):
         success, error = markdown_to_pdf(md_content, str(output_path))
         
         if not success:
-            raise HTTPException(status_code=500, detail=f'Conversion failed: {error}')
+            logger.error(f"Conversion failed: {error}")
+            raise api_error_response(MessageCode.CONVERSION_ERROR, error=error)
         
+        logger.info(f"Successfully converted to PDF: {output_filename}")
         # Return PDF file
         return FileResponse(
             str(output_path),
@@ -215,16 +230,18 @@ async def convert(file: UploadFile = File(...)):
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f'Error: {str(e)}')
+        logger.error(f"Error converting file: {str(e)}", exc_info=True)
+        raise api_error_response(MessageCode.PROCESSING_ERROR, error=str(e))
 
 @router.post("/convert-text")
 async def convert_text(request: ConvertTextRequest):
     """Convert markdown text to PDF"""
+    logger.info("Converting markdown text to PDF")
     try:
         md_content = request.content
         
         if not md_content:
-            raise HTTPException(status_code=400, detail='No content provided')
+            raise api_error_response(MessageCode.MISSING_CONTENT)
         
         # Generate output filename
         output_filename = 'markdown_output.pdf'
@@ -234,8 +251,10 @@ async def convert_text(request: ConvertTextRequest):
         success, error = markdown_to_pdf(md_content, str(output_path))
         
         if not success:
-            raise HTTPException(status_code=500, detail=f'Conversion failed: {error}')
+            logger.error(f"Conversion failed: {error}")
+            raise api_error_response(MessageCode.CONVERSION_ERROR, error=error)
         
+        logger.info(f"Successfully converted text to PDF: {output_filename}")
         # Return PDF file
         return FileResponse(
             str(output_path),
@@ -246,5 +265,6 @@ async def convert_text(request: ConvertTextRequest):
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f'Error: {str(e)}')
+        logger.error(f"Error converting text: {str(e)}", exc_info=True)
+        raise api_error_response(MessageCode.PROCESSING_ERROR, error=str(e))
 

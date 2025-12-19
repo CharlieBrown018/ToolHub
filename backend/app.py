@@ -10,27 +10,36 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from backend.config import (
     BASE_DIR, UPLOAD_FOLDER, OUTPUT_FOLDER, MAX_CONTENT_LENGTH,
-    API_VERSION, FRONTEND_BUILD_DIR, FRONTEND_STATIC_DIR
+    API_VERSION, FRONTEND_BUILD_DIR, FRONTEND_STATIC_DIR,
+    CORS_ORIGINS, CORS_METHODS, CORS_HEADERS, CORS_CREDENTIALS,
+    SERVER_HOST, SERVER_PORT, SERVER_RELOAD, DEBUG
 )
+from backend.utils.logging import setup_logger
 from backend.tools.scan2pdf.routes import router as scan2pdf_router
 from backend.tools.documark.routes import router as documark_router
 from backend.tools.datavalidator.routes import router as datavalidator_router
 from backend.tools.colorpalette.routes import router as colorpalette_router
 
+# Setup logging
+logger = setup_logger()
+
 # Create FastAPI app
 app = FastAPI(
     title="ToolHub",
     version=API_VERSION,
-    description="A unified platform for file conversion and utility tools"
+    description="A unified platform for file conversion and utility tools",
+    debug=DEBUG
 )
+
+logger.info(f"Starting ToolHub v{API_VERSION}")
 
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # In production, specify actual origins
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=CORS_ORIGINS,
+    allow_credentials=CORS_CREDENTIALS,
+    allow_methods=CORS_METHODS,
+    allow_headers=CORS_HEADERS,
 )
 
 # Store config in app state
@@ -152,8 +161,9 @@ if __name__ == '__main__':
     
     uvicorn.run(
         "backend.app:app",
-        host="0.0.0.0",
-        port=5000,
-        reload=True
+        host=SERVER_HOST,
+        port=SERVER_PORT,
+        reload=SERVER_RELOAD,
+        workers=SERVER_WORKERS if not SERVER_RELOAD else 1
     )
 

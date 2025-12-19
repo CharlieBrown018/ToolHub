@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { GlassCard, GlassCardContent, GlassCardHeader, GlassCardTitle } from '../ui/glass-card';
-import { useToast } from '../../hooks/useToast';
+import { useApiToast } from '../../hooks/useApiToast';
 import { type FormatType } from '../../services/datavalidator';
 import { ToolLayout } from '../layouts/ToolLayout';
 import { PageTransition } from '../animations/PageTransition';
 import { CodeEditor } from './datavalidator/CodeEditor';
-import { ValidationResultDisplay } from './datavalidator/ValidationResult';
-import { ActionButtons } from './datavalidator/ActionButtons';
+import { InputActions } from './datavalidator/ActionButtons';
+import { OutputActions } from './datavalidator/ActionButtons';
 import { useDataValidator } from '../../hooks/datavalidator/useDataValidator';
 import { CheckCircle } from '@phosphor-icons/react';
 
@@ -15,7 +15,7 @@ function DataValidator() {
   const [outputContent, setOutputContent] = useState('');
   const [inputFormat, setInputFormat] = useState<FormatType>('json');
   const [outputFormat, setOutputFormat] = useState<FormatType>('json');
-  const { toast } = useToast();
+  const { toast } = useApiToast();
   const {
     isProcessing,
     validationResult,
@@ -46,11 +46,11 @@ function DataValidator() {
     setInputContent(minified);
   };
 
-  const handleCopy = (content: string, type: 'input' | 'output') => {
-    navigator.clipboard.writeText(content);
+  const handleCopyOutput = () => {
+    navigator.clipboard.writeText(outputContent);
     toast({
       title: 'Copied',
-      description: `${type === 'input' ? 'Input' : 'Output'} copied to clipboard`,
+      description: 'Output copied to clipboard',
     });
   };
 
@@ -79,57 +79,59 @@ function DataValidator() {
         iconColor="purple"
       >
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Input Section */}
-        <GlassCard hover={false} animated={false} className="border-accent-purple/20">
-          <GlassCardHeader>
-            <div className="flex items-center justify-between">
-              <GlassCardTitle>Input</GlassCardTitle>
-            </div>
-          </GlassCardHeader>
-          <GlassCardContent className="space-y-4">
-            <CodeEditor
-              content={inputContent}
-              format={inputFormat}
-              onContentChange={setInputContent}
-              onFormatChange={setInputFormat}
-              disabled={isProcessing}
-              placeholder={`Enter ${inputFormat.toUpperCase()} content here...`}
-            />
-            <ActionButtons
-              isProcessing={isProcessing}
-              inputContent={inputContent}
-              outputContent={outputContent}
-              inputFormat={inputFormat}
-              outputFormat={outputFormat}
-              validationResult={validationResult}
-              onValidate={onValidate}
-              onConvert={onConvert}
-              onFormat={onFormat}
-              onMinify={onMinify}
-              onCopy={handleCopy}
-              onDownload={handleDownload}
-            />
-            <ValidationResultDisplay result={validationResult} />
-          </GlassCardContent>
-        </GlassCard>
+          {/* Input Section */}
+          <GlassCard hover={false} animated={false} className="border-accent-purple/30">
+            <GlassCardHeader>
+              <div className="flex items-center justify-between">
+                <GlassCardTitle>Input</GlassCardTitle>
+              </div>
+            </GlassCardHeader>
+            <GlassCardContent className="space-y-4">
+              <CodeEditor
+                content={inputContent}
+                format={inputFormat}
+                onContentChange={setInputContent}
+                onFormatChange={setInputFormat}
+                disabled={isProcessing}
+                showDropzone={true}
+                placeholder={`Enter ${inputFormat.toUpperCase()} content here...`}
+              />
+              <InputActions
+                isProcessing={isProcessing}
+                inputContent={inputContent}
+                inputFormat={inputFormat}
+                validationResult={validationResult}
+                onValidate={onValidate}
+                onConvert={onConvert}
+                onFormat={onFormat}
+                onMinify={onMinify}
+              />
+            </GlassCardContent>
+          </GlassCard>
 
-        {/* Output Section */}
-        <GlassCard hover={false} animated={false} className="border-accent-purple/20">
-          <GlassCardHeader>
-            <div className="flex items-center justify-between">
-              <GlassCardTitle>Output</GlassCardTitle>
-            </div>
-          </GlassCardHeader>
-          <GlassCardContent className="space-y-4">
-            <CodeEditor
-              content={outputContent}
-              format={outputFormat}
-              onContentChange={setOutputContent}
-              onFormatChange={setOutputFormat}
-              disabled={isProcessing}
-              readOnly
-              placeholder={`${outputFormat.toUpperCase()} output will appear here...`}
-            />
+          {/* Output Section */}
+          <GlassCard hover={false} animated={false} className="border-accent-purple/30">
+            <GlassCardHeader>
+              <div className="flex items-center justify-between">
+                <GlassCardTitle>Output</GlassCardTitle>
+              </div>
+            </GlassCardHeader>
+            <GlassCardContent className="space-y-4">
+              <CodeEditor
+                content={outputContent}
+                format={outputFormat}
+                onContentChange={setOutputContent}
+                onFormatChange={setOutputFormat}
+                disabled={isProcessing}
+                readOnly
+                placeholder={`${outputFormat.toUpperCase()} output will appear here...`}
+              />
+              <OutputActions
+                outputContent={outputContent}
+                outputFormat={outputFormat}
+                onCopy={handleCopyOutput}
+                onDownload={handleDownload}
+              />
             </GlassCardContent>
           </GlassCard>
         </div>

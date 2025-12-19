@@ -17,7 +17,7 @@ export function ConversionStats({ results, fileList }: ConversionStatsProps) {
   };
 
   return (
-    <GlassCard hover={false} animated={false} className="border-accent-blue/20">
+    <GlassCard hover={false} animated={false} className="border-accent-blue/30">
       <GlassCardHeader>
         <GlassCardTitle>Conversion Stats</GlassCardTitle>
         <GlassCardDescription>Real-time conversion progress</GlassCardDescription>

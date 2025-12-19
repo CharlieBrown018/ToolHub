@@ -20,9 +20,9 @@ const glassButtonVariants = cva(
         ghost: "border-transparent bg-transparent text-gray-300 hover:bg-glass-white/5 hover:text-gray-100",
         link: "text-accent-blue underline-offset-4 hover:underline border-transparent bg-transparent",
         blue: "bg-accent-blue/10 border border-accent-blue/30 text-accent-blue hover:bg-accent-blue/20 hover:border-accent-blue/50 shadow-glass-sm",
-        green: "bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/20 hover:border-emerald-500/50 shadow-glass-sm",
+        green: "bg-accent-green/10 border border-accent-green/30 text-accent-green hover:bg-accent-green/20 hover:border-accent-green/50 shadow-glass-sm",
         purple: "bg-accent-purple/10 border border-accent-purple/30 text-accent-purple hover:bg-accent-purple/20 hover:border-accent-purple/50 shadow-glass-sm",
-        orange: "bg-orange-500/10 border border-orange-500/30 text-orange-400 hover:bg-orange-500/20 hover:border-orange-500/50 shadow-glass-sm",
+        orange: "bg-accent-orange/10 border border-accent-orange/30 text-accent-orange hover:bg-accent-orange/20 hover:border-accent-orange/50 shadow-glass-sm",
       },
       size: {
         default: "h-10 px-4 py-2",

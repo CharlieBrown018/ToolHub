@@ -1,8 +1,15 @@
 import { useState, useRef } from 'react';
 import { GlassButton } from '../../ui/glass-button';
-import { useToast } from '../../../hooks/useToast';
+import { useApiToast } from '../../../hooks/useApiToast';
 import { CircleNotch, Palette, Image as ImageIcon } from '@phosphor-icons/react';
-import { generatePalette, type Color } from '../../../services/colorpalette';
+import { type Color } from '../../../services/colorpalette';
+import {
+  GlassSelect,
+  GlassSelectContent,
+  GlassSelectItem,
+  GlassSelectTrigger,
+  GlassSelectValue,
+} from '../../ui/glass-select';
 
 interface ExtractTabProps {
   onColorsGenerated: (colors: Color[]) => void;
@@ -16,7 +23,7 @@ export function ExtractTab({ onColorsGenerated, isProcessing, onProcessingChange
   const [numColors, setNumColors] = useState(5);
   const [method, setMethod] = useState<'dominant' | 'vibrant'>('dominant');
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { toast } = useToast();
+  const { callApi, toast } = useApiToast();
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -66,19 +73,26 @@ export function ExtractTab({ onColorsGenerated, isProcessing, onProcessingChange
 
     onProcessingChange(true);
     try {
-      const result = await generatePalette(selectedFile, numColors, method);
+      // Use callApi with FormData - automatically shows toast with backend message
+      const formData = new FormData();
+      formData.append('file', selectedFile);
+      
+      const params = new URLSearchParams({
+        num_colors: numColors.toString(),
+        method,
+      });
+      
+      const result = await callApi<{ colors: Color[]; method: string; num_colors: number }>(
+        `/api/tools/color-palette/generate?${params.toString()}`,
+        {
+          method: 'POST',
+          body: formData,
+        }
+      );
+      
       onColorsGenerated(result.colors);
-      toast({
-        title: 'Success',
-        description: `Generated ${result.colors.length} colors`,
-      });
     } catch (err: unknown) {
-      const error = err instanceof Error ? err.message : 'Failed to generate palette';
-      toast({
-        title: 'Error',
-        description: error,
-        variant: 'destructive',
-      });
+      // Error toast already shown by callApi
     } finally {
       onProcessingChange(false);
     }
@@ -123,19 +137,20 @@ export function ExtractTab({ onColorsGenerated, isProcessing, onProcessingChange
             max="20"
             value={numColors}
             onChange={(e) => setNumColors(parseInt(e.target.value) || 5)}
-            className="flex-1 px-3 py-1 rounded-lg bg-glass-white-md backdrop-blur-sm border border-glass-border text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+            className="flex-1 px-3 py-1 rounded-lg bg-glass-white-md backdrop-blur-sm border border-glass-border text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-accent-orange"
           />
         </div>
         <div className="flex items-center gap-2">
           <label className="text-sm font-medium w-32 text-gray-100">Method:</label>
-          <select
-            value={method}
-            onChange={(e) => setMethod(e.target.value as 'dominant' | 'vibrant')}
-            className="flex-1 px-3 py-2 rounded-lg bg-glass-white-md backdrop-blur-sm border border-glass-border text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500/50 hover:bg-glass-white-lg transition-colors cursor-pointer"
-          >
-            <option value="dominant" className="bg-bg-primary">Dominant Colors</option>
-            <option value="vibrant" className="bg-bg-primary">Vibrant Colors</option>
-          </select>
+          <GlassSelect value={method} onValueChange={(value: string) => setMethod(value as 'dominant' | 'vibrant')}>
+            <GlassSelectTrigger variant="orange" className="flex-1">
+              <GlassSelectValue placeholder="Select method" />
+            </GlassSelectTrigger>
+            <GlassSelectContent variant="orange">
+              <GlassSelectItem value="dominant" variant="orange">Dominant Colors</GlassSelectItem>
+              <GlassSelectItem value="vibrant" variant="orange">Vibrant Colors</GlassSelectItem>
+            </GlassSelectContent>
+          </GlassSelect>
         </div>
         <GlassButton
           onClick={handleExtractPalette}

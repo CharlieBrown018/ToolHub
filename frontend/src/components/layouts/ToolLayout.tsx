@@ -27,7 +27,7 @@ export function ToolLayout({
         icon={icon}
         iconColor={iconColor}
       />
-      <main className="container mx-auto px-4 py-8 flex-1">
+      <main className="container mx-auto px-4 flex-1">
         {children}
       </main>
     </>

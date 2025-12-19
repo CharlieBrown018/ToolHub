@@ -59,20 +59,27 @@ ToolHub uses a **glassmorphic design language** characterized by:
 
 Each tool has a designated color theme that should be applied consistently:
 
-| Tool | Color | Hex/Token | Usage |
-|------|-------|-----------|-------|
-| **Scan2PDF** | Blue | `accent-blue` / `#60a5fa` | Buttons, borders, icons, focus rings |
-| **DocuMark** | Green | `emerald-500` / `#10b981` | Buttons, borders, icons, focus rings |
-| **DataValidator** | Purple | `accent-purple` / `#8b5cf6` | Buttons, borders, icons, focus rings |
-| **ColorPalette** | Orange | `orange-500` / `#f97316` | Buttons, borders, icons, focus rings |
+| Tool | Color | Tailwind Token | Hex Value | Usage |
+|------|-------|----------------|-----------|-------|
+| **Scan2PDF** | Blue | `accent-blue` | `#60a5fa` | Buttons, borders, icons, focus rings |
+| **DocuMark** | Green | `accent-green` | `#10b981` | Buttons, borders, icons, focus rings |
+| **DataValidator** | Purple | `accent-purple` | `#8b5cf6` | Buttons, borders, icons, focus rings |
+| **ColorPalette** | Orange | `accent-orange` | `#f97316` | Buttons, borders, icons, focus rings |
+
+**Important**: All accent colors are defined in `tailwind.config.js` under `theme.extend.colors.accent`. Always use the Tailwind tokens (e.g., `accent-blue`, `accent-green`) instead of arbitrary color values or standard Tailwind colors (e.g., avoid `emerald-500`, `orange-500`).
 
 ### Color Application Rules
 
 1. **Buttons**: Use tool-specific colored variants (`variant="blue"`, `variant="green"`, etc.)
-2. **Borders**: Apply colored borders at 20% opacity (`border-{color}/20`)
-3. **Focus States**: Use tool color for focus rings (`focus:ring-{color}`)
-4. **Icons**: Match icon background and text color to tool theme
-5. **Hover States**: Increase border opacity to 40-50% on hover
+2. **Borders**: Apply colored borders at 30% opacity (`border-accent-{color}/30`) for cards and headers
+3. **Focus States**: Use tool color for focus rings (`focus:ring-accent-{color}`)
+4. **Icons**: Match icon background and text color to tool theme (`bg-accent-{color}/15 text-accent-{color}`)
+5. **Hover States**: Increase border opacity to 50% on hover (`hover:border-accent-{color}/50`)
+6. **CSS `accent-color` Property**: For native inputs (checkboxes, range sliders), use inline styles:
+   ```tsx
+   <input type="checkbox" style={{ accentColor: '#60a5fa' }} />
+   <input type="range" style={{ accentColor: '#f97316' }} />
+   ```
 
 ---
 

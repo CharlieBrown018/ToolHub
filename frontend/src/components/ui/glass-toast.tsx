@@ -14,8 +14,8 @@ const GlassToastViewport = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <ToastPrimitives.Viewport
     ref={ref}
-    className={cn(
-      "fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]",
+      className={cn(
+      "fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-auto sm:right-0 sm:top-auto sm:mb-20 sm:flex-col md:max-w-[420px]",
       className
     )}
     {...props}
@@ -29,6 +29,8 @@ const glassToastVariants = cva(
     variants: {
       variant: {
         default: "border-glass-border bg-glass-white-lg text-gray-100",
+        success:
+          "success group border-accent-green/30 bg-accent-green/20 text-accent-green",
         destructive:
           "destructive group border-red-500/30 bg-red-500/20 text-red-400",
       },
@@ -60,8 +62,8 @@ const GlassToastAction = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <ToastPrimitives.Action
     ref={ref}
-    className={cn(
-      "inline-flex h-8 shrink-0 items-center justify-center rounded-lg border border-glass-border bg-glass-white/5 px-3 text-sm font-medium text-gray-100 transition-colors hover:bg-glass-white-md focus:outline-none focus:ring-2 focus:ring-accent-blue focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 group-[.destructive]:border-red-500/30 group-[.destructive]:hover:border-red-500/50 group-[.destructive]:hover:bg-red-500/30 group-[.destructive]:hover:text-red-300 group-[.destructive]:focus:ring-red-400",
+      className={cn(
+      "inline-flex h-8 shrink-0 items-center justify-center rounded-lg border border-glass-border bg-glass-white/5 px-3 text-sm font-medium text-gray-100 transition-colors hover:bg-glass-white-md focus:outline-none focus:ring-2 focus:ring-accent-blue focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 group-[.success]:border-accent-green/30 group-[.success]:hover:border-accent-green/50 group-[.success]:hover:bg-accent-green/30 group-[.success]:hover:text-accent-green group-[.success]:focus:ring-accent-green group-[.destructive]:border-red-500/30 group-[.destructive]:hover:border-red-500/50 group-[.destructive]:hover:bg-red-500/30 group-[.destructive]:hover:text-red-300 group-[.destructive]:focus:ring-red-400",
       className
     )}
     {...props}
@@ -75,8 +77,8 @@ const GlassToastClose = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <ToastPrimitives.Close
     ref={ref}
-    className={cn(
-      "absolute right-2 top-2 rounded-lg p-1 text-gray-400 opacity-0 transition-opacity hover:text-gray-100 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-accent-blue group-hover:opacity-100 group-[.destructive]:text-red-300 group-[.destructive]:hover:text-red-50 group-[.destructive]:focus:ring-red-400",
+      className={cn(
+      "absolute right-2 top-2 rounded-lg p-1 text-gray-400 opacity-0 transition-opacity hover:text-gray-100 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-accent-blue group-hover:opacity-100 group-[.success]:text-accent-green group-[.success]:hover:text-accent-green group-[.success]:focus:ring-accent-green group-[.destructive]:text-red-300 group-[.destructive]:hover:text-red-50 group-[.destructive]:focus:ring-red-400",
       className
     )}
     toast-close=""

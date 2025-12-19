@@ -4,27 +4,23 @@
 
 import { apiRequest, apiUpload, apiStream } from './api';
 
+// Type definitions match the 'data' field from standardized ApiResponse<T>
 export interface TesseractStatus {
   tesseract_available: boolean;
   tesseract_path?: string;
 }
 
 export interface BrowseFilesResponse {
-  success: boolean;
-  files?: string[];
-  error?: string;
+  files: string[];
+  path: string;
 }
 
 export interface BrowseFolderResponse {
-  success: boolean;
-  path?: string;
-  error?: string;
+  path: string;
 }
 
 export interface UploadFilesResponse {
-  success: boolean;
-  files?: string[];
-  error?: string;
+  files: string[];
 }
 
 export interface ConvertProgress {

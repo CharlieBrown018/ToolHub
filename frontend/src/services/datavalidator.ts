@@ -10,15 +10,14 @@ export interface ValidationResponse {
   error?: string;
 }
 
+// Type definitions match the 'data' field from standardized ApiResponse<T>
 export interface ConvertResponse {
-  success: boolean;
-  output: string;
+  converted: string;
   from_format: string;
   to_format: string;
 }
 
 export interface FormatResponse {
-  success: boolean;
   formatted: string;
 }
 

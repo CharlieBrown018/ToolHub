@@ -3,11 +3,11 @@ import { Toolbox } from '@phosphor-icons/react';
 
 export function GlassHeader() {
   return (
-    <header className="sticky top-0 z-50 bg-glass-white-md backdrop-blur-md border-b border-glass-border shadow-glass-sm">
-      <div className="container mx-auto px-4 h-16">
-        <div className="flex items-center justify-between h-full">
+    <header className="sticky top-0 z-[100] border-b border-glass-border shadow-glass-sm isolate" style={{ background: 'rgba(17, 24, 39, 0.95)', backdropFilter: 'blur(12px)' }}>
+      <div className="container mx-auto px-4 h-16 relative z-10">
+        <div className="flex items-center justify-between h-full relative z-10">
           <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-            <div className="h-8 w-8 rounded-lg bg-glass-white-lg backdrop-blur-sm border border-glass-border flex items-center justify-center shadow-depth-1">
+            <div className="h-8 w-8 rounded-lg bg-glass-white-lg backdrop-blur-sm border border-glass-border flex items-center justify-center">
               <Toolbox className="h-4 w-4 text-accent-blue" weight="duotone" />
             </div>
             <h1 className="text-xl font-bold text-gray-100">ToolHub</h1>

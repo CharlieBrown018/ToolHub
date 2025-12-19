@@ -19,8 +19,12 @@ from backend.utils.image_converter import (
     create_searchable_pdf, tesseract_available, find_tesseract
 )
 from backend.config import UPLOAD_FOLDER
+from backend.utils.responses import api_success_response, api_error_response
+from backend.utils.messages import MessageCode
+from backend.utils.logging import get_logger
 
 router = APIRouter()
+logger = get_logger(__name__)
 
 class ConvertRequest(BaseModel):
     input_files: Optional[List[str]] = []
@@ -32,10 +36,14 @@ class ConvertRequest(BaseModel):
 @router.get("/status")
 async def status():
     """Get system status"""
-    return {
-        'tesseract_available': tesseract_available,
-        'tesseract_path': find_tesseract() or 'Not found'
-    }
+    logger.info("Checking Scan2PDF status")
+    return api_success_response(
+        MessageCode.SUCCESS,
+        data={
+            'tesseract_available': tesseract_available,
+            'tesseract_path': find_tesseract() or 'Not found'
+        }
+    )
 
 @router.post("/convert")
 async def convert(convert_request: ConvertRequest):
@@ -162,6 +170,7 @@ async def convert(convert_request: ConvertRequest):
 @router.post("/browse-files")
 async def browse_files():
     """Open native file picker for files"""
+    logger.info("Opening file browser")
     try:
         root = tk.Tk()
         root.withdraw()
@@ -180,22 +189,29 @@ async def browse_files():
         root.destroy()
         
         if files:
-            return {
-                'success': True,
-                'files': list(files),
-                'path': str(Path(files[0]).parent) if files else ''
-            }
+            return api_success_response(
+                MessageCode.SUCCESS,
+                data={
+                    'files': list(files),
+                    'path': str(Path(files[0]).parent) if files else ''
+                }
+            )
         else:
-            return {'success': False, 'message': 'No files selected'}
+            return api_success_response(
+                MessageCode.MISSING_FILES,
+                data={'files': [], 'path': ''}
+            )
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.error(f"Error browsing files: {str(e)}", exc_info=True)
+        raise api_error_response(MessageCode.PROCESSING_ERROR, error=str(e))
 
 @router.post("/upload-files")
 async def upload_files(files: list[UploadFile] = File(...)):
     """Upload files from drag-and-drop"""
+    logger.info(f"Uploading {len(files)} file(s)")
     try:
         if not files:
-            raise HTTPException(status_code=400, detail='No files provided')
+            raise api_error_response(MessageCode.MISSING_FILES)
         
         uploaded_files = []
         for file in files:
@@ -207,16 +223,22 @@ async def upload_files(files: list[UploadFile] = File(...)):
                     f.write(contents)
                 uploaded_files.append(str(filepath))
         
-        return {
-            'success': True,
-            'files': uploaded_files
-        }
+        logger.info(f"Successfully uploaded {len(uploaded_files)} file(s)")
+        return api_success_response(
+            MessageCode.FILE_UPLOAD_SUCCESS,
+            data={'files': uploaded_files},
+            count=len(uploaded_files)
+        )
+    except HTTPException:
+        raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.error(f"Error uploading files: {str(e)}", exc_info=True)
+        raise api_error_response(MessageCode.PROCESSING_ERROR, error=str(e))
 
 @router.post("/browse-folder")
 async def browse_folder():
     """Open native folder picker"""
+    logger.info("Opening folder browser")
     try:
         root = tk.Tk()
         root.withdraw()
@@ -226,25 +248,30 @@ async def browse_folder():
         root.destroy()
         
         if folder:
-            return {
-                'success': True,
-                'path': folder
-            }
+            return api_success_response(
+                MessageCode.SUCCESS,
+                data={'path': folder}
+            )
         else:
-            return {'success': False, 'message': 'No folder selected'}
+            return api_success_response(
+                MessageCode.NO_FOLDER_SELECTED,
+                data={'path': ''}
+            )
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.error(f"Error browsing folder: {str(e)}", exc_info=True)
+        raise api_error_response(MessageCode.PROCESSING_ERROR, error=str(e))
 
 @router.get("/preview-pdf")
 async def preview_pdf(path: str):
     """Preview PDF file"""
+    logger.info(f"Previewing PDF: {path}")
     try:
         file_path = Path(path)
         if not file_path.exists():
-            raise HTTPException(status_code=404, detail='File not found')
+            raise api_error_response(MessageCode.FILE_NOT_FOUND, file=path)
         
         if not file_path.suffix.lower() == '.pdf':
-            raise HTTPException(status_code=400, detail='Only PDF files can be previewed')
+            raise api_error_response(MessageCode.INVALID_FILE_TYPE, file_type='PDF')
         
         return FileResponse(
             str(file_path),
@@ -254,5 +281,6 @@ async def preview_pdf(path: str):
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.error(f"Error previewing PDF: {str(e)}", exc_info=True)
+        raise api_error_response(MessageCode.PROCESSING_ERROR, error=str(e))
 

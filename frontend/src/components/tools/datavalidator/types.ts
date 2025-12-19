@@ -13,5 +13,6 @@ export interface EditorProps {
   disabled?: boolean;
   readOnly?: boolean;
   placeholder?: string;
+  showDropzone?: boolean;
 }
 

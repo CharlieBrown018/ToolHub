@@ -1,8 +1,8 @@
 import { useRef } from 'react';
 import { GlassButton } from '../../ui/glass-button';
 import { Upload, FolderOpen } from '@phosphor-icons/react';
-import { browseFiles, browseFolder, uploadFiles } from '../../../services/scan2pdf';
-import { useToast } from '../../../hooks/useToast';
+import { useApiToast } from '../../../hooks/useApiToast';
+import { apiRequest, apiUpload } from '../../../services/api';
 
 interface FileDropzoneProps {
   inputFiles: string[];
@@ -20,57 +20,37 @@ export function FileDropzone({
   disabled,
 }: FileDropzoneProps) {
   const dropzoneRef = useRef<HTMLDivElement>(null);
-  const { toast } = useToast();
+  const { callApi, toast } = useApiToast();
 
   const handleBrowseFiles = async () => {
     try {
-      const response = await browseFiles();
-      if (response.success && response.files && response.files.length > 0) {
+      // Use callApi - automatically shows toast with backend message
+      const response = await callApi<{ files: string[]; path: string }>(
+        '/api/tools/image-to-pdf/browse-files',
+        { method: 'POST' }
+      );
+      
+      if (response.files && response.files.length > 0) {
         onInputFilesChange(response.files);
-        toast({
-          title: 'Files selected',
-          description: `${response.files.length} file(s) selected`,
-        });
-      } else {
-        toast({
-          title: 'Error',
-          description: response.error || 'No files selected',
-          variant: 'destructive',
-        });
       }
     } catch (err: unknown) {
-      const error = err instanceof Error ? err.message : 'Unknown error';
-      toast({
-        title: 'Error',
-        description: 'Failed to browse files: ' + error,
-        variant: 'destructive',
-      });
+      // Error toast already shown by callApi
     }
   };
 
   const handleBrowseFolder = async () => {
     try {
-      const response = await browseFolder();
-      if (response.success && response.path) {
+      // Use callApi - automatically shows toast with backend message
+      const response = await callApi<{ path: string }>(
+        '/api/tools/image-to-pdf/browse-folder',
+        { method: 'POST' }
+      );
+      
+      if (response.path) {
         onOutputPathChange(response.path);
-        toast({
-          title: 'Folder selected',
-          description: response.path,
-        });
-      } else {
-        toast({
-          title: 'Error',
-          description: response.error || 'No folder selected',
-          variant: 'destructive',
-        });
       }
     } catch (err: unknown) {
-      const error = err instanceof Error ? err.message : 'Unknown error';
-      toast({
-        title: 'Error',
-        description: 'Failed to browse folder: ' + error,
-        variant: 'destructive',
-      });
+      // Error toast already shown by callApi
     }
   };
 
@@ -95,21 +75,23 @@ export function FileDropzone({
     }
 
     try {
-      const data = await uploadFiles(supportedFiles);
-      if (data.success && data.files) {
-        onInputFilesChange(data.files);
-        toast({
-          title: 'Files uploaded',
-          description: `${supportedFiles.length} file(s) uploaded`,
-        });
+      // Use callApi with FormData - automatically shows toast with backend message
+      const formData = new FormData();
+      supportedFiles.forEach(file => formData.append('files', file));
+      
+      const response = await callApi<{ files: string[] }>(
+        '/api/tools/image-to-pdf/upload-files',
+        {
+          method: 'POST',
+          body: formData,
+        }
+      );
+      
+      if (response.files && response.files.length > 0) {
+        onInputFilesChange(response.files);
       }
     } catch (err: unknown) {
-      const error = err instanceof Error ? err.message : 'Unknown error';
-      toast({
-        title: 'Error',
-        description: 'Failed to upload files: ' + error,
-        variant: 'destructive',
-      });
+      // Error toast already shown by callApi
     }
   };
 

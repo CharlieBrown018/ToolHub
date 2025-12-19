@@ -1,8 +1,8 @@
 import { GlassCard, GlassCardContent, GlassCardDescription, GlassCardHeader, GlassCardTitle } from '../../ui/glass-card';
 import { GlassButton } from '../../ui/glass-button';
 import { CircleNotch, FileText } from '@phosphor-icons/react';
-import { convertText } from '../../../services/documark';
-import { useToast } from '../../../hooks/useToast';
+import { useApiToast } from '../../../hooks/useApiToast';
+import { apiDownload } from '../../../services/api';
 
 interface MarkdownEditorProps {
   content: string;
@@ -17,7 +17,7 @@ export function MarkdownEditor({
   isConverting,
   onConvertingChange,
 }: MarkdownEditorProps) {
-  const { toast } = useToast();
+  const { toast } = useApiToast();
 
   const handleConvert = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,7 +34,15 @@ export function MarkdownEditor({
     onConvertingChange(true);
 
     try {
-      const blob = await convertText(content);
+      // Use apiDownload for file downloads (returns Blob, not JSON)
+      const blob = await apiDownload('/api/tools/md-to-pdf/convert-text', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ content }),
+      });
+      
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -43,16 +51,20 @@ export function MarkdownEditor({
       a.click();
       document.body.removeChild(a);
       window.URL.revokeObjectURL(url);
+      
+      // Show success toast (apiDownload doesn't return JSON, so we use custom message)
       toast({
         title: 'Success',
         description: 'PDF generated successfully',
+        variant: 'success',
       });
     } catch (err: unknown) {
-      const error = err instanceof Error ? err.message : 'Conversion failed';
+      // Error handling - apiDownload throws errors with metadata
+      const error = err as Error & { toastVariant?: string; message?: string };
       toast({
         title: 'Error',
-        description: error,
-        variant: 'destructive',
+        description: error.message || 'Conversion failed',
+        variant: (error.toastVariant as 'destructive') || 'destructive',
       });
     } finally {
       onConvertingChange(false);
@@ -60,7 +72,7 @@ export function MarkdownEditor({
   };
 
   return (
-    <GlassCard hover={false} animated={false} className="border-emerald-500/20">
+    <GlassCard hover={false} animated={false} className="border-accent-green/30">
       <GlassCardHeader>
         <GlassCardTitle>Or Paste Markdown</GlassCardTitle>
         <GlassCardDescription>

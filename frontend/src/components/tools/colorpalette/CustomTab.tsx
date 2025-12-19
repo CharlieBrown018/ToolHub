@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { GlassButton } from '../../ui/glass-button';
-import { useToast } from '../../../hooks/useToast';
+import { useApiToast } from '../../../hooks/useApiToast';
 import { Plus, Trash, Eye } from '@phosphor-icons/react';
 import { type Color } from '../../../services/colorpalette';
 import { type SavedPalette } from './types';
@@ -21,7 +21,7 @@ export function CustomTab({
   onDeletePalette,
 }: CustomTabProps) {
   const [baseColor, setBaseColor] = useState('#3b82f6');
-  const { toast } = useToast();
+  const { toast } = useApiToast(); // UI-only actions (invalid color format)
 
   const handleAddCustomColor = () => {
     const hex = prompt('Enter hex color (e.g., #3b82f6):');

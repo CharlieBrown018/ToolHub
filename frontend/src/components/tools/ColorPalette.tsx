@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { GlassCard, GlassCardContent, GlassCardHeader, GlassCardTitle } from '../ui/glass-card';
-import { useToast } from '../../hooks/useToast';
+import { useApiToast } from '../../hooks/useApiToast';
 import {
   Image as ImageIcon,
   Sparkle,
@@ -35,7 +35,7 @@ function ColorPalette() {
   // Shared
   const [isProcessing, setIsProcessing] = useState(false);
   const [contrastResult, setContrastResult] = useState<ContrastResult | null>(null);
-  const { toast } = useToast();
+  const { toast } = useApiToast(); // UI-only actions (save/delete palette)
   const { savedPalettes, savePalette, deletePalette } = useSavedPalettes();
   
   // Get colors for current active tab
@@ -179,8 +179,8 @@ function ColorPalette() {
               onClick={() => setActiveTab(tab.id)}
               className={`flex items-center gap-2 px-4 py-2 border-b-2 transition-all duration-200 rounded-t-lg ${
                 activeTab === tab.id
-                  ? 'border-orange-500 text-orange-400 bg-glass-white-md backdrop-blur-sm'
-                  : 'border-transparent text-gray-400 hover:text-gray-100 hover:bg-glass-white/30'
+                  ? 'border-accent-orange text-accent-orange bg-glass-white-md backdrop-blur-sm'
+                  : 'border-transparent text-gray-400 hover:text-accent-orange hover:bg-accent-orange/10 hover:border-accent-orange/30'
               }`}
             >
               <Icon className="h-4 w-4" weight="duotone" />
@@ -192,7 +192,7 @@ function ColorPalette() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Left Panel - Controls */}
-        <GlassCard hover={false} animated={false} className="border-orange-500/20">
+        <GlassCard hover={false} animated={false} className="border-accent-orange/30">
           <GlassCardHeader>
             <GlassCardTitle>{getTabTitle()}</GlassCardTitle>
           </GlassCardHeader>
