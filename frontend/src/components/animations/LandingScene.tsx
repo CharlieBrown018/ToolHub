@@ -82,11 +82,11 @@ function Particles({ count = 100 }) {
 
 export default function LandingScene() {
   return (
-    <div className="absolute inset-0 -z-10 pointer-events-none">
-      <Canvas camera={{ position: [0, 0, 5], fov: 75 }}>
-        <ambientLight intensity={0.5} />
-        <pointLight position={[10, 10, 10]} intensity={1} color="#60a5fa" />
-        <pointLight position={[-10, -10, -10]} intensity={0.5} color="#8b5cf6" />
+    <div className="absolute inset-0 -z-20 pointer-events-none">
+      <Canvas camera={{ position: [0, 0, 5], fov: 75 }} gl={{ alpha: true }}>
+        <ambientLight intensity={0.2} />
+        <pointLight position={[10, 10, 10]} intensity={0.5} color="#60a5fa" />
+        <pointLight position={[-10, -10, -10]} intensity={0.2} color="#8b5cf6" />
         <AnimatedSphere />
         <Particles count={200} />
       </Canvas>

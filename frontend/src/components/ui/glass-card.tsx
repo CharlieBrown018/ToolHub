@@ -10,8 +10,9 @@ const GlassCard = React.forwardRef<
     hoverable?: boolean
     perspective?: boolean
     animated?: boolean
+    rounded?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | 'full'
   }
->(({ className, children, variant = 'elevated', hover, hoverable, perspective = true, animated = true, ...props }, ref) => {
+>(({ className, children, variant = 'elevated', hover, hoverable, perspective = true, animated = true, rounded = 'xl', ...props }, ref) => {
   // Use 'hover' if provided, otherwise fall back to 'hoverable', default to false
   const shouldHover = hover !== undefined ? hover : (hoverable !== undefined ? hoverable : false);
   
@@ -21,6 +22,7 @@ const GlassCard = React.forwardRef<
       hoverable={shouldHover}
       perspective={perspective}
       animated={animated}
+      rounded={rounded}
       className={cn("text-gray-100", className)}
     >
       <div ref={ref} {...props}>
