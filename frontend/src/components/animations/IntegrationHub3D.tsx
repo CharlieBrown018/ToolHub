@@ -4,17 +4,17 @@ import { Link } from 'react-router-dom';
 import { 
   Image as ImageIcon, 
   Lightning, 
-  Shield, 
+  ShieldCheck, 
   Columns, 
   Palette, 
   QrCode,
-  Briefcase
+  Toolbox
 } from '@phosphor-icons/react';
 
 const TOOLS = [
   { name: 'Scan2PDF', icon: ImageIcon, color: '#3b82f6', route: '/tools/image-to-pdf' },
   { name: 'WebP Express', icon: Lightning, color: '#6366f1', route: '/tools/webp-express' },
-  { name: 'SecurePass', icon: Shield, color: '#a855f7', route: '/tools/secure-pass' },
+  { name: 'SecurePass', icon: ShieldCheck, color: '#a855f7', route: '/tools/secure-pass' },
   { name: 'DiffMaster', icon: Columns, color: '#ef4444', route: '/tools/diff-master' },
   { name: 'Palette', icon: Palette, color: '#ec4899', route: '/tools/color-palette' },
   { name: 'QuickQR', icon: QrCode, color: '#f59e0b', route: '/tools/quick-qr' },
@@ -280,7 +280,7 @@ export default function IntegrationHub3D() {
         >
           <Thick3DBlock size={200} thickness={80} elevation={60} color="#3b82f6">
             <div className="flex flex-col items-center gap-4">
-              <Briefcase className="w-24 h-24 text-white drop-shadow-[0_15px_25px_rgba(0,0,0,0.5)]" weight="duotone" />
+              <Toolbox className="w-24 h-24 text-white drop-shadow-[0_15px_25px_rgba(0,0,0,0.5)]" weight="duotone" />
               <span className="text-[14px] font-black tracking-[0.4em] text-white/95">TOOLHUB</span>
             </div>
           </Thick3DBlock>
