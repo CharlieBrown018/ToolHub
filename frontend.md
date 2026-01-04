@@ -23,6 +23,11 @@ frontend/
 │   │   │   ├── progress.tsx
 │   │   │   ├── toast.tsx
 │   │   │   └── ...
+│   │   ├── animations/      # Animation components
+│   │   │   ├── IntegrationHub3D.tsx  # 3D isometric hub
+│   │   │   ├── RotatingGlobe.tsx    # Rotating globe background
+│   │   │   └── PageTransition.tsx    # Page transitions
+│   │   ├── Landing.tsx      # Marketing landing page
 │   │   ├── Hub.tsx          # Main hub page
 │   │   └── tools/
 │   │       ├── Scan2PDF.tsx # Image to PDF tool
@@ -79,11 +84,24 @@ Preview the production build locally.
 
 ### Component Structure
 
+**Landing Component** (`components/Landing.tsx`)
+- Main marketing/landing page with hero section
+- Animated rotating headline with typewriter effect
+- 3D isometric hub visualization (`IntegrationHub3D`)
+- Three-section layout: Hero, Story/Features, Community
+- Scroll-triggered animations with Framer Motion
+- Responsive grid layout
+
 **Hub Component** (`components/Hub.tsx`)
-- Main landing page
-- Displays tool cards
+- Main hub page displaying all available tools
+- Displays tool cards in grid layout
 - Fetches tools list from API
 - Uses shadcn/ui Card components
+
+**Animation Components** (`components/animations/`)
+- **IntegrationHub3D.tsx** - 3D isometric hub visualization with interactive tiles
+- **RotatingGlobe.tsx** - Animated rotating globe background
+- **PageTransition.tsx** - Page transition animations
 
 **Tool Components** (`components/tools/`)
 - **Scan2PDF.tsx** - Image to PDF converter
@@ -128,9 +146,62 @@ Preview the production build locally.
 
 ## 🎨 Components
 
+### Landing Component
+
+Main marketing/landing page with animated hero section and 3D visualizations.
+
+**Features:**
+- **Animated Hero Section:**
+  - Rotating headline with typewriter effect (cycles through: Utility, Productivity, Privacy, ToolHub)
+  - Animated cursor blinking effect
+  - Smooth transitions between headlines using Framer Motion `AnimatePresence`
+  - Two-column responsive layout (text left, 3D visualization right)
+
+- **3D Hub Visualization:**
+  - Interactive isometric 3D hub (`IntegrationHub3D` component)
+  - Shows central TOOLHUB tile connected to tool tiles
+  - Animated pulse lines connecting hub to tools
+  - Grid-based positioning system
+
+- **Story & Features Section:**
+  - "Frustrated by the Web?" story card with glassmorphic design
+  - Three feature highlights with icons (Utility, Privacy, Open Source)
+  - Scroll-triggered animations (`whileInView`)
+  - Hover effects on feature cards
+
+- **Community & Support Section:**
+  - Three support cards (Buy Coffee, Share Ideas, Contribute)
+  - Rotating globe background (`RotatingGlobe` component)
+  - Call-to-action button linking to `/hub`
+  - Glassmorphic cards with color-coded borders
+
+**State Management:**
+- `headlineIndex` - Current rotating headline index (0-3)
+- `displayText` - Typewriter effect display text
+- `containerRef` - Ref for scroll tracking
+
+**Animations:**
+- Headline rotation every 4.5 seconds
+- Typewriter effect (100ms per character)
+- Scroll-triggered fade-in animations
+- Hover scale/rotate effects on icons
+- Smooth page transitions via `PageTransition`
+
+**Usage:**
+```tsx
+<Landing />
+```
+
+**Styling:**
+- Uses `GlassButton` and `GlassCard` components
+- Responsive grid layout (`lg:grid-cols-12`)
+- Custom color helper functions (`getBorderClasses`, `getIconBgClasses`)
+- Gradient backgrounds and blur effects
+- Accent color system for consistent theming
+
 ### Hub Component
 
-Main landing page that displays all available tools with glassmorphic design.
+Main hub page that displays all available tools with glassmorphic design.
 
 **Features:**
 - Fetches tools from `/api/tools`
@@ -148,6 +219,75 @@ Main landing page that displays all available tools with glassmorphic design.
 - Uses GlassCard components for tool cards
 - Glassmorphic header with backdrop blur
 - Glassmorphic footer with border
+
+### IntegrationHub3D Component
+
+3D isometric visualization of the tool hub with interactive tiles and animated connections.
+
+**Features:**
+- **3D Tile System:**
+  - Sharp-edged 3D boxes (top, front, left faces visible)
+  - Configurable tile sizes (small, medium, large)
+  - Grid-based positioning system (10x10 grid)
+  - Solid color faces with gradient shading
+
+- **Animated Pulse Lines:**
+  - Lines connecting hub to each tool tile
+  - Animated path drawing effect
+  - Moving spark particles along paths
+  - Color-coded by tool color
+
+- **Grid System:**
+  - Configurable grid size and cell dimensions
+  - Automatic path generation following grid lines
+  - Ghost/decorative lines extending outward
+  - Isometric perspective transform
+
+**Configuration:**
+- `GRID_CONFIG` - Grid dimensions and cell size
+- `TILE_SIZES` - Preset tile dimensions and thickness
+- `TILES` - Array of tile configurations (position, color, icon, route)
+
+**Usage:**
+```tsx
+<IntegrationHub3D />
+```
+
+**Styling:**
+- CSS 3D transforms (`transform-style: preserve-3d`)
+- Isometric rotation (`rotateX(58deg) rotateZ(-38deg)`)
+- Custom color shading function for 3D depth
+- Ground shadow effects
+
+### RotatingGlobe Component
+
+Animated rotating globe background used in the Community section of the Landing page.
+
+**Features:**
+- Continuous rotation animation
+- Subtle opacity for background effect
+- SVG-based globe rendering
+
+**Usage:**
+```tsx
+<RotatingGlobe />
+```
+
+### PageTransition Component
+
+Page transition wrapper for smooth route changes.
+
+**Features:**
+- Fade-in animations on page load
+- Smooth transitions between routes
+- Wraps page content
+
+**Usage:**
+```tsx
+<PageTransition>
+  {/* Page content */}
+</PageTransition>
+```
 
 ### Scan2PDF Component
 
@@ -294,6 +434,26 @@ import YourTool from './components/tools/YourTool';
 ### Step 3: Update Navigation
 
 The tool will automatically appear in the Hub if it's registered in the backend `/api/tools` endpoint.
+
+### Step 4: Add to Landing Page Visualization (Optional)
+
+To add your tool to the 3D visualization on the Landing page, update the `TILES` array in `components/animations/IntegrationHub3D.tsx`:
+
+```typescript
+const TILES: TileConfig[] = [
+  // ... existing tiles
+  { 
+    id: 'your-tool', 
+    gridX: 5, 
+    gridY: 2, 
+    name: 'YourTool', 
+    icon: YourIcon, 
+    color: '#your-color', 
+    route: '/tools/your-tool', 
+    size: 'medium' 
+  },
+];
+```
 
 ## 🎨 Styling Guidelines
 

@@ -106,32 +106,36 @@ export default function Landing() {
                   <h1 className="text-5xl md:text-7xl xl:text-8xl font-black text-white leading-[0.9] tracking-tighter">
                     Where <br />
                     <div className="relative inline-flex items-center align-bottom py-2">
-                        {headlineIndex === 3 && (
-                          <motion.span 
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            className="mr-4 text-white"
-                          >
-                            Tool
-                          </motion.span>
-                        )}
                         <AnimatePresence mode="wait">
-                          <motion.span
+                          <motion.div
                             key={headlineIndex}
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.9 }}
                             transition={{ duration: 0.4 }}
-                            className={`inline-flex items-center px-6 py-1 rounded-2xl text-white ${headlines[headlineIndex].color} whitespace-nowrap min-w-[2ch] leading-none`}
+                            className="inline-flex items-center"
                             style={{ willChange: "transform, opacity" }}
                           >
-                            {displayText}
-                            <motion.span
-                              animate={{ opacity: [0, 1, 0] }}
-                              transition={{ duration: 0.8, repeat: Infinity }}
-                              className="inline-block w-1 h-[0.7em] bg-white/60 ml-2 align-middle rounded-full"
-                            />
-                          </motion.span>
+                            {headlineIndex === 3 && (
+                              <motion.span 
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: -20 }}
+                                transition={{ duration: 0.4 }}
+                                className="mr-4 text-white"
+                              >
+                                Tool
+                              </motion.span>
+                            )}
+                            <span className={`inline-flex items-center px-6 py-1 rounded-2xl text-white ${headlines[headlineIndex].color} whitespace-nowrap min-w-[2ch] leading-none`}>
+                              {displayText}
+                              <motion.span
+                                animate={{ opacity: [0, 1, 0] }}
+                                transition={{ duration: 0.8, repeat: Infinity }}
+                                className="inline-block w-1 h-[0.7em] bg-white/60 ml-2 align-middle rounded-full"
+                              />
+                            </span>
+                          </motion.div>
                         </AnimatePresence>
                     </div>
                     <br /> happens.
