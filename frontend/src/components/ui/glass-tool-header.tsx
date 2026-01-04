@@ -120,7 +120,7 @@ export function GlassToolHeader({ title, subtitle, statusBadge, icon: Icon, icon
           </div>
           <div className="flex items-center gap-4">
             {statusBadge && <div>{statusBadge}</div>}
-            <Link to="/">
+            <Link to="/hub">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}

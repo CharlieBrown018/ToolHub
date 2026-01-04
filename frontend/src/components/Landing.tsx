@@ -14,7 +14,6 @@ import {
 import { GlassButton } from './ui/glass-button';
 import { GlassCard } from './ui/glass-card';
 import { PageTransition } from './animations/PageTransition';
-import LandingScene from './animations/LandingScene';
 import IntegrationHub3D from './animations/IntegrationHub3D';
 import RotatingGlobe from './animations/RotatingGlobe';
 import { useRef, useState, useEffect } from 'react';
@@ -96,8 +95,6 @@ export default function Landing() {
   return (
     <PageTransition>
       <div ref={containerRef} className="relative min-h-screen">
-        {/* 3D Interactive Background */}
-        <LandingScene />
 
         {/* Section 1: Hero */}
         <section className="relative flex flex-col items-center justify-center pt-12 pb-24 lg:pt-20 lg:pb-40 overflow-hidden">
@@ -162,17 +159,15 @@ export default function Landing() {
                   </GlassButton>
                 </div>
                 
-                <div className="flex items-center gap-10 pt-8 border-t border-glass-border/20 max-w-lg">
+                <div className="flex items-center gap-10 pt-8 max-w-lg">
                   <div className="space-y-1">
                     <div className="text-2xl font-black text-white leading-none">100%</div>
                     <div className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Open Source</div>
                   </div>
-                  <div className="h-10 w-px bg-glass-border/20" />
                   <div className="space-y-1">
                     <div className="text-2xl font-black text-white leading-none">Local</div>
                     <div className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Privacy First</div>
                   </div>
-                  <div className="h-10 w-px bg-glass-border/20" />
                   <div className="space-y-1">
                     <div className="text-2xl font-black text-white leading-none">Free</div>
                     <div className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">No Accounts</div>
@@ -181,9 +176,9 @@ export default function Landing() {
               </div>
 
               {/* Right Column: Visual Workbench (Span 7) */}
-              <div className="lg:col-span-7 flex items-center justify-end relative min-h-[600px] lg:min-h-[750px] w-full">
+              <div className="lg:col-span-7 flex items-center justify-center relative min-h-[600px] lg:min-h-[750px] w-full">
                 <div className="absolute inset-0 bg-accent-blue/5 rounded-full blur-[160px] pointer-events-none" />
-                <div className="relative w-full h-full max-w-[800px]">
+                <div className="relative w-full h-full max-w-[800px]" style={{ marginLeft: '-100px' }}>
                   <IntegrationHub3D />
                 </div>
               </div>

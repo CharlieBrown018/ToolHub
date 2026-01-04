@@ -8,20 +8,67 @@ import {
   Columns, 
   Palette, 
   QrCode,
-  Toolbox
+  Toolbox,
+  Icon
 } from '@phosphor-icons/react';
 
-const TOOLS = [
-  { name: 'Scan2PDF', icon: ImageIcon, color: '#3b82f6', route: '/tools/image-to-pdf' },
-  { name: 'WebP Express', icon: Lightning, color: '#6366f1', route: '/tools/webp-express' },
-  { name: 'SecurePass', icon: ShieldCheck, color: '#a855f7', route: '/tools/secure-pass' },
-  { name: 'DiffMaster', icon: Columns, color: '#ef4444', route: '/tools/diff-master' },
-  { name: 'Palette', icon: Palette, color: '#ec4899', route: '/tools/color-palette' },
-  { name: 'QuickQR', icon: QrCode, color: '#f59e0b', route: '/tools/quick-qr' },
+// ============================================================================
+// CONFIGURATION
+// ============================================================================
+
+interface GridConfig {
+  gridSize: number;      // Grid dimensions (e.g., 9 = 9x9 grid)
+  cellSize: number;      // Size of each grid cell in pixels
+  minGap: number;        // Minimum cells between tiles (for visible pulse lines)
+}
+
+interface TileConfig {
+  id: string;
+  gridX: number;         // Grid X position (0 to gridSize-1)
+  gridY: number;         // Grid Y position (0 to gridSize-1)
+  name: string;
+  icon: Icon;
+  color: string;
+  route?: string;
+  size?: 'small' | 'medium' | 'large';  // Tile size
+  isHub?: boolean;       // Is this the central hub?
+}
+
+// Grid configuration
+const GRID_CONFIG: GridConfig = {
+  gridSize: 10,          // 10x10 grid
+  cellSize: 75,          // 75px per cell
+  minGap: 2,             // Minimum 2 cells between tiles
+};
+
+// Tile size presets (in grid cells)
+const TILE_SIZES = {
+  small: { cells: 1, pixels: 90, thickness: 28 },
+  medium: { cells: 1.5, pixels: 110, thickness: 35 },
+  large: { cells: 2.5, pixels: 180, thickness: 55 },
+};
+
+// Tile configurations - placed on grid coordinates
+// Hub is at center (4.5, 4.5) in a 10x10 grid (centered between cells 4 and 5)
+const TILES: TileConfig[] = [
+  // Central Hub - centered in 10x10 grid
+  { id: 'hub', gridX: 4, gridY: 4, name: '', icon: Toolbox, color: '#3b82f6', isHub: true, size: 'large' },
+  
+  // Tools around the hub (at least 2 cells away for visible pulse lines)
+  { id: 'scan2pdf', gridX: 1, gridY: 1, name: 'Scan2PDF', icon: ImageIcon, color: '#3b82f6', route: '/tools/image-to-pdf', size: 'medium' },
+  { id: 'webp', gridX: 7, gridY: 0, name: 'WebP Express', icon: Lightning, color: '#6366f1', route: '/tools/webp-express', size: 'medium' },
+  { id: 'quickqr', gridX: 0, gridY: 5, name: 'QuickQR', icon: QrCode, color: '#f59e0b', route: '/tools/quick-qr', size: 'medium' },
+  { id: 'securepass', gridX: 8, gridY: 3, name: 'SecurePass', icon: ShieldCheck, color: '#a855f7', route: '/tools/secure-pass', size: 'medium' },
+  { id: 'palette', gridX: 2, gridY: 8, name: 'Palette', icon: Palette, color: '#ec4899', route: '/tools/color-palette', size: 'medium' },
+  { id: 'diffmaster', gridX: 8, gridY: 7, name: 'DiffMaster', icon: Columns, color: '#ef4444', route: '/tools/diff-master', size: 'medium' },
 ];
 
-// Helper to darken colors for 3D sides
-const shadeColor = (col: string, amt: number) => {
+// ============================================================================
+// HELPER FUNCTIONS
+// ============================================================================
+
+// Darken/lighten colors for 3D shading
+const shadeColor = (col: string, amt: number): string => {
   let usePound = false;
   if (col[0] === "#") {
     col = col.slice(1);
@@ -37,111 +84,153 @@ const shadeColor = (col: string, amt: number) => {
   return (usePound ? "#" : "") + (g | (b << 8) | (r << 16)).toString(16).padStart(6, '0');
 };
 
-function Thick3DBlock({ 
-  size = 100, 
-  thickness = 40, 
-  elevation = 20,
-  color = '#3b82f6', 
-  children,
-  className = ""
-}: { 
-  size?: number; 
-  thickness?: number; 
-  elevation?: number;
-  color?: string; 
-  children?: React.ReactNode;
+// Convert grid position to pixel position
+const gridToPixel = (gridPos: number, config: GridConfig): number => {
+  return gridPos * config.cellSize;
+};
+
+// Calculate center of tile in pixels
+const getTileCenter = (tile: TileConfig, config: GridConfig): { x: number; y: number } => {
+  const sizeConfig = TILE_SIZES[tile.size || 'medium'];
+  const offset = (sizeConfig.cells * config.cellSize) / 2;
+  return {
+    x: gridToPixel(tile.gridX, config) + offset,
+    y: gridToPixel(tile.gridY, config) + offset,
+  };
+};
+
+// Generate orthogonal grid path between two points
+const generateGridPath = (
+  startX: number, 
+  startY: number, 
+  endX: number, 
+  endY: number
+): string => {
+  // Create L-shaped path following grid lines
+  const midX = startX + (endX - startX) * 0.5;
+  return `M ${startX} ${startY} L ${midX} ${startY} L ${midX} ${endY} L ${endX} ${endY}`;
+};
+
+// ============================================================================
+// 3D TILE COMPONENT
+// ============================================================================
+
+interface Tile3DProps {
+  size: number;
+  thickness: number;
+  color: string;
+  children: React.ReactNode;
   className?: string;
-}) {
+}
+
+function Tile3D({ size, thickness, color, children, className = "" }: Tile3DProps) {
+  const depth = thickness;
+  
   return (
     <div 
       className={`relative ${className}`}
       style={{ 
         width: size, 
-        height: size, 
+        height: size,
         transformStyle: 'preserve-3d',
-        transform: `translateZ(${elevation}px)`,
       }}
     >
-      {/* Top Face */}
+      {/* 3D Cube Container */}
       <div 
-        className="absolute inset-0 rounded-2xl flex items-center justify-center border border-white/30"
         style={{ 
-          background: `linear-gradient(135deg, ${color}, ${shadeColor(color, -20)})`,
-          transform: `translateZ(${thickness}px)`,
-          zIndex: 5,
-          boxShadow: `inset 0 2px 15px rgba(255,255,255,0.4), 0 10px 30px rgba(0,0,0,0.5)`,
+          width: '100%', 
+          height: '100%', 
+          transformStyle: 'preserve-3d',
+          position: 'relative',
         }}
       >
-        <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/30 to-transparent pointer-events-none" />
-        {children}
+        {/* Top Face - Main surface */}
+        <div 
+          className="absolute flex items-center justify-center border border-white/30"
+          style={{ 
+            width: size,
+            height: size,
+            background: `linear-gradient(135deg, ${color}, ${shadeColor(color, -10)})`,
+            transform: `translateZ(${depth}px)`,
+            boxShadow: `inset 0 2px 20px rgba(255,255,255,0.5), 0 8px 32px rgba(0,0,0,0.4)`,
+          }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-white/20 to-transparent pointer-events-none" />
+          <div className="relative z-10">{children}</div>
+        </div>
+
+        {/* Front Face (Bottom) - flat rectangle, no rounding */}
+        <div 
+          className="absolute"
+          style={{ 
+            width: size,
+            height: depth,
+            bottom: -depth,
+            left: 0,
+            background: `linear-gradient(to bottom, ${shadeColor(color, -15)}, ${shadeColor(color, -35)})`,
+            transform: `rotateX(-90deg) translateY(-${depth}px)`,
+            transformOrigin: 'top',
+            borderTop: `1px solid rgba(255,255,255,0.25)`,
+          }}
+        />
+
+        {/* Left Face - flat rectangle, no rounding */}
+        <div 
+          className="absolute"
+          style={{ 
+            width: depth,
+            height: size,
+            top: 0,
+            left: 0,
+            background: `linear-gradient(to left, ${shadeColor(color, -25)}, ${shadeColor(color, -45)})`,
+            transform: `rotateY(-90deg)`,
+            transformOrigin: 'left',
+            borderRight: `1px solid rgba(255,255,255,0.2)`,
+          }}
+        />
       </div>
 
-      {/* Front Face (Thickness facing viewer) */}
+      {/* Ground Shadow */}
       <div 
-        className="absolute left-0 right-0 rounded-b-2xl"
+        className="absolute bg-black/70"
         style={{ 
-          bottom: 0,
-          height: thickness,
-          background: `linear-gradient(to bottom, ${shadeColor(color, -40)}, ${shadeColor(color, -60)})`,
-          transform: `rotateX(-90deg)`,
-          transformOrigin: 'bottom',
-          boxShadow: 'inset 0 -10px 20px rgba(0,0,0,0.3)'
-        }}
-      />
-
-      {/* Right Face (Thickness facing viewer) */}
-      <div 
-        className="absolute top-0 bottom-0 rounded-r-2xl"
-        style={{ 
-          right: 0,
-          width: thickness,
-          background: `linear-gradient(to right, ${shadeColor(color, -50)}, ${shadeColor(color, -70)})`,
-          transform: `rotateY(90deg)`,
-          transformOrigin: 'right',
-          boxShadow: 'inset -10px 0 20px rgba(0,0,0,0.3)'
-        }}
-      />
-
-      {/* Ground Shadow - Projecting onto the grid plane */}
-      <div 
-        className="absolute inset-0 bg-black/80 rounded-2xl"
-        style={{ 
-          transform: `translateZ(${-elevation}px) translateY(${elevation/2}px) scale(1.1)`,
-          filter: 'blur(30px)',
-          opacity: 0.6
+          width: size,
+          height: size,
+          left: 0,
+          top: 0,
+          transform: `translateZ(-20px) translateY(16px) scale(1.25)`,
+          filter: 'blur(45px)',
+          opacity: 0.4,
+          zIndex: -1,
         }}
       />
     </div>
   );
 }
 
-function SlackLine({ 
-  startX, 
-  startY, 
-  endX, 
-  endY, 
-  color = '#cbd5e1', 
-  active = false,
-  delay = 0 
-}: { 
-  startX: number; 
-  startY: number; 
-  endX: number; 
-  endY: number; 
-  color?: string;
-  active?: boolean;
+// ============================================================================
+// PULSE LINE COMPONENT
+// ============================================================================
+
+interface PulseLineProps {
+  startX: number;
+  startY: number;
+  endX: number;
+  endY: number;
+  color: string;
   delay?: number;
-}) {
-  // Orthogonal path: start -> half-horizontal -> vertical -> rest-horizontal
-  const midX = startX + (endX - startX) * 0.5;
-  const pathD = `M ${startX} ${startY} L ${midX} ${startY} L ${midX} ${endY} L ${endX} ${endY}`;
+  active?: boolean;
+}
+
+function PulseLine({ startX, startY, endX, endY, color, delay = 0, active = true }: PulseLineProps) {
+  const pathD = generateGridPath(startX, startY, endX, endY);
 
   return (
     <svg 
       className="absolute inset-0 w-full h-full pointer-events-none overflow-visible"
-      style={{ zIndex: 0, transform: 'translateZ(0px)' }} // Flat on the ground
+      style={{ zIndex: 0, transform: 'translateZ(0px)' }}
     >
-      {/* Ghost Path (always visible but faint) */}
+      {/* Base path (always visible) */}
       <path
         d={pathD}
         stroke="#ffffff"
@@ -151,7 +240,7 @@ function SlackLine({
         fill="none"
       />
 
-      {/* Active Colored Path with Glow */}
+      {/* Active pulse path with glow */}
       {active && (
         <>
           <motion.path
@@ -175,7 +264,7 @@ function SlackLine({
             }}
           />
           
-          {/* Moving Sparks / Data flow - Slowed down even more for ultra-calm feel */}
+          {/* Moving spark particles */}
           {[0, 1].map((i) => (
             <motion.circle
               key={i}
@@ -185,13 +274,13 @@ function SlackLine({
               animate={{ 
                 opacity: [0, 0.8, 0.8, 0],
                 scale: [0.8, 1.2, 0.8],
-                //@ts-ignore
+                // @ts-ignore
                 "--offset-distance": ["0%", "100%"]
               }}
               style={{ 
-                //@ts-ignore
+                // @ts-ignore
                 offsetPath: `path('${pathD}')`,
-                //@ts-ignore
+                // @ts-ignore
                 offsetDistance: "var(--offset-distance)",
                 filter: 'drop-shadow(0 0 10px white)',
                 willChange: "transform, opacity"
@@ -210,25 +299,60 @@ function SlackLine({
   );
 }
 
-export default function IntegrationHub3D() {
-  const centerX = 50;
-  const centerY = 50;
-  const radius = 42; // Increased radius for more space
+// ============================================================================
+// GHOST LINES (decorative broken lines extending outward)
+// ============================================================================
 
-  const toolPositions = TOOLS.map((_, i) => {
-    const angle = (i / TOOLS.length) * Math.PI * 2 - Math.PI / 2;
-    return {
-      x: centerX + radius * Math.cos(angle),
-      y: centerY + radius * Math.sin(angle),
-    };
-  });
+function GhostLines({ hubCenter, config }: { hubCenter: { x: number; y: number }; config: GridConfig }) {
+  const ghostLines = [];
+  const totalSize = config.gridSize * config.cellSize;
+  
+  // Generate ghost lines in 8 directions
+  for (let i = 0; i < 12; i++) {
+    const angle = (i / 12) * Math.PI * 2 + Math.PI / 12;
+    const distance = totalSize * 0.6 + (i % 3) * 40;
+    const endX = hubCenter.x + distance * Math.cos(angle);
+    const endY = hubCenter.y + distance * Math.sin(angle);
+    
+    ghostLines.push(
+      <PulseLine
+        key={`ghost-${i}`}
+        startX={hubCenter.x}
+        startY={hubCenter.y}
+        endX={endX}
+        endY={endY}
+        color="#ffffff"
+        active={false}
+      />
+    );
+  }
+  
+  return <>{ghostLines}</>;
+}
+
+// ============================================================================
+// MAIN COMPONENT
+// ============================================================================
+
+export default function IntegrationHub3D() {
+  const config = GRID_CONFIG;
+  const totalSize = config.gridSize * config.cellSize;
+  
+  // Find hub tile
+  const hubTile = TILES.find(t => t.isHub);
+  const hubCenter = hubTile ? getTileCenter(hubTile, config) : { x: totalSize / 2, y: totalSize / 2 };
+  
+  // Get non-hub tiles
+  const toolTiles = TILES.filter(t => !t.isHub);
 
   return (
     <div className="w-full h-full min-h-[700px] relative flex items-center justify-end overflow-visible">
       {/* Isometric Stage */}
       <div 
-        className="relative w-[750px] h-[750px] transform-gpu translate-x-12"
+        className="relative transform-gpu"
         style={{ 
+          width: totalSize,
+          height: totalSize,
           perspective: '3000px',
           transform: 'rotateX(58deg) rotateZ(-38deg)',
           transformStyle: 'preserve-3d'
@@ -239,76 +363,85 @@ export default function IntegrationHub3D() {
           className="absolute inset-[-40%] opacity-[0.12]"
           style={{
             backgroundImage: `linear-gradient(white 1.5px, transparent 1.5px), linear-gradient(90deg, white 1.5px, transparent 1.5px)`,
-            backgroundSize: '70px 70px',
+            backgroundSize: `${config.cellSize}px ${config.cellSize}px`,
             maskImage: 'radial-gradient(circle at 50% 50%, black, transparent 90%)',
             transform: 'translateZ(0px)'
           }}
         />
 
-        {/* Lines */}
-        {toolPositions.map((pos, i) => (
-          <SlackLine
-            key={`line-${i}`}
-            startX={50 * 7.5} startY={50 * 7.5}
-            endX={pos.x * 7.5} endY={pos.y * 7.5}
-            color={TOOLS[i].color}
-            active={true}
-            delay={i * 0.2}
-          />
-        ))}
-
-        {/* Ghost/Broken Lines */}
-        {[...Array(18)].map((_, i) => {
-          const angle = (i / 18) * Math.PI * 2 + Math.PI / 18;
-          const r = radius + 30 + (i % 3) * 20;
-          const ex = centerX + r * Math.cos(angle);
-          const ey = centerY + r * Math.sin(angle);
+        {/* Pulse Lines from Hub to each Tool */}
+        {toolTiles.map((tile, i) => {
+          const tileCenter = getTileCenter(tile, config);
           return (
-            <SlackLine
-              key={`ghost-${i}`}
-              startX={50 * 7.5} startY={50 * 7.5}
-              endX={ex * 7.5} endY={ey * 7.5}
-              active={false}
+            <PulseLine
+              key={`line-${tile.id}`}
+              startX={hubCenter.x}
+              startY={hubCenter.y}
+              endX={tileCenter.x}
+              endY={tileCenter.y}
+              color={tile.color}
+              delay={i * 0.2}
+              active={true}
             />
           );
         })}
 
-        {/* Central Hub - High elevation and thickness */}
-        <div 
-          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-          style={{ transform: 'translate(-50%, -50%)' }}
-        >
-          <Thick3DBlock size={200} thickness={80} elevation={60} color="#3b82f6">
-            <div className="flex flex-col items-center gap-4">
-              <Toolbox className="w-24 h-24 text-white drop-shadow-[0_15px_25px_rgba(0,0,0,0.5)]" weight="duotone" />
-              <span className="text-[14px] font-black tracking-[0.4em] text-white/95">TOOLHUB</span>
-            </div>
-          </Thick3DBlock>
-        </div>
+        {/* Ghost/Decorative Lines */}
+        <GhostLines hubCenter={hubCenter} config={config} />
 
-        {/* Tool Tiles - Elevated and thick */}
-        {TOOLS.map((tool, i) => (
-          <div
-            key={i}
-            className="absolute"
-            style={{ 
-              left: `${toolPositions[i].x}%`, 
-              top: `${toolPositions[i].y}%`,
-              transform: 'translate(-50%, -50%)'
-            }}
-          >
-            <Link to={tool.route}>
-              <Thick3DBlock size={110} thickness={45} elevation={30} color={tool.color}>
-                <div className="flex flex-col items-center gap-2">
-                  <tool.icon className="w-12 h-12 text-white" weight="duotone" />
-                  <span className="text-[9px] font-black text-white/90 uppercase tracking-widest leading-none">
-                    {tool.name}
-                  </span>
-                </div>
-              </Thick3DBlock>
-            </Link>
-          </div>
-        ))}
+        {/* Render all tiles */}
+        {TILES.map((tile) => {
+          const sizeConfig = TILE_SIZES[tile.size || 'medium'];
+          const pixelX = gridToPixel(tile.gridX, config);
+          const pixelY = gridToPixel(tile.gridY, config);
+          const IconComponent = tile.icon;
+
+          const tileElement = (
+            <Tile3D 
+              size={sizeConfig.pixels} 
+              thickness={sizeConfig.thickness} 
+              color={tile.color}
+            >
+              <div className="flex flex-col items-center gap-2">
+                <IconComponent 
+                  className={`text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.4)] ${
+                    tile.isHub ? 'w-24 h-24' : 'w-12 h-12'
+                  }`} 
+                  weight="duotone" 
+                />
+                <span className={`font-black text-white/90 uppercase tracking-widest leading-none ${
+                  tile.isHub ? 'text-[14px] tracking-[0.4em]' : 'text-[9px]'
+                }`}>
+                  {tile.name}
+                </span>
+              </div>
+            </Tile3D>
+          );
+
+          return (
+            <div
+              key={tile.id}
+              className="absolute"
+              style={{ 
+                left: pixelX,
+                top: pixelY,
+                transformStyle: 'preserve-3d',
+              }}
+            >
+              {tile.route ? (
+                <Link 
+                  to={tile.route} 
+                  className="block"
+                  style={{ transformStyle: 'preserve-3d' }}
+                >
+                  {tileElement}
+                </Link>
+              ) : (
+                tileElement
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
