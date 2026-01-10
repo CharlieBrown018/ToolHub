@@ -124,75 +124,193 @@ interface Tile3DProps {
 }
 
 function Tile3D({ size, thickness, color, children, className = "" }: Tile3DProps) {
+  const [isHovered, setIsHovered] = React.useState(false);
+  const hoverTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleMouseEnter = () => {
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+      hoverTimeoutRef.current = null;
+    }
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    hoverTimeoutRef.current = setTimeout(() => {
+      setIsHovered(false);
+    }, 150); // Increased grace period for maximum robustness
+  };
+
+  React.useEffect(() => {
+    return () => {
+      if (hoverTimeoutRef.current) {
+        clearTimeout(hoverTimeoutRef.current);
+      }
+    };
+  }, []);
+
   const depth = thickness;
+  const baseDepth = thickness * 0.5;
+  const capDepth = thickness * 0.5;
+  const capSize = size * 0.86;
+  const capOffset = (size - capSize) / 2;
+  
+  // Convert hex color to rgba for glow effect
+  const hexToRgba = (hex: string, alpha: number): string => {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  };
+  
+  const glowColor = hexToRgba(color, 0.6);
+  const glowShadow = isHovered 
+    ? `0 0 30px ${glowColor}, 0 0 60px ${hexToRgba(color, 0.4)}, 0 0 90px ${hexToRgba(color, 0.2)}`
+    : '';
+  
+  // Expand hitbox by 0% on all sides for precise hover detection
+  const expandedSize = size;
   
   return (
     <div 
-      className={`relative ${className}`}
+      className={`relative ${className} transition-all duration-300 pointer-events-none`}
       style={{ 
-        width: size, 
-        height: size,
+        width: expandedSize, 
+        height: expandedSize,
         transformStyle: 'preserve-3d',
+        filter: isHovered ? `drop-shadow(0 0 20px ${glowColor})` : 'none',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
       }}
     >
       {/* 3D Cube Container */}
       <div 
         style={{ 
-          width: '100%', 
-          height: '100%', 
+          width: size, 
+          height: size, 
           transformStyle: 'preserve-3d',
           position: 'relative',
         }}
       >
-        {/* Top Face - Main surface */}
-        <div 
-          className="absolute flex items-center justify-center border border-white/30"
-          style={{ 
-            width: size,
-            height: size,
-            background: `linear-gradient(135deg, ${color}, ${shadeColor(color, -10)})`,
-            transform: `translateZ(${depth}px)`,
-            boxShadow: `inset 0 2px 20px rgba(255,255,255,0.5), 0 8px 32px rgba(0,0,0,0.4)`,
-          }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-white/20 to-transparent pointer-events-none" />
-          <div className="relative z-10">{children}</div>
-        </div>
-
-        {/* Front Face (Bottom) - flat rectangle, no rounding */}
+        {/* --- VISIBLE GEOMETRY --- */}
+        {/* --- BASE TIER --- */}
+        {/* Base Front Face */}
         <div 
           className="absolute"
           style={{ 
             width: size,
-            height: depth,
-            bottom: -depth,
+            height: baseDepth,
+            bottom: -baseDepth,
             left: 0,
-            background: `linear-gradient(to bottom, ${shadeColor(color, -15)}, ${shadeColor(color, -35)})`,
-            transform: `rotateX(-90deg) translateY(-${depth}px)`,
+            background: `linear-gradient(to bottom, ${shadeColor(color, -20)}, ${shadeColor(color, -40)})`,
+            transform: `rotateX(-90deg) translateY(-${baseDepth}px)`,
             transformOrigin: 'top',
-            borderTop: `1px solid rgba(255,255,255,0.25)`,
+            borderTop: `1px solid rgba(255,255,255,0.15)`,
+            boxShadow: `0 4px 16px rgba(0,0,0,0.5), inset 0 -2px 8px rgba(0,0,0,0.3)`,
           }}
         />
 
-        {/* Left Face - flat rectangle, no rounding */}
+        {/* Base Left Face */}
         <div 
           className="absolute"
           style={{ 
-            width: depth,
+            width: baseDepth,
             height: size,
             top: 0,
             left: 0,
-            background: `linear-gradient(to left, ${shadeColor(color, -25)}, ${shadeColor(color, -45)})`,
+            background: `linear-gradient(to left, ${shadeColor(color, -30)}, ${shadeColor(color, -50)})`,
             transform: `rotateY(-90deg)`,
             transformOrigin: 'left',
-            borderRight: `1px solid rgba(255,255,255,0.2)`,
+            borderRight: `1px solid rgba(255,255,255,0.1)`,
+            boxShadow: `4px 0 16px rgba(0,0,0,0.5), inset -2px 0 8px rgba(0,0,0,0.3)`,
           }}
         />
+
+        {/* Base Top Face (Shoulder) */}
+        <div 
+          className="absolute"
+          style={{ 
+            width: size,
+            height: size,
+            background: shadeColor(color, -10),
+            transform: `translateZ(${baseDepth}px)`,
+            border: '1px solid rgba(255,255,255,0.1)',
+            boxShadow: `0 6px 24px rgba(0,0,0,0.4), inset 0 2px 12px rgba(0,0,0,0.2)`,
+          }}
+        />
+
+        {/* --- CAP TIER --- */}
+        {/* Cap Front Face */}
+        <div 
+          className="absolute transition-all duration-300"
+          style={{ 
+            width: capSize,
+            height: capDepth,
+            top: capOffset + capSize,
+            left: capOffset,
+            background: `linear-gradient(to bottom, ${shadeColor(color, 5)}, ${shadeColor(color, -15)})`,
+            transform: `translateZ(${depth}px) rotateX(-90deg)`,
+            transformOrigin: 'top',
+            borderTop: `1px solid rgba(255,255,255,0.3)`,
+            boxShadow: isHovered
+              ? `0 0 15px ${hexToRgba(color, 0.4)}, 0 4px 20px rgba(0,0,0,0.6), inset 0 -2px 10px rgba(0,0,0,0.4)`
+              : `0 4px 20px rgba(0,0,0,0.6), inset 0 -2px 10px rgba(0,0,0,0.4)`,
+          }}
+        />
+
+        {/* Cap Left Face */}
+        <div 
+          className="absolute transition-all duration-300"
+          style={{ 
+            width: capDepth,
+            height: capSize,
+            top: capOffset,
+            left: capOffset,
+            background: `linear-gradient(to left, ${shadeColor(color, -5)}, ${shadeColor(color, -25)})`,
+            transform: `translateZ(${baseDepth}px) rotateY(-90deg)`,
+            transformOrigin: 'left',
+            borderRight: `1px solid rgba(255,255,255,0.25)`,
+            boxShadow: isHovered
+              ? `0 0 15px ${hexToRgba(color, 0.4)}, 4px 0 20px rgba(0,0,0,0.6), inset -2px 0 10px rgba(0,0,0,0.4)`
+              : `4px 0 20px rgba(0,0,0,0.6), inset -2px 0 10px rgba(0,0,0,0.4)`,
+          }}
+        />
+
+        {/* Top Face - Main surface */}
+        <div 
+          className="absolute flex items-center justify-center border border-white/30 transition-all duration-300 pointer-events-none"
+          style={{ 
+            width: capSize,
+            height: capSize,
+            left: capOffset,
+            top: capOffset,
+            background: `linear-gradient(135deg, ${color}, ${shadeColor(color, -10)})`,
+            transform: `translateZ(${depth}px)`,
+            boxShadow: isHovered
+              ? `${glowShadow}, inset 0 2px 20px rgba(255,255,255,0.5), 0 12px 40px rgba(0,0,0,0.6), 0 4px 16px rgba(0,0,0,0.4)`
+              : `inset 0 2px 20px rgba(255,255,255,0.5), 0 12px 40px rgba(0,0,0,0.6), 0 4px 16px rgba(0,0,0,0.4)`,
+          }}
+        >
+          {/* INTERACTIVE HIT TARGET - Invisible plate on top */}
+          <div 
+            className="absolute inset-0 z-50 cursor-pointer"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            style={{ 
+              pointerEvents: 'auto',
+              backgroundColor: 'rgba(255, 255, 255, 0.001)', // Force hit testing
+            }}
+          />
+
+          <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-white/20 to-transparent pointer-events-none" />
+          <div className="relative z-10 scale-[0.85] pointer-events-none">{children}</div>
+        </div>
       </div>
 
       {/* Ground Shadow */}
       <div 
-        className="absolute bg-black/70"
+        className="absolute bg-black/70 pointer-events-none"
         style={{ 
           width: size,
           height: size,
