@@ -1,24 +1,52 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect, useMemo } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import { GlassCard, GlassCardContent, GlassCardDescription, GlassCardFooter, GlassCardHeader, GlassCardTitle } from './ui/glass-card';
 import { GlassButton } from './ui/glass-button';
-import { HubLayout } from './layouts/HubLayout';
 import { PageTransition } from './animations/PageTransition';
-import { CircleNotch, Image, FileText, CheckCircle, Palette, CaretRight, Lightning, ArrowsInSimple, Columns, ShieldCheck, ArrowsLeftRight, QrCode } from '@phosphor-icons/react';
+import { CircleNotch, CaretRight } from '@phosphor-icons/react';
 import { useSearch } from '../context/SearchContext';
+import { getFeaturedTools, categorizeTools, getToolCategory, CATEGORIES } from '../utils/categories';
+import { getToolIcon } from '../utils/tool-icons';
 
 function Hub() {
-  const { searchQuery, searchResults: tools } = useSearch();
+  const { searchQuery, searchResults: allTools } = useSearch();
   const [loading, setLoading] = useState(true);
+  const [searchParams] = useSearchParams();
+  const selectedCategory = searchParams.get('category');
+
+  // Helper to get consistent category color for a tool
+  const getEffectiveColor = (tool: any) => {
+    const categoryId = getToolCategory(tool);
+    return CATEGORIES[categoryId]?.color || tool.color || 'blue';
+  };
 
   useEffect(() => {
     // We already have tools from search results in context
-    if (tools.length > 0 || !searchQuery) {
+    if (allTools.length > 0 || !searchQuery) {
       setLoading(false);
     }
-  }, [tools, searchQuery]);
+  }, [allTools, searchQuery]);
 
-  if (loading && tools.length === 0) {
+  // Determine which tools to display
+  const displayedTools = useMemo(() => {
+    // If searching, show search results
+    if (searchQuery.trim()) {
+      return allTools;
+    }
+    
+    // If category selected, show tools from that category
+    if (selectedCategory) {
+      const categories = categorizeTools(allTools);
+      const category = categories.find(cat => cat.id === selectedCategory);
+      return category?.tools || [];
+    }
+    
+    // Otherwise, show featured tools (1 from each category)
+    return getFeaturedTools(allTools);
+  }, [allTools, searchQuery, selectedCategory]);
+
+
+  if (loading && allTools.length === 0) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-bg-primary">
         <div className="flex flex-col items-center gap-4">
@@ -78,21 +106,6 @@ function Hub() {
     return colors[color] || colors.blue;
   };
 
-  const getToolIcon = (toolId: string) => {
-    const iconMap: Record<string, React.ComponentType<any>> = {
-      'image-to-pdf': Image,
-      'md-to-pdf': FileText,
-      'data-validator': CheckCircle,
-      'color-palette': Palette,
-      'webp-express': Lightning,
-      'shrink-it': ArrowsInSimple,
-      'diff-master': Columns,
-      'secure-pass': ShieldCheck,
-      'unit-flow': ArrowsLeftRight,
-      'quick-qr': QrCode,
-    };
-    return iconMap[toolId] || Image;
-  };
 
   const getButtonVariant = (color: string) => {
     const variants: Record<string, any> = {
@@ -112,63 +125,102 @@ function Hub() {
 
   return (
     <PageTransition>
-      <HubLayout>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-12">
-        {tools.map((tool) => (
-          <GlassCard
-            key={tool.id}
-            className={`relative overflow-hidden ${getColorClasses(tool.color)}`}
-            hover={true}
-            animated={true}
-          >
-            {/* Gradient Background Layer */}
-            <div className={`absolute inset-0 ${getGradientClasses(tool.color)} pointer-events-none`} />
-            
-            {/* Content Layer */}
-            <div className="relative z-10">
-              <GlassCardHeader>
-                <div className="flex items-center gap-3 mb-2">
-                  <div className={`h-12 w-12 rounded-xl ${getIconColorClasses(tool.color)} backdrop-blur-sm border border-glass-border flex items-center justify-center shadow-depth-1`}>
-                    {(() => {
-                      const IconComponent = getToolIcon(tool.id);
-                      return <IconComponent className="h-6 w-6" weight="duotone" />;
-                    })()}
-                  </div>
-                  <GlassCardTitle className="text-xl text-gray-100">{tool.display_name || tool.title}</GlassCardTitle>
-                </div>
-              <GlassCardDescription className="text-base text-gray-300">
-                {tool.description}
-              </GlassCardDescription>
-            </GlassCardHeader>
-            <GlassCardContent>
-              <div className="flex flex-wrap gap-2">
-                {tool.features.map((feature, idx) => (
-                  <span
-                    key={idx}
-                    className="text-xs px-2 py-1 rounded-md bg-glass-white-md backdrop-blur-sm border border-glass-border text-gray-300"
-                  >
-                    {feature}
-                  </span>
-                ))}
-              </div>
-            </GlassCardContent>
-            <GlassCardFooter>
-              <GlassButton
-                asChild
-                variant={getButtonVariant(tool.color)}
-                className="w-full"
-              >
-                <Link to={tool.route}>
-                  Open Tool
-                  <CaretRight className="ml-2 h-4 w-4" weight="duotone" />
-                </Link>
-              </GlassButton>
-            </GlassCardFooter>
+        {/* Header Section */}
+        <div className="mb-8">
+          {searchQuery.trim() ? (
+            <div className="flex items-center gap-3 mb-2">
+              <h1 className="text-3xl font-bold text-white">Search Results</h1>
+              <span className="text-sm text-gray-400">({displayedTools.length} {displayedTools.length === 1 ? 'tool' : 'tools'})</span>
             </div>
-          </GlassCard>
-        ))}
+          ) : selectedCategory ? (
+            <div className="flex items-center gap-3 mb-2">
+              <h1 className="text-3xl font-bold text-white">
+                {categorizeTools(allTools).find(cat => cat.id === selectedCategory)?.name || 'Category'}
+              </h1>
+              <span className="text-sm text-gray-400">({displayedTools.length} {displayedTools.length === 1 ? 'tool' : 'tools'})</span>
+            </div>
+          ) : (
+            <div className="mb-2">
+              <div className="flex items-center gap-3 mb-2">
+                <h1 className="text-3xl font-bold text-white">Featured Tools</h1>
+              </div>
+              <p className="text-gray-400 text-sm">
+                Discover one tool from each category. Browse categories in the sidebar to see all tools.
+              </p>
+            </div>
+          )}
         </div>
-      </HubLayout>
+
+        {/* Tools Grid */}
+        {displayedTools.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-20">
+            <p className="text-gray-400 text-lg mb-2">No tools found</p>
+            <p className="text-gray-500 text-sm">
+              {searchQuery.trim() 
+                ? 'Try a different search query' 
+                : 'Select a category from the sidebar'}
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-12">
+            {displayedTools.map((tool) => {
+              const effectiveColor = getEffectiveColor(tool);
+              return (
+                <GlassCard
+                  key={tool.id}
+                  className={`relative overflow-hidden ${getColorClasses(effectiveColor)}`}
+                  hover={true}
+                  animated={true}
+                >
+                  {/* Gradient Background Layer */}
+                  <div className={`absolute inset-0 ${getGradientClasses(effectiveColor)} pointer-events-none`} />
+                  
+                  {/* Content Layer */}
+                  <div className="relative z-10">
+                    <GlassCardHeader>
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className={`h-12 w-12 rounded-xl ${getIconColorClasses(effectiveColor)} backdrop-blur-sm border border-glass-border flex items-center justify-center shadow-depth-1`}>
+                          {(() => {
+                            const IconComponent = getToolIcon(tool.id);
+                            return <IconComponent className="h-6 w-6" weight="duotone" />;
+                          })()}
+                        </div>
+                        <GlassCardTitle className="text-xl text-gray-100">{tool.display_name || tool.title}</GlassCardTitle>
+                      </div>
+                    <GlassCardDescription className="text-base text-gray-300">
+                      {tool.description}
+                    </GlassCardDescription>
+                  </GlassCardHeader>
+                  <GlassCardContent>
+                    <div className="flex flex-wrap gap-2">
+                      {tool.features.map((feature, idx) => (
+                        <span
+                          key={idx}
+                          className="text-xs px-2 py-1 rounded-md bg-glass-white-md backdrop-blur-sm border border-glass-border text-gray-300"
+                        >
+                          {feature}
+                        </span>
+                      ))}
+                    </div>
+                  </GlassCardContent>
+                  <GlassCardFooter>
+                    <GlassButton
+                      asChild
+                      variant={getButtonVariant(effectiveColor)}
+                      className="w-full"
+                    >
+                      <Link to={tool.route}>
+                        Open Tool
+                        <CaretRight className="ml-2 h-4 w-4" weight="duotone" />
+                      </Link>
+                    </GlassButton>
+                  </GlassCardFooter>
+                  </div>
+                </GlassCard>
+              );
+            })}
+          </div>
+        )}
     </PageTransition>
   );
 }

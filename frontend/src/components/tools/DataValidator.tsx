@@ -76,11 +76,11 @@ function DataValidator() {
         title="DataValidator"
         subtitle="Validate and convert between JSON, XML, YAML, CSV, and TOML formats"
         icon={CheckCircle}
-        iconColor="purple"
+        iconColor="indigo"
       >
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Input Section */}
-          <GlassCard hover={false} animated={false} className="border-accent-purple/30 h-full">
+          <GlassCard hover={false} animated={false} className="border-accent-indigo/30 h-full">
             <GlassCardHeader>
               <div className="flex items-center justify-between">
                 <GlassCardTitle>Input</GlassCardTitle>
@@ -110,7 +110,7 @@ function DataValidator() {
           </GlassCard>
 
           {/* Output Section */}
-          <GlassCard hover={false} animated={false} className="border-accent-purple/30 h-full">
+          <GlassCard hover={false} animated={false} className="border-accent-indigo/30 h-full">
             <GlassCardHeader>
               <div className="flex items-center justify-between">
                 <GlassCardTitle>Output</GlassCardTitle>

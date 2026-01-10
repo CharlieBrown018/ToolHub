@@ -13,7 +13,8 @@ import {
   ShieldCheck,
   QrCode,
   Palette,
-  FileText
+  FileText,
+  Lightning
 } from '@phosphor-icons/react';
 import { Snail, Heart as HeartIcon, UserX, Ghost } from 'lucide-react';
 import { GlassCard } from '../ui/glass-card';
@@ -718,29 +719,43 @@ function Chapter3({
       name: 'Image Tools', 
       icon: Image, 
       color: 'blue',
-      tools: ['Image to PDF', 'WebP Convert', 'Compress'],
+      tools: ['Scan2PDF', 'WebP Express', 'ShrinkIt'],
       description: 'Convert, compress, optimize'
     },
     { 
-      name: 'Security', 
-      icon: ShieldCheck, 
-      color: 'green',
-      tools: ['Password Gen', 'Hash Check'],
-      description: 'Secure & private utilities'
-    },
-    { 
-      name: 'Developer', 
+      name: 'Developer Tools', 
       icon: Code, 
-      color: 'purple',
-      tools: ['JSON Format', 'Diff Master', 'Base64'],
-      description: 'Code & data tools'
+      color: 'indigo',
+      tools: ['DataValidator', 'DiffMaster'],
+      description: 'Code & data formatting'
     },
     { 
-      name: 'Design', 
+      name: 'Document Tools', 
+      icon: FileText, 
+      color: 'green',
+      tools: ['DocuMark'],
+      description: 'Markdown to PDF processing'
+    },
+    { 
+      name: 'Design Tools', 
       icon: Palette, 
       color: 'pink',
-      tools: ['Color Palette', 'Gradient Gen'],
-      description: 'Creative utilities'
+      tools: ['ColorPalette'],
+      description: 'Creative design utilities'
+    },
+    { 
+      name: 'Security Tools', 
+      icon: ShieldCheck, 
+      color: 'amber',
+      tools: ['SecurePass'],
+      description: 'Privacy & security generators'
+    },
+    { 
+      name: 'Utilities', 
+      icon: Lightning, 
+      color: 'teal',
+      tools: ['UnitFlow', 'QuickQR'],
+      description: 'Daily productivity tools'
     },
   ];
 
@@ -813,22 +828,24 @@ function Chapter3({
             const colorClasses: Record<string, { bg: string; border: string; text: string; iconBg: string }> = {
               blue: { bg: 'from-accent-blue/5', border: 'border-accent-blue/15 hover:border-accent-blue/30', text: 'text-accent-blue', iconBg: 'bg-accent-blue/20' },
               green: { bg: 'from-accent-green/5', border: 'border-accent-green/15 hover:border-accent-green/30', text: 'text-accent-green', iconBg: 'bg-accent-green/20' },
-              purple: { bg: 'from-accent-purple/5', border: 'border-accent-purple/15 hover:border-accent-purple/30', text: 'text-accent-purple', iconBg: 'bg-accent-purple/20' },
-              pink: { bg: 'from-pink-500/5', border: 'border-pink-500/15 hover:border-pink-500/30', text: 'text-pink-400', iconBg: 'bg-pink-500/20' },
+              indigo: { bg: 'from-accent-indigo/5', border: 'border-accent-indigo/15 hover:border-accent-indigo/30', text: 'text-accent-indigo', iconBg: 'bg-accent-indigo/20' },
+              pink: { bg: 'from-accent-pink/5', border: 'border-accent-pink/15 hover:border-accent-pink/30', text: 'text-accent-pink', iconBg: 'bg-accent-pink/20' },
+              amber: { bg: 'from-accent-amber/5', border: 'border-accent-amber/15 hover:border-accent-amber/30', text: 'text-accent-amber', iconBg: 'bg-accent-amber/20' },
+              teal: { bg: 'from-accent-teal/5', border: 'border-accent-teal/15 hover:border-accent-teal/30', text: 'text-accent-teal', iconBg: 'bg-accent-teal/20' },
             };
             const colors = colorClasses[category.color] || colorClasses.blue;
             
             return (
-              <div key={idx} className="col-span-3 md:col-span-3 lg:col-span-3">
+              <div key={idx} className="col-span-6 md:col-span-2 lg:col-span-2">
                 <GlassCard className={`p-5 lg:p-6 h-full bg-gradient-to-br ${colors.bg} to-transparent ${colors.border} transition-all group`}>
                   <div className={`w-14 h-14 rounded-xl ${colors.iconBg} ${colors.text} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                     <category.icon className="w-7 h-7" weight="duotone" />
                   </div>
-                  <div className="text-lg font-bold text-white mb-1">{category.name}</div>
+                  <div className={`text-lg font-bold ${colors.text} mb-1`}>{category.name}</div>
                   <div className="text-sm text-gray-500 mb-3">{category.description}</div>
                   <div className="flex flex-wrap gap-1.5">
                     {category.tools.map((tool, toolIdx) => (
-                      <span key={toolIdx} className={`text-xs px-2 py-1 rounded-md bg-white/5 ${colors.text}/70`}>
+                      <span key={toolIdx} className={`text-xs px-2 py-1 rounded-md ${colors.iconBg} ${colors.text} font-medium`}>
                         {tool}
                       </span>
                     ))}
@@ -856,38 +873,38 @@ export default function NarrativeSection() {
   });
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // OPTIMIZED SCROLL ANIMATIONS - Simplified for smooth 60fps performance
+  // OPTIMIZED SCROLL ANIMATIONS - Snappier transitions for a faster feel
   // ═══════════════════════════════════════════════════════════════════════════
   
-  // Chapter 1: Visible 0-0.28, Fade out 0.28-0.38
-  const chapter1Opacity = useTransform(scrollYProgress, [0, 0.28, 0.38], [1, 1, 0]);
-  const chapter1Y = useTransform(scrollYProgress, [0, 0.28, 0.38], [0, 0, -40]);
-  const chapter1Scale = useTransform(scrollYProgress, [0, 0.28, 0.38], [1, 1, 0.98]);
-  const chapter1Rotate = useTransform(scrollYProgress, [0, 0.38], [0, 0.3]);
-  const chapter1Blur = useTransform(scrollYProgress, [0, 0.30, 0.38], [0, 0, 1.5]);
+  // Chapter 1: Visible 0-0.22, Fast fade out 0.22-0.28
+  const chapter1Opacity = useTransform(scrollYProgress, [0, 0.22, 0.28], [1, 1, 0]);
+  const chapter1Y = useTransform(scrollYProgress, [0, 0.22, 0.28], [0, 0, -30]);
+  const chapter1Scale = useTransform(scrollYProgress, [0, 0.22, 0.28], [1, 1, 0.99]);
+  const chapter1Rotate = useTransform(scrollYProgress, [0, 0.28], [0, 0]);
+  const chapter1Blur = useTransform(scrollYProgress, [0, 0.24, 0.28], [0, 0, 0.5]);
   const ch1BadgeScale = useTransform(scrollYProgress, [0, 0.08], [0.98, 1]);
   const ch1TitleY = useTransform(scrollYProgress, [0, 0.06], [4, 0]);
 
-  // Chapter 2: Fade in 0.30-0.40, Visible 0.40-0.62, Fade out 0.62-0.72
-  const chapter2Opacity = useTransform(scrollYProgress, [0.30, 0.40, 0.62, 0.72], [0, 1, 1, 0]);
-  const chapter2Y = useTransform(scrollYProgress, [0.30, 0.40, 0.62, 0.72], [40, 0, 0, -40]);
-  const chapter2Scale = useTransform(scrollYProgress, [0.30, 0.40, 0.62, 0.72], [0.98, 1, 1, 0.98]);
-  const chapter2Rotate = useTransform(scrollYProgress, [0.30, 0.40, 0.62, 0.72], [-0.3, 0, 0, 0.3]);
-  const chapter2Blur = useTransform(scrollYProgress, [0.30, 0.40, 0.62, 0.72], [1.5, 0, 0, 1.5]);
-  const ch2BadgeScale = useTransform(scrollYProgress, [0.32, 0.40], [0.96, 1]);
-  const ch2TitleY = useTransform(scrollYProgress, [0.32, 0.40], [12, 0]);
+  // Chapter 2: Fast fade in 0.24-0.30, Visible 0.30-0.55, Fast fade out 0.55-0.61
+  const chapter2Opacity = useTransform(scrollYProgress, [0.24, 0.30, 0.55, 0.61], [0, 1, 1, 0]);
+  const chapter2Y = useTransform(scrollYProgress, [0.24, 0.30, 0.55, 0.61], [30, 0, 0, -30]);
+  const chapter2Scale = useTransform(scrollYProgress, [0.24, 0.30, 0.55, 0.61], [0.99, 1, 1, 0.99]);
+  const chapter2Rotate = useTransform(scrollYProgress, [0.24, 0.30, 0.55, 0.61], [0, 0, 0, 0]);
+  const chapter2Blur = useTransform(scrollYProgress, [0.24, 0.30, 0.55, 0.61], [0.5, 0, 0, 0.5]);
+  const ch2BadgeScale = useTransform(scrollYProgress, [0.26, 0.30], [0.98, 1]);
+  const ch2TitleY = useTransform(scrollYProgress, [0.26, 0.30], [8, 0]);
 
-  // Chapter 3: Fade in 0.64-0.74, Visible 0.74-1
-  const chapter3Opacity = useTransform(scrollYProgress, [0.64, 0.74, 1], [0, 1, 1]);
-  const chapter3Y = useTransform(scrollYProgress, [0.64, 0.74], [40, 0]);
-  const chapter3Scale = useTransform(scrollYProgress, [0.64, 0.74], [0.98, 1]);
-  const chapter3Blur = useTransform(scrollYProgress, [0.64, 0.74], [1.5, 0]);
-  const ch3TitleScale = useTransform(scrollYProgress, [0.66, 0.74], [0.98, 1]);
+  // Chapter 3: Fast fade in 0.57-0.63, Visible 0.63-1
+  const chapter3Opacity = useTransform(scrollYProgress, [0.57, 0.63, 1], [0, 1, 1]);
+  const chapter3Y = useTransform(scrollYProgress, [0.57, 0.63], [30, 0]);
+  const chapter3Scale = useTransform(scrollYProgress, [0.57, 0.63], [0.99, 1]);
+  const chapter3Blur = useTransform(scrollYProgress, [0.57, 0.63], [0.5, 0]);
+  const ch3TitleScale = useTransform(scrollYProgress, [0.59, 0.63], [0.99, 1]);
 
-  // Background glows - simple 3-phase transitions
-  const glow1Opacity = useTransform(scrollYProgress, [0, 0.30, 0.40], [0.5, 0.5, 0]);
-  const glow2Opacity = useTransform(scrollYProgress, [0.30, 0.40, 0.62, 0.72], [0, 0.5, 0.5, 0]);
-  const glow3Opacity = useTransform(scrollYProgress, [0.64, 0.74, 1], [0, 0.5, 0.4]);
+  // Background glows - tightened transitions
+  const glow1Opacity = useTransform(scrollYProgress, [0, 0.24, 0.28], [0.5, 0.5, 0]);
+  const glow2Opacity = useTransform(scrollYProgress, [0.24, 0.30, 0.55, 0.61], [0, 0.5, 0.5, 0]);
+  const glow3Opacity = useTransform(scrollYProgress, [0.57, 0.63, 1], [0, 0.5, 0.4]);
 
   // Floating shapes - simplified linear motion (fewer calculations)
   const decoY1 = useTransform(scrollYProgress, [0, 1], [0, -200]);
@@ -908,7 +925,7 @@ export default function NarrativeSection() {
 
   return (
     <section ref={containerRef} className="relative">
-      <div className="h-[350vh] relative">
+      <div className="h-[300vh] relative">
         <div className="sticky top-0 h-screen flex items-center justify-center overflow-hidden">
           
           {/* Background glows - GPU accelerated with will-change */}

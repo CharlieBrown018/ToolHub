@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import { Tool } from '../../types/tool';
 import { Link, useNavigate } from 'react-router-dom';
+import { getToolCategory, CATEGORIES } from '../../utils/categories';
 
 interface GlassSearchBarProps {
   value: string;
@@ -178,41 +179,44 @@ export function GlassSearchBar({
             <div className="relative z-10">
               <div className="max-h-[400px] overflow-y-auto custom-scrollbar p-2">
               {results.length > 0 ? (
-                results.map((tool, index) => (
-                  <Link
-                    key={tool.id}
-                    to={tool.route}
-                    onClick={() => {
-                      setIsFocused(false);
-                      onResultClick?.();
-                      handleClear();
-                    }}
-                    onMouseEnter={() => setActiveIndex(index)}
-                    className={`flex items-center gap-4 p-4 rounded-xl transition-all group ${
-                      activeIndex === index ? 'bg-white/5 border border-white/10' : 'bg-transparent border border-transparent'
-                    }`}
-                  >
-                    <div className={`h-11 w-11 rounded-xl bg-accent-${tool.color}/20 border border-accent-${tool.color}/30 flex items-center justify-center shadow-depth-1`}>
-                      {(() => {
-                        const IconComponent = getToolIcon(tool.id);
-                        return <IconComponent className={`h-6 w-6 text-accent-${tool.color}`} weight="duotone" />;
-                      })()}
-                    </div>
-                    <div className="flex-1 min-w-0 text-left">
-                      <div className="flex items-center gap-3">
-                        <p className="text-base font-bold text-gray-100 truncate">{tool.display_name || tool.title}</p>
-                        {tool.tags?.slice(0, 2).map(tag => (
-                          <span key={tag} className="text-[11px] px-2 py-0.5 rounded-full bg-glass-white-md border border-glass-border text-gray-500 font-medium uppercase tracking-wider">{tag}</span>
-                        ))}
+                results.map((tool, index) => {
+                  const categoryId = getToolCategory(tool);
+                  const effectiveColor = CATEGORIES[categoryId]?.color || tool.color || 'blue';
+                  const IconComponent = getToolIcon(tool.id);
+                  
+                  return (
+                    <Link
+                      key={tool.id}
+                      to={tool.route}
+                      onClick={() => {
+                        setIsFocused(false);
+                        onResultClick?.();
+                        handleClear();
+                      }}
+                      onMouseEnter={() => setActiveIndex(index)}
+                      className={`flex items-center gap-4 p-4 rounded-xl transition-all group ${
+                        activeIndex === index ? 'bg-white/5 border border-white/10' : 'bg-transparent border border-transparent'
+                      }`}
+                    >
+                      <div className={`h-11 w-11 rounded-xl bg-accent-${effectiveColor}/20 border border-accent-${effectiveColor}/30 flex items-center justify-center shadow-depth-1`}>
+                        <IconComponent className={`h-6 w-6 text-accent-${effectiveColor}`} weight="duotone" />
                       </div>
-                      <p className="text-sm text-gray-400 truncate mt-1">{tool.description}</p>
-                    </div>
-                    <div className={`flex items-center gap-3 transition-all ${activeIndex === index ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2'}`}>
-                      <span className="text-xs text-gray-500 uppercase font-bold tracking-widest">Open</span>
-                      <CaretRight className="h-5 w-5 text-gray-400" />
-                    </div>
-                  </Link>
-                ))
+                      <div className="flex-1 min-w-0 text-left">
+                        <div className="flex items-center gap-3">
+                          <p className="text-base font-bold text-gray-100 truncate">{tool.display_name || tool.title}</p>
+                          {tool.tags?.slice(0, 2).map(tag => (
+                            <span key={tag} className="text-[11px] px-2 py-0.5 rounded-full bg-glass-white-md border border-glass-border text-gray-500 font-medium uppercase tracking-wider">{tag}</span>
+                          ))}
+                        </div>
+                        <p className="text-sm text-gray-400 truncate mt-1">{tool.description}</p>
+                      </div>
+                      <div className={`flex items-center gap-3 transition-all ${activeIndex === index ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2'}`}>
+                        <span className="text-xs text-gray-500 uppercase font-bold tracking-widest">Open</span>
+                        <CaretRight className="h-5 w-5 text-gray-400" />
+                      </div>
+                    </Link>
+                  );
+                })
               ) : (
                 <div className="p-12 text-center flex flex-col items-center gap-4">
                   <div className="h-16 w-16 rounded-full bg-glass-white-md flex items-center justify-center border border-glass-border">

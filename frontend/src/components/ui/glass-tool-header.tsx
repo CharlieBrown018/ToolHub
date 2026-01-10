@@ -94,7 +94,7 @@ export function GlassToolHeader({ title, subtitle, statusBadge, icon: Icon, icon
   };
 
   return (
-    <div className="container mx-auto px-4 pt-6 pb-4">
+    <div className="container mx-auto px-4 pt-4 pb-4">
       <div className={`relative overflow-hidden bg-glass-white-md backdrop-blur-md border ${getBorderColorClasses(iconColor)} rounded-xl p-4 sm:p-6 shadow-glass-depth transition-all duration-300`}>
         {/* Gradient Background Layer */}
         <div className={`absolute inset-0 ${getGradientClasses(iconColor)} pointer-events-none`} />

@@ -72,14 +72,14 @@ export default function DiffMaster() {
         title="DiffMaster"
         subtitle="Analyze and compare text or code side-by-side with ease"
         icon={Columns}
-        iconColor="red"
+        iconColor="indigo"
       >
         <div className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <GlassCard hover={false} animated={false} className="border-red-500/30 h-full">
+            <GlassCard hover={false} animated={false} className="border-accent-indigo/30 h-full">
               <GlassCardHeader className="flex flex-row items-center justify-between pb-2">
                 <div className="flex items-center gap-2">
-                  <FileText className="h-4 w-4 text-red-400" />
+                  <FileText className="h-4 w-4 text-accent-indigo" />
                   <GlassCardTitle className="text-sm font-bold">Version A</GlassCardTitle>
                 </div>
                 <div className="flex gap-2">
@@ -93,12 +93,12 @@ export default function DiffMaster() {
                   value={leftContent}
                   onChange={(e) => setLeftContent(e.target.value)}
                   placeholder="Paste original content here..."
-                  className="w-full h-[300px] lg:h-[450px] bg-glass-white-md backdrop-blur-md border border-glass-border rounded-lg p-4 text-sm font-mono text-gray-100 focus:outline-none focus:ring-1 focus:ring-red-500/50 resize-none custom-scrollbar"
+                  className="w-full h-[300px] lg:h-[450px] bg-glass-white-md backdrop-blur-md border border-glass-border rounded-lg p-4 text-sm font-mono text-gray-100 focus:outline-none focus:ring-1 focus:ring-accent-indigo/50 resize-none custom-scrollbar"
                 />
               </GlassCardContent>
             </GlassCard>
 
-            <GlassCard hover={false} animated={false} className="border-red-500/30 h-full">
+            <GlassCard hover={false} animated={false} className="border-accent-indigo/30 h-full">
               <GlassCardHeader className="flex flex-row items-center justify-between pb-2">
                 <div className="flex items-center gap-2">
                   <Code className="h-4 w-4 text-green-400" />
@@ -121,10 +121,10 @@ export default function DiffMaster() {
             </GlassCard>
           </div>
 
-          <GlassCard hover={false} animated={false} className="border-red-500/30">
+          <GlassCard hover={false} animated={false} className="border-accent-indigo/30">
             <GlassCardContent className="py-4">
               <div className="flex gap-4">
-                <GlassButton variant="red" className="flex-1 py-6 text-lg font-bold" onClick={handleCompare} disabled={isComparing}>
+                <GlassButton variant="indigo" className="flex-1 py-6 text-lg font-bold" onClick={handleCompare} disabled={isComparing}>
                   {isComparing ? 'Comparing...' : 'Compare Versions'}
                 </GlassButton>
                 <GlassButton variant="outline" className="px-8" onClick={swapContent}>
@@ -135,10 +135,10 @@ export default function DiffMaster() {
           </GlassCard>
 
           {diffResult && (
-            <GlassCard hover={false} animated={true} className="border-red-500/30 overflow-hidden">
+            <GlassCard hover={false} animated={true} className="border-accent-indigo/30 overflow-hidden">
               <GlassCardHeader className="flex justify-between items-center">
                 <GlassCardTitle>Comparison Result</GlassCardTitle>
-                <GlassButton variant="ghost" size="sm" onClick={() => setDiffResult(null)} className="h-8 px-2 text-[10px] uppercase font-bold text-red-400">
+                <GlassButton variant="ghost" size="sm" onClick={() => setDiffResult(null)} className="h-8 px-2 text-[10px] uppercase font-bold text-accent-indigo">
                   Close
                 </GlassButton>
               </GlassCardHeader>

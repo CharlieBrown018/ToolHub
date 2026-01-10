@@ -73,7 +73,7 @@ export default function SecurePass() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Column 1: Password Display */}
           <div className="space-y-6">
-            <GlassCard hover={false} animated={false} className="border-amber-500/30 overflow-hidden h-full">
+            <GlassCard hover={false} animated={false} className="border-accent-amber/30 overflow-hidden h-full">
               <GlassCardHeader>
                 <GlassCardTitle>Your Secure Password</GlassCardTitle>
               </GlassCardHeader>
@@ -118,7 +118,7 @@ export default function SecurePass() {
 
           {/* Column 2: Customization */}
           <div className="space-y-6">
-            <GlassCard hover={false} animated={false} className="border-amber-500/30 h-full">
+            <GlassCard hover={false} animated={false} className="border-accent-amber/30 h-full">
               <GlassCardHeader>
                 <GlassCardTitle>Customization Settings</GlassCardTitle>
               </GlassCardHeader>
@@ -126,7 +126,7 @@ export default function SecurePass() {
                 <div className="p-4 rounded-xl bg-glass-white-sm border border-glass-border space-y-4">
                   <div className="flex justify-between mb-2">
                     <label className="text-sm font-medium text-gray-300">Password Length</label>
-                    <span className="text-sm text-amber-400 font-bold px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/20">{length}</span>
+                    <span className="text-sm text-accent-amber font-bold px-2 py-0.5 rounded bg-accent-amber/10 border border-accent-amber/20">{length}</span>
                   </div>
                   <input
                     type="range"
@@ -134,7 +134,7 @@ export default function SecurePass() {
                     max="64"
                     value={length}
                     onChange={(e) => setLength(parseInt(e.target.value))}
-                    className="w-full h-2 bg-glass-white-lg rounded-lg appearance-none cursor-pointer accent-amber-500"
+                    className="w-full h-2 bg-glass-white-lg rounded-lg appearance-none cursor-pointer accent-accent-amber"
                   />
                   <div className="flex justify-between text-[10px] text-gray-500 px-1 font-mono uppercase">
                     <span>8 chars</span>
@@ -149,10 +149,10 @@ export default function SecurePass() {
                     { label: 'Numbers (0-9)', state: includeNumbers, setter: setIncludeNumbers },
                     { label: 'Symbols (!@#$%^&*)', state: includeSymbols, setter: setIncludeSymbols },
                   ].map((option, i) => (
-                    <div key={i} className="flex items-center justify-between p-4 rounded-xl bg-glass-white-sm border border-glass-border group hover:border-amber-500/30 transition-all duration-300">
+                    <div key={i} className="flex items-center justify-between p-4 rounded-xl bg-glass-white-sm border border-glass-border group hover:border-accent-amber/30 transition-all duration-300">
                       <span className="text-sm text-gray-300 group-hover:text-white transition-colors">{option.label}</span>
                       <button 
-                        className={`w-12 h-6 rounded-full relative transition-colors ${option.state ? 'bg-amber-500/40' : 'bg-glass-white-lg'}`}
+                        className={`w-12 h-6 rounded-full relative transition-colors ${option.state ? 'bg-accent-amber/40' : 'bg-glass-white-lg'}`}
                         onClick={() => option.setter(!option.state)}
                       >
                         <div className={`absolute top-1 left-1 w-4 h-4 rounded-full bg-white shadow-sm transition-all duration-300 ${option.state ? 'translate-x-6' : 'translate-x-0'}`} />

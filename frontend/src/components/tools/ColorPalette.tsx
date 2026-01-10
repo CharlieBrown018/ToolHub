@@ -167,7 +167,7 @@ function ColorPalette() {
         title="ColorPalette"
         subtitle="Professional color palette tools - Extract, Generate, Build & Analyze"
         icon={Palette}
-        iconColor="orange"
+        iconColor="pink"
       >
         {/* Tabs */}
         <div className="flex flex-wrap gap-2 mb-6 border-b border-glass-border">
@@ -179,8 +179,8 @@ function ColorPalette() {
               onClick={() => setActiveTab(tab.id)}
               className={`flex items-center gap-2 px-4 py-2 border-b-2 transition-all duration-200 rounded-t-lg ${
                 activeTab === tab.id
-                  ? 'border-accent-orange text-accent-orange bg-glass-white-md backdrop-blur-sm'
-                  : 'border-transparent text-gray-400 hover:text-accent-orange hover:bg-accent-orange/10 hover:border-accent-orange/30'
+                  ? 'border-accent-pink text-accent-pink bg-glass-white-md backdrop-blur-sm'
+                  : 'border-transparent text-gray-400 hover:text-accent-pink hover:bg-accent-pink/10 hover:border-accent-pink/30'
               }`}
             >
               <Icon className="h-4 w-4" weight="duotone" />
@@ -192,7 +192,7 @@ function ColorPalette() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Left Panel - Controls */}
-        <GlassCard hover={false} animated={false} className="border-accent-orange/30 h-full">
+        <GlassCard hover={false} animated={false} className="border-accent-pink/30 h-full">
           <GlassCardHeader>
             <GlassCardTitle>{getTabTitle()}</GlassCardTitle>
           </GlassCardHeader>

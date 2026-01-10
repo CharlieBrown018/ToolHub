@@ -88,7 +88,7 @@ TOOLS_DATA = [
         'display_name': 'DataValidator',
         'description': 'Validate and convert between JSON, XML, YAML, CSV, and TOML formats',
         'icon': 'fas fa-check-circle',
-        'color': 'purple',
+        'color': 'indigo',
         'features': ['Multi-format validation', 'Format conversion', 'Beautify & minify'],
         'route': '/tools/data-validator',
         'tags': ['json', 'xml', 'yaml', 'csv', 'toml', 'validate', 'convert', 'format']
@@ -99,7 +99,7 @@ TOOLS_DATA = [
         'display_name': 'ColorPalette',
         'description': 'Generate beautiful color palettes from images using AI-powered extraction',
         'icon': 'fas fa-palette',
-        'color': 'orange',
+        'color': 'pink',
         'features': ['Image upload', 'Dominant colors', 'Vibrant extraction'],
         'route': '/tools/color-palette',
         'tags': ['color', 'palette', 'image', 'design', 'extract', 'generate']
@@ -110,7 +110,7 @@ TOOLS_DATA = [
         'display_name': 'WebP Express',
         'description': 'Convert PNG and JPG images to modern WebP format for better web performance',
         'icon': 'fas fa-bolt',
-        'color': 'indigo',
+        'color': 'blue',
         'features': ['Bulk conversion', 'Quality control', 'Fast processing'],
         'route': '/tools/webp-express',
         'tags': ['webp', 'image', 'convert', 'optimization', 'modern']
@@ -121,7 +121,7 @@ TOOLS_DATA = [
         'display_name': 'ShrinkIt',
         'description': 'Powerful compression for images and PDF files without significant quality loss',
         'icon': 'fas fa-compress-arrows-alt',
-        'color': 'teal',
+        'color': 'blue',
         'features': ['Image shrinking', 'PDF optimization', 'Size comparison'],
         'route': '/tools/shrink-it',
         'tags': ['compress', 'optimization', 'image', 'pdf', 'size']
@@ -132,7 +132,7 @@ TOOLS_DATA = [
         'display_name': 'DiffMaster',
         'description': 'Compare text, code, or JSON side-by-side to highlight differences and changes',
         'icon': 'fas fa-columns',
-        'color': 'red',
+        'color': 'indigo',
         'features': ['Syntax highlighting', 'Inline diff', 'JSON comparison'],
         'route': '/tools/diff-master',
         'tags': ['diff', 'compare', 'text', 'code', 'json']
@@ -154,7 +154,7 @@ TOOLS_DATA = [
         'display_name': 'UnitFlow',
         'description': 'Instant conversion between various units of measurement, data, and time',
         'icon': 'fas fa-exchange-alt',
-        'color': 'cyan',
+        'color': 'teal',
         'features': ['Data units', 'Metric/Imperial', 'Time conversion'],
         'route': '/tools/unit-flow',
         'tags': ['unit', 'converter', 'data', 'measurement']
@@ -165,10 +165,10 @@ TOOLS_DATA = [
         'display_name': 'QuickQR',
         'description': 'Create customizable QR codes for links, text, and contact information instantly',
         'icon': 'fas fa-qrcode',
-        'color': 'pink',
+        'color': 'teal',
         'features': ['Custom colors', 'Live preview', 'SVG export'],
         'route': '/tools/quick-qr',
-        'tags': ['qr', 'generator', 'code', 'link', 'design']
+        'tags': ['qr', 'generator', 'code', 'link', 'utility']
     }
 ]
 

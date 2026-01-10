@@ -95,12 +95,12 @@ export default function UnitFlow() {
         title="UnitFlow"
         subtitle="Universal unit converter for dimensions, weight, and more"
         icon={ArrowsLeftRight}
-        iconColor="cyan"
+        iconColor="teal"
       >
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Left Column: Category Selection & From Input */}
           <div className="space-y-6">
-            <GlassCard hover={false} animated={false} className="border-cyan-500/30 h-full">
+            <GlassCard hover={false} animated={false} className="border-accent-teal/30 h-full">
               <GlassCardHeader>
                 <GlassCardTitle>Conversion Settings</GlassCardTitle>
               </GlassCardHeader>
@@ -112,7 +112,7 @@ export default function UnitFlow() {
                       onClick={() => setType(t.id)}
                       className={`flex flex-col items-center justify-center gap-2 p-4 rounded-xl border transition-all duration-300 ${
                         type === t.id 
-                        ? 'bg-cyan-500/20 border-cyan-500/50 text-cyan-400 shadow-glass-sm' 
+                        ? 'bg-accent-teal/20 border-accent-teal/50 text-accent-teal shadow-glass-sm' 
                         : 'bg-glass-white-sm border-glass-border text-gray-400 hover:bg-glass-white-md hover:text-gray-200'
                       }`}
                     >
@@ -123,7 +123,7 @@ export default function UnitFlow() {
                 </div>
 
                 <div className="space-y-4 pt-4 border-t border-glass-border">
-                  <div className="bg-glass-white-md backdrop-blur-md border border-glass-border rounded-xl p-4 focus-within:ring-2 focus-within:ring-cyan-500/30 transition-all">
+                  <div className="bg-glass-white-md backdrop-blur-md border border-glass-border rounded-xl p-4 focus-within:ring-2 focus-within:ring-accent-teal/30 transition-all">
                     <label className="text-[10px] text-gray-500 uppercase font-bold mb-1 block">From</label>
                     <div className="flex items-center gap-4">
                       <input
@@ -144,7 +144,7 @@ export default function UnitFlow() {
 
                 <GlassButton 
                   variant="outline" 
-                  className="w-full border-cyan-500/20 text-cyan-400 hover:bg-cyan-500/10"
+                  className="w-full border-accent-teal/20 text-accent-teal hover:bg-accent-teal/10"
                   onClick={() => {
                     const tempValue = fromValue;
                     const tempUnit = fromUnit;
@@ -161,14 +161,14 @@ export default function UnitFlow() {
 
           {/* Right Column: Result Display */}
           <div className="space-y-6">
-            <GlassCard hover={false} animated={false} className="border-cyan-500/30 h-full flex flex-col">
+            <GlassCard hover={false} animated={false} className="border-accent-teal/30 h-full flex flex-col">
               <GlassCardHeader>
                 <GlassCardTitle>Conversion Result</GlassCardTitle>
               </GlassCardHeader>
               <GlassCardContent className="flex-1 flex flex-col justify-center space-y-8">
                 <div className="bg-glass-white-md backdrop-blur-md border border-glass-border rounded-xl p-8 text-center shadow-glass-inner">
                   <label className="text-[10px] text-gray-500 uppercase font-bold mb-2 block">Converted Value</label>
-                  <div className="text-4xl sm:text-5xl font-bold text-cyan-400 truncate tracking-tight">
+                  <div className="text-4xl sm:text-5xl font-bold text-accent-teal truncate tracking-tight">
                     {toValue || '0'}
                   </div>
                 </div>

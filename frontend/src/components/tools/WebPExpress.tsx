@@ -88,11 +88,11 @@ export default function WebPExpress() {
         title="WebP Express"
         subtitle="Convert images to high-performance WebP format instantly"
         icon={Lightning}
-        iconColor="indigo"
+        iconColor="blue"
       >
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="space-y-6">
-            <GlassCard hover={false} animated={false} className="border-indigo-500/30 h-full">
+            <GlassCard hover={false} animated={false} className="border-accent-blue/30 h-full">
               <GlassCardHeader>
                 <GlassCardTitle>Upload Images</GlassCardTitle>
               </GlassCardHeader>
@@ -100,7 +100,7 @@ export default function WebPExpress() {
                 <div
                   onDrop={onDrop}
                   onDragOver={(e) => e.preventDefault()}
-                  className="border-2 border-dashed border-glass-border rounded-xl p-12 text-center hover:border-indigo-500/50 transition-colors cursor-pointer bg-glass-white-md backdrop-blur-md"
+                  className="border-2 border-dashed border-glass-border rounded-xl p-12 text-center hover:border-accent-blue/50 transition-colors cursor-pointer bg-glass-white-md backdrop-blur-md"
                   onClick={() => document.getElementById('file-upload')?.click()}
                 >
                   <input
@@ -111,7 +111,7 @@ export default function WebPExpress() {
                     className="hidden"
                     onChange={(e) => e.target.files && addFiles(Array.from(e.target.files))}
                   />
-                  <Upload className="h-12 w-12 mx-auto text-indigo-400 mb-4" weight="duotone" />
+                  <Upload className="h-12 w-12 mx-auto text-accent-blue/70 mb-4" weight="duotone" />
                   <p className="text-gray-300 mb-2">Drag and drop images here, or click to browse</p>
                   <p className="text-xs text-gray-500">Supports PNG, JPG, JPEG</p>
                 </div>
@@ -135,7 +135,7 @@ export default function WebPExpress() {
                           {file.status === 'processing' && (
                             <div className="w-24 px-2">
                               <div className="h-1 w-full bg-glass-white-lg rounded-full overflow-hidden">
-                                <div className="h-full bg-indigo-500 transition-all duration-300" style={{ width: `${file.progress}%` }} />
+                                <div className="h-full bg-accent-blue transition-all duration-300" style={{ width: `${file.progress}%` }} />
                               </div>
                             </div>
                           )}
@@ -155,7 +155,7 @@ export default function WebPExpress() {
           </div>
 
           <div className="space-y-6">
-            <GlassCard hover={false} animated={false} className="border-indigo-500/30 h-full">
+            <GlassCard hover={false} animated={false} className="border-accent-blue/30 h-full">
               <GlassCardHeader>
                 <GlassCardTitle>Settings</GlassCardTitle>
               </GlassCardHeader>
@@ -163,7 +163,7 @@ export default function WebPExpress() {
                 <div>
                   <div className="flex justify-between mb-2">
                     <label className="text-sm text-gray-300">Quality</label>
-                    <span className="text-sm text-indigo-400 font-bold">{quality}%</span>
+                    <span className="text-sm text-accent-blue font-bold">{quality}%</span>
                   </div>
                   <input
                     type="range"
@@ -171,7 +171,7 @@ export default function WebPExpress() {
                     max="100"
                     value={quality}
                     onChange={(e) => setQuality(parseInt(e.target.value))}
-                    className="w-full h-2 bg-glass-white-lg rounded-lg appearance-none cursor-pointer accent-indigo-500"
+                    className="w-full h-2 bg-glass-white-lg rounded-lg appearance-none cursor-pointer accent-accent-blue"
                   />
                   <p className="text-[10px] text-gray-500 mt-2">Higher quality means larger file size.</p>
                 </div>
@@ -180,7 +180,7 @@ export default function WebPExpress() {
                   <GlassButton
                     onClick={handleConvert}
                     disabled={isProcessing || files.length === 0}
-                    variant="indigo"
+                    variant="blue"
                     className="w-full py-8 text-xl font-bold"
                   >
                     {isProcessing ? (

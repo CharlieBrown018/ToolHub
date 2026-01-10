@@ -94,17 +94,17 @@ export default function ShrinkIt() {
         title="ShrinkIt"
         subtitle="Professional file compression for images and PDFs"
         icon={ArrowsInSimple}
-        iconColor="teal"
+        iconColor="blue"
       >
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="space-y-6">
-            <GlassCard hover={false} animated={false} className="border-teal-500/30 h-full">
+            <GlassCard hover={false} animated={false} className="border-accent-blue/30 h-full">
               <GlassCardHeader>
                 <GlassCardTitle>Upload Files</GlassCardTitle>
               </GlassCardHeader>
               <GlassCardContent>
                 <div
-                  className="border-2 border-dashed border-glass-border rounded-xl p-12 text-center hover:border-teal-500/50 transition-colors cursor-pointer bg-glass-white-md backdrop-blur-md"
+                  className="border-2 border-dashed border-glass-border rounded-xl p-12 text-center hover:border-accent-blue/50 transition-colors cursor-pointer bg-glass-white-md backdrop-blur-md"
                   onClick={() => document.getElementById('shrink-upload')?.click()}
                 >
                   <input
@@ -115,7 +115,7 @@ export default function ShrinkIt() {
                     className="hidden"
                     onChange={(e) => e.target.files && addFiles(Array.from(e.target.files))}
                   />
-                  <Upload className="h-12 w-12 mx-auto text-teal-400 mb-4" weight="duotone" />
+                  <Upload className="h-12 w-12 mx-auto text-accent-blue/70 mb-4" weight="duotone" />
                   <p className="text-gray-300 mb-2">Drop images or PDFs here</p>
                   <p className="text-xs text-gray-500">Maximum file size: 50MB</p>
                 </div>
@@ -125,7 +125,7 @@ export default function ShrinkIt() {
                     {files.map((file) => (
                       <div key={file.id} className="p-4 rounded-xl bg-glass-white-md border border-glass-border flex items-center justify-between group">
                         <div className="flex items-center gap-4">
-                          <div className={`h-10 w-10 rounded-lg flex items-center justify-center ${file.type === 'pdf' ? 'bg-red-500/20 text-red-400' : 'bg-teal-500/20 text-teal-400'}`}>
+                          <div className={`h-10 w-10 rounded-lg flex items-center justify-center ${file.type === 'pdf' ? 'bg-red-500/20 text-red-400' : 'bg-accent-blue/20 text-accent-blue'}`}>
                             <FileArrowDown className="h-6 w-6" weight="duotone" />
                           </div>
                           <div>
@@ -133,7 +133,7 @@ export default function ShrinkIt() {
                             <div className="flex items-center gap-2 mt-1">
                               <span className="text-xs text-gray-500 line-through">{formatSize(file.originalSize)}</span>
                               {file.compressedSize && (
-                                <span className="text-xs text-teal-400 font-bold">{formatSize(file.compressedSize)}</span>
+                                <span className="text-xs text-accent-blue font-bold">{formatSize(file.compressedSize)}</span>
                               )}
                             </div>
                           </div>
@@ -141,11 +141,11 @@ export default function ShrinkIt() {
 
                         <div className="flex items-center gap-4">
                           {file.status === 'processing' && (
-                            <ArrowsClockwise className="h-5 w-5 text-teal-400 animate-spin" />
+                            <ArrowsClockwise className="h-5 w-5 text-accent-blue animate-spin" />
                           )}
                           {file.status === 'success' && (
                             <div className="text-right">
-                              <span className="text-[10px] px-1.5 py-0.5 rounded bg-teal-500/20 text-teal-400 font-bold">
+                              <span className="text-[10px] px-1.5 py-0.5 rounded bg-accent-blue/20 text-accent-blue font-bold">
                                 -{Math.round((1 - (file.compressedSize! / file.originalSize)) * 100)}%
                               </span>
                             </div>
@@ -166,7 +166,7 @@ export default function ShrinkIt() {
           </div>
 
           <div className="space-y-6">
-            <GlassCard hover={false} animated={false} className="border-teal-500/30 h-full flex flex-col">
+            <GlassCard hover={false} animated={false} className="border-accent-blue/30 h-full flex flex-col">
               <GlassCardHeader>
                 <GlassCardTitle>Compression Settings</GlassCardTitle>
               </GlassCardHeader>
@@ -174,7 +174,7 @@ export default function ShrinkIt() {
                 <div className="p-6 rounded-xl bg-glass-white-sm border border-glass-border">
                   <div className="flex justify-between mb-4">
                     <label className="text-sm font-medium text-gray-300">Target Quality</label>
-                    <span className="text-sm text-teal-400 font-bold px-2 py-0.5 rounded bg-teal-500/10 border border-teal-500/20">{compressionLevel}%</span>
+                    <span className="text-sm text-accent-blue font-bold px-2 py-0.5 rounded bg-accent-blue/10 border border-accent-blue/20">{compressionLevel}%</span>
                   </div>
                   <input
                     type="range"
@@ -182,7 +182,7 @@ export default function ShrinkIt() {
                     max="90"
                     value={compressionLevel}
                     onChange={(e) => setCompressionLevel(parseInt(e.target.value))}
-                    className="w-full h-2 bg-glass-white-lg rounded-lg appearance-none cursor-pointer accent-teal-500"
+                    className="w-full h-2 bg-glass-white-lg rounded-lg appearance-none cursor-pointer accent-accent-blue"
                   />
                   <div className="flex justify-between text-[10px] text-gray-500 mt-2 px-1 font-mono uppercase">
                     <span>Smallest Size</span>
@@ -193,7 +193,7 @@ export default function ShrinkIt() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="p-6 rounded-xl bg-glass-white-md backdrop-blur-md border border-glass-border text-center">
                     <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-2 font-bold">Total Saved</p>
-                    <p className="text-2xl font-bold text-teal-400">{formatSize(totalSaved)}</p>
+                    <p className="text-2xl font-bold text-accent-blue">{formatSize(totalSaved)}</p>
                   </div>
                   <div className="p-6 rounded-xl bg-glass-white-md backdrop-blur-md border border-glass-border text-center">
                     <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-2 font-bold">Files</p>
@@ -205,7 +205,7 @@ export default function ShrinkIt() {
                   <GlassButton
                     onClick={handleCompress}
                     disabled={isProcessing || files.length === 0}
-                    variant="teal"
+                    variant="blue"
                     className="w-full py-8 text-xl font-bold"
                   >
                     {isProcessing ? (

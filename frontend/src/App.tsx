@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { RootLayout } from './components/layouts';
 import { SearchProvider } from './context/SearchContext';
+import { SidebarProvider } from './context/SidebarContext';
 import Landing from './components/Landing';
 import Hub from './components/Hub';
 import Scan2PDF from './components/tools/Scan2PDF';
@@ -19,23 +20,25 @@ function App() {
   return (
     <Router>
       <SearchProvider>
-        <RootLayout>
-          <Routes>
-            <Route path="/" element={<Landing />} />
-            <Route path="/hub" element={<Hub />} />
-            <Route path="/tools/image-to-pdf" element={<Scan2PDF />} />
-            <Route path="/tools/md-to-pdf" element={<DocuMark />} />
-            <Route path="/tools/data-validator" element={<DataValidator />} />
-            <Route path="/tools/color-palette" element={<ColorPalette />} />
-            <Route path="/tools/webp-express" element={<WebPExpress />} />
-            <Route path="/tools/shrink-it" element={<ShrinkIt />} />
-            <Route path="/tools/diff-master" element={<DiffMaster />} />
-            <Route path="/tools/secure-pass" element={<SecurePass />} />
-            <Route path="/tools/unit-flow" element={<UnitFlow />} />
-            <Route path="/tools/quick-qr" element={<QuickQR />} />
-          </Routes>
-        </RootLayout>
-        <GlassToaster />
+        <SidebarProvider>
+          <RootLayout>
+            <Routes>
+              <Route path="/" element={<Landing />} />
+              <Route path="/hub" element={<Hub />} />
+              <Route path="/tools/image-to-pdf" element={<Scan2PDF />} />
+              <Route path="/tools/md-to-pdf" element={<DocuMark />} />
+              <Route path="/tools/data-validator" element={<DataValidator />} />
+              <Route path="/tools/color-palette" element={<ColorPalette />} />
+              <Route path="/tools/webp-express" element={<WebPExpress />} />
+              <Route path="/tools/shrink-it" element={<ShrinkIt />} />
+              <Route path="/tools/diff-master" element={<DiffMaster />} />
+              <Route path="/tools/secure-pass" element={<SecurePass />} />
+              <Route path="/tools/unit-flow" element={<UnitFlow />} />
+              <Route path="/tools/quick-qr" element={<QuickQR />} />
+            </Routes>
+          </RootLayout>
+          <GlassToaster />
+        </SidebarProvider>
       </SearchProvider>
     </Router>
   );
