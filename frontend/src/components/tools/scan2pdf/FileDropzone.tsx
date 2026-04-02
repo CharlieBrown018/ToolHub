@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { GlassButton } from '../../ui/glass-button';
 import { Upload, FolderOpen } from '@phosphor-icons/react';
 import { useApiToast } from '../../../hooks/useApiToast';
-import { apiRequest, apiUpload } from '../../../services/api';
+
 
 interface FileDropzoneProps {
   inputFiles: string[];

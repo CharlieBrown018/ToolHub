@@ -3,7 +3,7 @@ import { GlassCard, GlassCardContent, GlassCardHeader, GlassCardTitle } from '..
 import { GlassButton } from '../ui/glass-button';
 import { ToolLayout } from '../layouts/ToolLayout';
 import { PageTransition } from '../animations/PageTransition';
-import { Lightning, Upload, Image, FileText, Trash, ArrowsClockwise } from '@phosphor-icons/react';
+import { Lightning, Upload, Trash, ArrowsClockwise } from '@phosphor-icons/react';
 import { useApiToast } from '../../hooks/useApiToast';
 
 interface FileItem {

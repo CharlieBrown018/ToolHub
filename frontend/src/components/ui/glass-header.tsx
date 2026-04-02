@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Toolbox, House, SquaresFour } from '@phosphor-icons/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { GlassSearchBar } from './glass-searchbar';
@@ -12,9 +12,8 @@ export function GlassHeader() {
   const hubText = "Hub";
   const { searchQuery, setSearchQuery } = useSearch();
   const location = useLocation();
-  const navigate = useNavigate();
   const [searchResults, setSearchResults] = useState<Tool[]>([]);
-  const [isSearching, setIsSearching] = useState(false);
+  const [, setIsSearching] = useState(false);
 
   const container = {
     hidden: { opacity: 0 },

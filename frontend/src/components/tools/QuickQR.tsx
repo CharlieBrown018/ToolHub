@@ -3,7 +3,7 @@ import { GlassCard, GlassCardContent, GlassCardHeader, GlassCardTitle } from '..
 import { GlassButton } from '../ui/glass-button';
 import { ToolLayout } from '../layouts/ToolLayout';
 import { PageTransition } from '../animations/PageTransition';
-import { QrCode, Download, Palette, Link as LinkIcon, TextT, User, ShareNetwork, ArrowsClockwise } from '@phosphor-icons/react';
+import { QrCode, Download, Link as LinkIcon, TextT, User, ShareNetwork, ArrowsClockwise } from '@phosphor-icons/react';
 import { useApiToast } from '../../hooks/useApiToast';
 
 export default function QuickQR() {

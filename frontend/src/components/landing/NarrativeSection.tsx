@@ -1,4 +1,4 @@
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, MotionValue } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { 
   Code, 
@@ -20,21 +20,21 @@ import { useRef } from 'react';
 // FLOATING SHAPES COMPONENT
 // ═══════════════════════════════════════════════════════════════════════════
 interface FloatingShapesProps {
-  decoY1: ReturnType<typeof useTransform>;
-  decoY2: ReturnType<typeof useTransform>;
-  decoY3: ReturnType<typeof useTransform>;
-  decoY4: ReturnType<typeof useTransform>;
-  decoY5: ReturnType<typeof useTransform>;
-  decoY6: ReturnType<typeof useTransform>;
-  decoY7: ReturnType<typeof useTransform>;
-  decoY8: ReturnType<typeof useTransform>;
-  decoRotate1: ReturnType<typeof useTransform>;
-  decoRotate2: ReturnType<typeof useTransform>;
-  decoRotate3: ReturnType<typeof useTransform>;
-  decoScale1: ReturnType<typeof useTransform>;
-  decoScale2: ReturnType<typeof useTransform>;
-  decoOpacity1: ReturnType<typeof useTransform>;
-  decoOpacity2: ReturnType<typeof useTransform>;
+  decoY1: MotionValue<number>;
+  decoY2: MotionValue<number>;
+  decoY3: MotionValue<number>;
+  decoY4: MotionValue<number>;
+  decoY5: MotionValue<number>;
+  decoY6: MotionValue<number>;
+  decoY7: MotionValue<number>;
+  decoY8: MotionValue<number>;
+  decoRotate1: MotionValue<number>;
+  decoRotate2: MotionValue<number>;
+  decoRotate3: MotionValue<number>;
+  decoScale1: MotionValue<number>;
+  decoScale2: MotionValue<number>;
+  decoOpacity1: MotionValue<number>;
+  decoOpacity2: MotionValue<number>;
 }
 
 function FloatingShapes({
@@ -326,13 +326,13 @@ function FloatingShapes({
 // ═══════════════════════════════════════════════════════════════════════════
 
 interface Chapter1Props {
-  opacity: ReturnType<typeof useTransform>;
-  y: ReturnType<typeof useTransform>;
-  scale: ReturnType<typeof useTransform>;
-  rotate: ReturnType<typeof useTransform>;
-  blur: ReturnType<typeof useTransform>;
-  badgeScale: ReturnType<typeof useTransform>;
-  titleY: ReturnType<typeof useTransform>;
+  opacity: MotionValue<number>;
+  y: MotionValue<number>;
+  scale: MotionValue<number>;
+  rotate: MotionValue<number>;
+  blur: MotionValue<number>;
+  badgeScale: MotionValue<number>;
+  titleY: MotionValue<number>;
 }
 
 function Chapter1({ opacity, y, scale, rotate, blur, badgeScale, titleY }: Chapter1Props) {
@@ -440,13 +440,13 @@ function Chapter1({ opacity, y, scale, rotate, blur, badgeScale, titleY }: Chapt
 }
 
 interface Chapter2Props {
-  opacity: ReturnType<typeof useTransform>;
-  y: ReturnType<typeof useTransform>;
-  scale: ReturnType<typeof useTransform>;
-  rotate: ReturnType<typeof useTransform>;
-  blur: ReturnType<typeof useTransform>;
-  badgeScale: ReturnType<typeof useTransform>;
-  titleY: ReturnType<typeof useTransform>;
+  opacity: MotionValue<number>;
+  y: MotionValue<number>;
+  scale: MotionValue<number>;
+  rotate: MotionValue<number>;
+  blur: MotionValue<number>;
+  badgeScale: MotionValue<number>;
+  titleY: MotionValue<number>;
 }
 
 function Chapter2({ opacity, y, scale, rotate, blur, badgeScale, titleY }: Chapter2Props) {
@@ -560,23 +560,23 @@ function Chapter2({ opacity, y, scale, rotate, blur, badgeScale, titleY }: Chapt
 }
 
 interface Chapter3Props {
-  opacity: ReturnType<typeof useTransform>;
-  y: ReturnType<typeof useTransform>;
-  scale: ReturnType<typeof useTransform>;
-  blur: ReturnType<typeof useTransform>;
-  titleScale: ReturnType<typeof useTransform>;
-  f1Opacity: ReturnType<typeof useTransform>;
-  f1Y: ReturnType<typeof useTransform>;
-  f1Scale: ReturnType<typeof useTransform>;
-  f2Opacity: ReturnType<typeof useTransform>;
-  f2Y: ReturnType<typeof useTransform>;
-  f2Scale: ReturnType<typeof useTransform>;
-  f3Opacity: ReturnType<typeof useTransform>;
-  f3Y: ReturnType<typeof useTransform>;
-  f3Scale: ReturnType<typeof useTransform>;
-  f4Opacity: ReturnType<typeof useTransform>;
-  f4Y: ReturnType<typeof useTransform>;
-  f4Scale: ReturnType<typeof useTransform>;
+  opacity: MotionValue<number>;
+  y: MotionValue<number>;
+  scale: MotionValue<number>;
+  blur: MotionValue<number>;
+  titleScale: MotionValue<number>;
+  f1Opacity: MotionValue<number>;
+  f1Y: MotionValue<number>;
+  f1Scale: MotionValue<number>;
+  f2Opacity: MotionValue<number>;
+  f2Y: MotionValue<number>;
+  f2Scale: MotionValue<number>;
+  f3Opacity: MotionValue<number>;
+  f3Y: MotionValue<number>;
+  f3Scale: MotionValue<number>;
+  f4Opacity: MotionValue<number>;
+  f4Y: MotionValue<number>;
+  f4Scale: MotionValue<number>;
 }
 
 function Chapter3({

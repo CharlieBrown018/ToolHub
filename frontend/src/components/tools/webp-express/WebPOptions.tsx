@@ -1,5 +1,5 @@
 import { GlassCard, GlassCardContent, GlassCardHeader, GlassCardTitle } from '../../ui/glass-card';
-import { Settings, Info } from '@phosphor-icons/react';
+import { GearSix, Info } from '@phosphor-icons/react';
 import * as Slider from '@radix-ui/react-slider';
 
 interface WebPOptionsProps {
@@ -25,7 +25,7 @@ export function WebPOptions({
     <GlassCard className="border-accent-indigo/30 shadow-indigo-glow/10">
       <GlassCardHeader className="pb-2">
         <div className="flex items-center gap-2">
-          <Settings className="h-5 w-5 text-accent-indigo" weight="duotone" />
+          <GearSix className="h-5 w-5 text-accent-indigo" weight="duotone" />
           <GlassCardTitle className="text-lg">Conversion Settings</GlassCardTitle>
         </div>
       </GlassCardHeader>
@@ -50,7 +50,7 @@ export function WebPOptions({
           <Slider.Root
             className="relative flex items-center select-none touch-none w-full h-5"
             value={[quality]}
-            onValueChange={(vals) => onQualityChange(vals[0])}
+            onValueChange={(vals: number[]) => onQualityChange(vals[0])}
             max={100}
             min={1}
             step={1}

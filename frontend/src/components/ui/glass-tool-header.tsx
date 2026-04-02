@@ -1,6 +1,5 @@
 import { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-import { GlassButton } from './glass-button';
 import { ArrowLeft } from '@phosphor-icons/react';
 import { motion } from 'framer-motion';
 

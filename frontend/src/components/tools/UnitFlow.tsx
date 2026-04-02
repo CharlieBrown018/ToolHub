@@ -4,7 +4,7 @@ import { GlassButton } from '../ui/glass-button';
 import { ToolLayout } from '../layouts/ToolLayout';
 import { PageTransition } from '../animations/PageTransition';
 import { ArrowsLeftRight, Scales, Ruler, Thermometer, Database } from '@phosphor-icons/react';
-import { GlassSelect } from '../ui/glass-select';
+import { GlassSelect, GlassSelectTrigger, GlassSelectValue, GlassSelectContent, GlassSelectItem } from '../ui/glass-select';
 
 const UNIT_TYPES = [
   { id: 'length', name: 'Length', icon: Ruler },
@@ -13,7 +13,7 @@ const UNIT_TYPES = [
   { id: 'data', name: 'Data', icon: Database },
 ];
 
-const UNITS = {
+const UNITS: Record<string, { value: string; label: string; factor?: number }[]> = {
   length: [
     { value: 'm', label: 'Meters', factor: 1 },
     { value: 'km', label: 'Kilometers', factor: 1000 },
@@ -71,7 +71,7 @@ export default function UnitFlow() {
       
       setToValue(result.toFixed(2));
     } else {
-      const units = UNITS[type as keyof typeof UNITS];
+      const units = UNITS[type];
       const fromFactor = units.find(u => u.value === fromUnit)?.factor || 1;
       const toFactor = units.find(u => u.value === toUnit)?.factor || 1;
       const result = (val * fromFactor) / toFactor;
@@ -84,7 +84,7 @@ export default function UnitFlow() {
   }, [fromValue, fromUnit, toUnit, type]);
 
   useEffect(() => {
-    const defaultUnits = UNITS[type as keyof typeof UNITS];
+    const defaultUnits = UNITS[type];
     setFromUnit(defaultUnits[0].value);
     setToUnit(defaultUnits[1].value);
   }, [type]);
@@ -134,19 +134,22 @@ export default function UnitFlow() {
                       />
                     </div>
                   </div>
-                  <GlassSelect
-                    value={fromUnit}
-                    onValueChange={setFromUnit}
-                    options={UNITS[type as keyof typeof UNITS]}
-                    placeholder="Select Unit"
-                  />
+                  <GlassSelect value={fromUnit} onValueChange={setFromUnit}>
+                    <GlassSelectTrigger>
+                      <GlassSelectValue placeholder="Select Unit" />
+                    </GlassSelectTrigger>
+                    <GlassSelectContent>
+                      {UNITS[type].map((u) => (
+                        <GlassSelectItem key={u.value} value={u.value}>{u.label}</GlassSelectItem>
+                      ))}
+                    </GlassSelectContent>
+                  </GlassSelect>
                 </div>
 
                 <GlassButton 
                   variant="outline" 
                   className="w-full border-accent-teal/20 text-accent-teal hover:bg-accent-teal/10"
                   onClick={() => {
-                    const tempValue = fromValue;
                     const tempUnit = fromUnit;
                     setFromValue(toValue);
                     setFromUnit(toUnit);
@@ -175,12 +178,16 @@ export default function UnitFlow() {
 
                 <div className="space-y-4">
                   <label className="text-[10px] text-gray-500 uppercase font-bold mb-1 block px-1">To Unit</label>
-                  <GlassSelect
-                    value={toUnit}
-                    onValueChange={setToUnit}
-                    options={UNITS[type as keyof typeof UNITS]}
-                    placeholder="Select Unit"
-                  />
+                  <GlassSelect value={toUnit} onValueChange={setToUnit}>
+                    <GlassSelectTrigger>
+                      <GlassSelectValue placeholder="Select Unit" />
+                    </GlassSelectTrigger>
+                    <GlassSelectContent>
+                      {UNITS[type].map((u) => (
+                        <GlassSelectItem key={u.value} value={u.value}>{u.label}</GlassSelectItem>
+                      ))}
+                    </GlassSelectContent>
+                  </GlassSelect>
                 </div>
               </GlassCardContent>
             </GlassCard>

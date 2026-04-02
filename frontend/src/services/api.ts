@@ -39,6 +39,8 @@ export interface ApiResponseWithMetadata<T> {
  * 
  * @param showToast - If true, returns metadata for automatic toast handling
  */
+async function apiRequest<T>(endpoint: string, options: RequestInit & { showToast: true }): Promise<ApiResponseWithMetadata<T>>;
+async function apiRequest<T>(endpoint: string, options?: RequestInit & { showToast?: false }): Promise<T>;
 async function apiRequest<T>(
   endpoint: string,
   options: RequestInit & { showToast?: boolean } = {}

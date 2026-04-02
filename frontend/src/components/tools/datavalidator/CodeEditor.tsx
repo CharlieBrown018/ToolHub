@@ -1,6 +1,7 @@
 import { FormatSelector } from './FormatSelector';
 import { FileDropzone } from './FileDropzone';
 import { type EditorProps } from './types';
+import { type FormatType } from '../../../services/datavalidator';
 
 export function CodeEditor({
   content,

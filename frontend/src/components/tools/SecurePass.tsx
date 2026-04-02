@@ -3,7 +3,7 @@ import { GlassCard, GlassCardContent, GlassCardHeader, GlassCardTitle } from '..
 import { GlassButton } from '../ui/glass-button';
 import { ToolLayout } from '../layouts/ToolLayout';
 import { PageTransition } from '../animations/PageTransition';
-import { ShieldCheck, Copy, ArrowsClockwise, Check, Info } from '@phosphor-icons/react';
+import { ShieldCheck, Copy, ArrowsClockwise, Check } from '@phosphor-icons/react';
 import { useApiToast } from '../../hooks/useApiToast';
 
 export default function SecurePass() {

@@ -2,7 +2,7 @@
  * DataValidator API service
  */
 
-import { apiRequest, apiUpload } from './api';
+import { apiRequest } from './api';
 
 export interface ValidationResponse {
   valid: boolean;

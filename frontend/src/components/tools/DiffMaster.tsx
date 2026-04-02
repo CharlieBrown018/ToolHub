@@ -3,7 +3,7 @@ import { GlassCard, GlassCardContent, GlassCardHeader, GlassCardTitle } from '..
 import { GlassButton } from '../ui/glass-button';
 import { ToolLayout } from '../layouts/ToolLayout';
 import { PageTransition } from '../animations/PageTransition';
-import { Columns, ArrowsLeftRight, Trash, FileText, Code } from '@phosphor-icons/react';
+import { Columns, ArrowsLeftRight, FileText, Code } from '@phosphor-icons/react';
 import { useApiToast } from '../../hooks/useApiToast';
 
 export default function DiffMaster() {
@@ -51,12 +51,6 @@ export default function DiffMaster() {
 
     setDiffResult(mockDiff);
     setIsComparing(false);
-  };
-
-  const clearAll = () => {
-    setLeftContent('');
-    setRightContent('');
-    setDiffResult(null);
   };
 
   const swapContent = () => {

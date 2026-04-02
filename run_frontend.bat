@@ -29,7 +29,7 @@ if not exist node_modules (
 echo Starting Vite development server...
 echo.
 echo Server will be available at:
-echo   http://localhost:3000
+echo   http://localhost:5174
 echo.
 echo Press Ctrl+C to stop the server
 echo.
