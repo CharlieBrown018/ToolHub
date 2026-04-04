@@ -111,6 +111,13 @@ CORS_METHODS = _config["cors"]["allowed_methods"]
 CORS_HEADERS = _config["cors"]["allowed_headers"]
 CORS_CREDENTIALS = _config["cors"]["allow_credentials"]
 
+# Rate limiting
+_rl = _config.get("rate_limiting", {})
+RATE_LIMITING_ENABLED: bool = _rl.get("enabled", True)
+RATE_LIMIT_DEFAULT: list[str] = _rl.get("default_limits", ["500/day", "100/hour", "30/minute"])
+RATE_LIMIT_UPLOAD: list[str] = _rl.get("upload_limits", ["10/minute"])
+RATE_LIMIT_STORAGE_URI: str = _rl.get("storage_uri", "memory://")
+
 # Frontend paths
 FRONTEND_BUILD_DIR = BASE_DIR / 'frontend' / 'build'
 FRONTEND_STATIC_DIR = FRONTEND_BUILD_DIR / 'static' if FRONTEND_BUILD_DIR.exists() else None

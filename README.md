@@ -122,9 +122,11 @@ toolhub/
 
 ## 📚 API Documentation
 
-FastAPI automatically generates interactive API documentation:
+Interactive API docs are available **in development mode only** (`debug: true` in `appconfig.json`):
 - **Swagger UI:** http://localhost:5000/docs
 - **ReDoc:** http://localhost:5000/redoc
+
+Docs are disabled in production to avoid exposing the full API surface.
 
 ## 🎨 Features
 
@@ -171,4 +173,4 @@ FastAPI automatically generates interactive API documentation:
 
 ## 📄 License
 
-Free and open-source utilities.
+All rights reserved. This is a private project — not licensed for redistribution or commercial use by third parties.

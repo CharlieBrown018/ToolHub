@@ -38,6 +38,12 @@
     "allowed_methods": ["*"],
     "allowed_headers": ["*"],
     "allow_credentials": true
+  },
+  "rate_limiting": {
+    "enabled": true,
+    "default_limits": ["500/day", "100/hour", "30/minute"],
+    "upload_limits": ["10/minute"],
+    "storage_uri": "memory://"
   }
 }
 

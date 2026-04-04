@@ -3,16 +3,21 @@ ToolHub - FastAPI Backend
 A unified platform for various file conversion and utility tools
 """
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
+import secure
 
 from backend.config import (
     BASE_DIR, UPLOAD_FOLDER, OUTPUT_FOLDER, MAX_CONTENT_LENGTH,
     API_VERSION, FRONTEND_BUILD_DIR, FRONTEND_STATIC_DIR,
     CORS_ORIGINS, CORS_METHODS, CORS_HEADERS, CORS_CREDENTIALS,
-    SERVER_HOST, SERVER_PORT, SERVER_RELOAD, DEBUG
+    SERVER_HOST, SERVER_PORT, SERVER_RELOAD, DEBUG,
+    RATE_LIMITING_ENABLED, RATE_LIMIT_DEFAULT, RATE_LIMIT_STORAGE_URI,
 )
 from backend.utils.logging import setup_logger
 from backend.tools.scan2pdf.routes import router as scan2pdf_router
@@ -23,13 +28,54 @@ from backend.tools.colorpalette.routes import router as colorpalette_router
 # Setup logging
 logger = setup_logger()
 
-# Create FastAPI app
+# ── Rate limiting ──────────────────────────────────────────────────────────────
+limiter = Limiter(
+    key_func=get_remote_address,
+    default_limits=RATE_LIMIT_DEFAULT,
+    enabled=RATE_LIMITING_ENABLED,
+    storage_uri=RATE_LIMIT_STORAGE_URI,
+)
+
+# ── Security headers ───────────────────────────────────────────────────────────
+_csp = (
+    secure.ContentSecurityPolicy()
+    .default_src("'self'")
+    .script_src("'self'")
+    .style_src("'self'", "'unsafe-inline'")
+    .img_src("'self'", "data:", "blob:")
+    .connect_src("'self'")
+    .frame_ancestors("'none'")
+)
+_secure_headers = secure.Secure(
+    server=secure.Server().set(""),
+    hsts=secure.StrictTransportSecurity().max_age(31536000).include_subdomains(),
+    xfo=secure.XFrameOptions().deny(),
+    csp=_csp,
+    referrer=secure.ReferrerPolicy().strict_origin_when_cross_origin(),
+    cache=secure.CacheControl().no_store(),
+)
+
+# ── App ────────────────────────────────────────────────────────────────────────
+# Disable interactive docs in production — avoids exposing the full API surface
 app = FastAPI(
     title="ToolHub",
     version=API_VERSION,
     description="A unified platform for file conversion and utility tools",
-    debug=DEBUG
+    debug=DEBUG,
+    docs_url="/docs" if DEBUG else None,
+    redoc_url="/redoc" if DEBUG else None,
+    openapi_url="/openapi.json" if DEBUG else None,
 )
+
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+
+@app.middleware("http")
+async def add_security_headers(request: Request, call_next):
+    response = await call_next(request)
+    await _secure_headers.set_headers_async(response)
+    return response
 
 logger.info(f"Starting ToolHub v{API_VERSION}")
 
